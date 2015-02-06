@@ -1,0 +1,12 @@
+/**
+ * Module EiCaptcha
+ *(Re)Captcha pour Prestashop
+ *
+ * © h-hennes 2013-2014
+ * @version 0.2.0 
+ * http://www.h-hennes.fr/blog/
+ */
+ 
+ /* Styles Specifiques prestashop 1.5 */
+ .account_eicaptcha label {display: inline-block;font-size: 14px;padding: 6px 15px;text-align: right;width: 230px;}
+ .account_eicaptcha div#captcha-box {float:left;}
