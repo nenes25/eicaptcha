@@ -1,9 +1,1 @@
-Après avoir installé le module copier le code suivant dans le template "contact-form.tpl" de votre thème
-After the module installation paste the folowing code in your theme template file "contact-form.tpl"
-
-{if $captcha}
-<p>
-<label for="captcha">{l s='Captcha'}</label>
-<div id="captcha-box">{$captcha}</div>
-</p>
-{/if}
+Avec la version 0.4.0 , l'installation du module via Prestashop est suffisante

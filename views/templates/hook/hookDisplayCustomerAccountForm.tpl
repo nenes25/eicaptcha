@@ -32,7 +32,7 @@
  * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
  * Captcha content is automaticaly added into the selector #captcha-box
  *}
-<div {if $prestashopVersion|escape:'html' == 16 }class="row" {/if}id="captcha-box"></div>
+<div class="g-recaptcha{if $prestashopVersion|escape:'html' == 16 } row {/if}" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box"></div>
 
 {if $prestashopVersion|escape:'html' == 15 }
 	</fieldset>	
@@ -40,17 +40,9 @@
 
 {* Les variables nécessaires au bon fonctionnement du plugin *}
 <script type="text/javascript">
- publicKey = '{$publicKey|escape:'html'}';
  waiting_message = '{$waiting_message|escape:'html'}';
  checkCaptchaUrl = '{$checkCaptchaUrl|escape:'html'}';
  errorSelector = '{$errorSelector|escape:'html'}';
  formSelector = '{$formSelector|escape:'html'}';
 </script>
-
-{literal}
-<script type="text/javascript">
-$(document).ready(function(){
- Recaptcha.create(publicKey, "captcha-box", {theme: "white"});;
- });
-</script>
-{/literal}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
