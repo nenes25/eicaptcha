@@ -124,6 +124,7 @@ class EiCaptcha extends Module
 						'label' => $this->l('Enable Captcha for account creation'),
 						'name' => 'CAPTCHA_ENABLE_ACCOUNT',
 						'required' => true,
+						'class' => 't',
 						'is_bool' => true,
 						'values' => array(
 							array(
@@ -141,7 +142,7 @@ class EiCaptcha extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-default pull-right',
+					'class' => 'button btn btn-default pull-right',
 				)
 			),
 			);
