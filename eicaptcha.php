@@ -37,7 +37,7 @@ class EiCaptcha extends Module
 		$this->author = 'hhennes';
 		$this->name = 'eicaptcha';
 		$this->tab = 'front_office_features';
-		$this->version = '0.4.0';
+		$this->version = '0.4.1';
 		$this->need_instance = 1;
 		
 		$this->bootstrap = true;
@@ -75,7 +75,7 @@ class EiCaptcha extends Module
 	public function postProcess()
 	{
 		if (Tools::isSubmit('SubmitCaptchaConfiguration'))
-		{
+		{		
 			Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
 			Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
 			Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
@@ -124,6 +124,7 @@ class EiCaptcha extends Module
 						'label' => $this->l('Enable Captcha for account creation'),
 						'name' => 'CAPTCHA_ENABLE_ACCOUNT',
 						'required' => true,
+						'class' => 't',
 						'is_bool' => true,
 						'values' => array(
 							array(
@@ -141,7 +142,7 @@ class EiCaptcha extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-default pull-right',
+					'class' => 'button btn btn-default pull-right',
 				)
 			),
 			);
@@ -185,10 +186,6 @@ class EiCaptcha extends Module
 		//Affichage sur le formulaire de contact
 		if ($this->context->controller instanceof ContactController)
 			return $this->displayCaptchaContactForm();
-		
-		//Affichage sur les éléments "Envoyer à un Ami" et "Envoyer un commentaire"
-		if ( $this->context->controller instanceof ProductController)
-			return $this->displayCaptchaProductPage();
 	}
 
 	/**
@@ -298,19 +295,5 @@ class EiCaptcha extends Module
 		$js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>';
 
 		return $js;
-	}
-
-	/**
-	 * Affichage du captcha sur la page du formulaire produit
-	 * (Nécessite de surcharger les templates des modules productcomments et sendtofriend)
-	 */
-	private function displayCaptchaProductPage(){
-		$js = '<script type="text/javascript">var RecaptachKey="'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";</script>
-			   <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>';
-		
-		$this->context->controller->addJS($this->_path.'/js/eicaptcha-modules.js');
-		
-		return $js;
-
 	}
 }
