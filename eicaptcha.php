@@ -37,7 +37,7 @@ class EiCaptcha extends Module
 		$this->author = 'hhennes';
 		$this->name = 'eicaptcha';
 		$this->tab = 'front_office_features';
-		$this->version = '0.4.0';
+		$this->version = '0.4.1';
 		$this->need_instance = 1;
 		
 		$this->bootstrap = true;
@@ -96,8 +96,6 @@ class EiCaptcha extends Module
 	 * Affichage du formulaire de configuration Admin
 	 */
 	public function renderForm(){
-	
-		ppp($this->getConfigFieldsValues());
 		
 		$fields_form = array(
 			'form' => array(
