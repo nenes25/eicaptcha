@@ -37,7 +37,7 @@ class EiCaptcha extends Module
 		$this->author = 'hhennes';
 		$this->name = 'eicaptcha';
 		$this->tab = 'front_office_features';
-		$this->version = '0.4.1';
+		$this->version = '0.4.2';
 		$this->need_instance = 1;
 		
 		$this->bootstrap = true;
@@ -186,6 +186,17 @@ class EiCaptcha extends Module
 		//Affichage sur le formulaire de contact
 		if ($this->context->controller instanceof ContactController)
 			return $this->displayCaptchaContactForm();
+			
+		if ( $this->context->controller instanceof ProductController ) {	
+			$html = '<script type="text/javascript"> 
+						var checkCaptchaUrl ="'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php";
+						var RecaptachKey = "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";
+					</script>
+					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+					<script type="text/javascript" src="'.$this->_path.'/js/eicaptcha-modules.js"></script>';
+			
+			return $html;
+		}
 	}
 
 	/**

@@ -21,3 +21,4 @@
  - V 0.3.1 - 2015-01-22 : Gestion de l'API V2 pour le formulaire de création de compte // API V2 for account creation
  - V 0.4.0 - 2015-02-12 : /!\ Compatible Prestashop > 1.5., API (Re)Captcha V2
  - V 0.4.1 - 2015-05-21 : Suppression fichier inutile + ligne debug  // Optimisation
+ - V 0.4.2 - 2015-05-22 : Ajout du code pour mettre en place le captcha sur le formulaire envoyer à un ami // Add code to display captcha on the send to friend form
