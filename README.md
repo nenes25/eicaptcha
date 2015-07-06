@@ -4,8 +4,8 @@ Module EiCaptcha for prestashop
 This module display Google recaptcha on the following forms :
  - contact form
  - account creation form
- - send to a friend form
- - product comments form (in progress)
+ - send to a friend form :( <a href="install-sendtoafriend.md">Installation procedure</a> )
+ - product comments form : ( <a href="install-productcomments.md">Installation procedure</a> )
  
  For more details about this module  : 
  http://h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/ (FR)
@@ -44,8 +44,8 @@ Module Captcha pour prestashop
 Permets d'afficher un captcha (ReCaptcha de google ) pour prestashop sur :
  - Le formulaire de contact
  - Le formulaire de création de compte
- - Le formulaire de partage à un ami
- - Le formulaire de commentaire produit
+ - Le formulaire de partage à un ami ( <a href="http://www.h-hennes.fr/blog/2015/05/22/prestashop-mettre-en-place-un-captcha-sur-le-formulaire-envoyer-a-un-ami/" target="_blank">Procédure</a>  )
+ - Le formulaire de commentaire produit (  <a href="http://www.h-hennes.fr/blog/2015/06/17/prestashop-captcha-commentaires-produit/" target="_blank">Procédure</a>  )
  
  Pour plus de détails sur l'installation et l'historique du module : 
  http://h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/
