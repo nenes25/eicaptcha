@@ -97,7 +97,7 @@ $(document).ready(function(){
 		e.preventDefault();
 
                 //GEstion Ajax du captcha
-                 if (!grecaptcha.getResponse()) {
+                 if (!grecaptcha.getResponse(recaptchaProductComment)) {
                     $.ajax({
                         method: "POST",
                         url: checkCaptchaUrl,

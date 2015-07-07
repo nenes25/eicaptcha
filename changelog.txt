@@ -23,3 +23,4 @@
  - V 0.4.1 - 2015-05-21 : Suppression fichier inutile + ligne debug  // Optimisation
  - V 0.4.2 - 2015-05-22 : Ajout du code pour mettre en place le captcha sur le formulaire envoyer à un ami // Add code to display captcha on the send to friend form
  - V 0.4.3 - 2015-06-17 : Ajout du code pour mettre en place le captcha sur les commentaires produits // Add code to display captcha on the product comments form
+ - V 0.4.4 - 2015-07-07 : Correctif lorsque le captcha est activé à la fois sur le module sendtoafriend et productcomments  // Correction when the captcha is enable on both productcomments and sendtoafriend module

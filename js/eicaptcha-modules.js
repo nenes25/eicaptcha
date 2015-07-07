@@ -7,6 +7,6 @@ var onloadCallback = function() {
      grecaptcha.render("recaptchaSendToAFriend", {"sitekey" : RecaptachKey});
     }
 	if ( document.getElementById('recaptchaProductComments')) {
-     grecaptcha.render("recaptchaProductComments", {"sitekey" : RecaptachKey});
+     recaptchaProductComment = grecaptcha.render("recaptchaProductComments", {"sitekey" : RecaptachKey});
     }
 };
