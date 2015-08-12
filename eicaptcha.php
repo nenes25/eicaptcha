@@ -37,7 +37,7 @@ class EiCaptcha extends Module
 		$this->author = 'hhennes';
 		$this->name = 'eicaptcha';
 		$this->tab = 'front_office_features';
-		$this->version = '0.4.4';
+		$this->version = '0.4.5';
 		$this->need_instance = 1;
 		
 		$this->bootstrap = true;
@@ -52,7 +52,9 @@ class EiCaptcha extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('displayCustomerAccountForm') || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0))
+		if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('displayCustomerAccountForm') || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
+			|| !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+		)
 			return false;
 
 		return true;
@@ -63,14 +65,16 @@ class EiCaptcha extends Module
 		if (!parent::uninstall())
 			return false;
 
-		if (!Configuration::deleteByName('CAPTCHA_PUBLIC_KEY') || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY') || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT'))
+		if (!Configuration::deleteByName('CAPTCHA_PUBLIC_KEY') || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY') || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
+			|| !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
+			)
 			return false;
 
 		return true;
 	}
 
 	/**
-	 * Soumission de la configuration dans l'admin
+	 * Post Process in back office
 	 */
 	public function postProcess()
 	{
@@ -79,11 +83,15 @@ class EiCaptcha extends Module
 			Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
 			Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
 			Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
+			Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
 			
 			$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 		}
 	}
 
+	/**
+	 * Module Configuration in Back Office
+	 */
 	public function getContent()
 	{
 		$this->_html .=$this->postProcess();
@@ -93,7 +101,7 @@ class EiCaptcha extends Module
 	}
 
 	/**
-	 * Affichage du formulaire de configuration Admin
+	 * Admin Form for module Configuration
 	 */
 	public function renderForm(){
 		
@@ -118,6 +126,26 @@ class EiCaptcha extends Module
 						'name' => 'CAPTCHA_PUBLIC_KEY',
 						'required' => true,
 						'empty_message' => $this->l('Please fill the captcha public key'),
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Enable Captcha for contact form'),
+						'name' => 'CAPTCHA_ENABLE_CONTACT',
+						'required' => true,
+						'class' => 't',
+						'is_bool' => true,
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value'=> 1,
+								'label'=> $this->l('Enabled'),
+							),
+							array(
+								'id' => 'active_off',
+								'value'=> 0,
+								'label'=> $this->l('Disabled'),
+							),
+						),
 					),
 					array(
 						'type' => 'radio',
@@ -169,24 +197,29 @@ class EiCaptcha extends Module
 		
 	}
 	
+	/**
+	 * Get config values to hydrate the helperForm
+	 */
 	public function getConfigFieldsValues()
 	{
 		return array(
 			'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
 			'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
 			'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
+			'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
 		);
 	}
 	
 	/**
-	 * Hook Header pour le formulaire de contact
+	 * Hook Header
 	 */
 	public function hookHeader($params)
 	{
-		//Affichage sur le formulaire de contact
-		if ($this->context->controller instanceof ContactController)
+		//Display the captcha on the contact page if it's enabled
+		if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1 )
 			return $this->displayCaptchaContactForm();
-			
+		
+		//Add Javascript in product page in order to display the captcha for the module "sendToAFriend" and "ProductsComments"
 		if ( $this->context->controller instanceof ProductController ) {	
 			$html = '<script type="text/javascript"> 
 						var checkCaptchaUrl ="'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php";
@@ -200,8 +233,8 @@ class EiCaptcha extends Module
 	}
 
 	/**
-	 * Actions ajax du module
-	 * (Affichage du message d'erreur en utilisant un template)
+	 * Ajax Actions of the module
+	 * (Error displaying with smarty template)
 	 */
 	public function hookAjaxCall()
 	{
@@ -216,13 +249,12 @@ class EiCaptcha extends Module
 	}
 
 	/**
-	 * Rajout des champs au formulaire de création de compte
+	 * Add Captcha on the Customer Registration Form
 	 */
 	public function hookDisplayCustomerAccountForm($params)
 	{
 		if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1)
 		{
-			//Récupération de la clé publique
 			$publickey = Configuration::get('CAPTCHA_PUBLIC_KEY');
 
 			if (_PS_VERSION_ > '1.6')
@@ -239,10 +271,8 @@ class EiCaptcha extends Module
 				$prestashop_version = '15';
 			}
 			
-			//Ajout du Js
 			$this->context->controller->addJS($this->_path.'/js/eicaptcha.js');
 
-			//Assignation des variables nécessaires au bon fonctionnement du module
 			$this->context->smarty->assign('publicKey', $publickey);
 			$this->context->smarty->assign('waiting_message', $this->l('Please wait during captcha check'));
 			$this->context->smarty->assign('checkCaptchaUrl', _MODULE_DIR_.$this->name.'/eicaptcha-ajax.php');
@@ -256,11 +286,11 @@ class EiCaptcha extends Module
 	}
 
 	/**
-	 * Affichage du captcha sur la page du formulaire de contact
+	 * Display Captcha on the contact Form Page
 	 */
 	private function displayCaptchaContactForm()
 	{
-		//Gestion des classes en fonction de la version de prestashop
+		//Css class depends from Prestashop version
 		if (_PS_VERSION_ > '1.6')
 		{
 			$error_class = 'alert';
@@ -272,17 +302,17 @@ class EiCaptcha extends Module
 			$form_class = 'std';
 		}
 
-		//Insertion dynamique du contenu
+		//Dynamic insertion of the content
 		$js = '<script type="text/javascript">
             
             $(document).ready(function(){
             
-               //Insertion de la div qui va contenir le captcha dans la page 
+               //Add div where the captcha will be displayed
                $(".submit").before("<div id=\"captcha-box\"></div>");
                
-               //Gestion de la soumission du formulaire
+               //Manage form submit
                 $("#submitMessage").click(function(){
-                    //Si pas de réponse du formulaire on affiche un message d\'erreur :
+                    //If no response we display an error
                     if ( ! grecaptcha.getResponse() ) {
 					    $.ajax({
 								method : "POST",
@@ -299,7 +329,7 @@ class EiCaptcha extends Module
                 });
             });
             
-            //Fonction de callBack de recaptcha une fois que la page est chargée
+            //Recaptcha CallBack Function
             var onloadCallback = function() {grecaptcha.render("captcha-box", {"sitekey" : "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'"});};
             </script>';
 
