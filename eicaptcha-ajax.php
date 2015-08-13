@@ -29,12 +29,11 @@ include(dirname(__FILE__).'/eicaptcha.php');
 
 /* Instanciation du controller */
 $controller = new FrontController();
-if (Configuration::get('PS_SSL_ENABLED') == 1)
-	$controller->ssl = true;
+if (Configuration::get('PS_SSL_ENABLED') == 1) {
+    $controller->ssl = true;
+}
 $controller->init();
 
 $action = Tools::getValue('action');
 $eicaptcha = new Eicaptcha();
 $eicaptcha->hookAjaxCall();
-
-?>

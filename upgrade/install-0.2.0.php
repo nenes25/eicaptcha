@@ -24,10 +24,11 @@
 *  http://www.h-hennes.fr/blog/
 */
 
-if (!defined('_PS_VERSION_'))
-	exit;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 function upgrade_module_0_2_0($object)
 {
-	return ($object->registerHook('displayCustomerAccountForm'));
+    return ($object->registerHook('displayCustomerAccountForm'));
 }
