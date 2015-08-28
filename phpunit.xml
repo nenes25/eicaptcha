@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<phpunit convertErrorsToExceptions="true">
+ <testsuite name='EiCapthaTests'>
+      <directory suffix='.php'>./tests/</directory>
+ </testsuite>
+ <logging>
+     <log type="junit" target="./tests/results/results.xml" logIncompleteSkipped="true"/>
+     <log type="tap" target="./tests/results/results.tap" logIncompleteSkipped="true"/>
+ </logging>
+</phpunit>
