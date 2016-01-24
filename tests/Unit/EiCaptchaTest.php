@@ -3,7 +3,7 @@
 $exec_dir = str_replace('modules/eicaptcha', '', trim(shell_exec('pwd')));
 include_once $exec_dir . 'config/config.inc.php';
 
-class ContactFormFieldsTest extends PHPUnit_Framework_TestCase {
+class EiCaptchaTest extends PHPUnit_Framework_TestCase {
     
     //Nom du module
     protected $_moduleName = 'eicaptcha';
