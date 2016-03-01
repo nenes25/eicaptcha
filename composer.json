@@ -1,0 +1,19 @@
+{
+  "name": "nenes25/eicaptcha",
+  "description": "PrestaShop Captcha Module",
+  "homepage": "https://github.com/nenes25/eicaptcha",
+  "license": "AFL - Academic Free License (AFL 3.0)",
+  "authors": [
+    {
+      "name": "Hhennes",
+      "email": "contact@h-hennes.fr"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.2"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "type": "prestashop-module"
+}
