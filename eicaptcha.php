@@ -49,6 +49,7 @@ class eicaptcha extends Module
         if ($this->active && (!Configuration::get('CAPTCHA_PUBLIC_KEY') || !Configuration::get('CAPTCHA_PRIVATE_KEY'))) {
             $this->warning = $this->l('Captcha Module need to be configurated');
         }
+        $this->themes = array( 0 => 'light', 1 => 'dark');
     }
 
     public function install()
@@ -87,6 +88,8 @@ class eicaptcha extends Module
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
             Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
+            Configuration::updateValue('CAPTCHA_THEME', Tools::getValue('CAPTCHA_THEME'));
             
             $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
         }
@@ -170,6 +173,33 @@ class eicaptcha extends Module
                             ),
                         ),
                     ),
+                    array(
+                        'type' => 'text',
+                        'label' => $this->l('Force Captcha language'),
+                        'hint' => $this->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for autodetect'),
+                        'desc' => $this->l('For available language codes see: https://developers.google.com/recaptcha/docs/language'),
+                        'name' => 'CAPTCHA_FORCE_LANG',
+                        'required' => false,
+                    ),
+                    array(
+                        'type' => 'radio',
+                        'label' => $this->l('Theme'),
+                        'name' => 'CAPTCHA_THEME',
+                        'required' => true,
+                        'is_bool' => true,
+                        'values' => array(
+                            array(
+                                'id' => 'clight',
+                                'value' => 0,
+                                'label' => $this->l('Light'),
+                            ),
+                            array(
+                                'id' => 'cdark',
+                                'value' => 1,
+                                'label' => $this->l('Dark'),
+                            ),
+                        ),
+                    ),
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
@@ -209,6 +239,8 @@ class eicaptcha extends Module
             'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
             'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
             'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
+            'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
+            'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
         );
     }
     
@@ -228,7 +260,7 @@ class eicaptcha extends Module
 						var checkCaptchaUrl ="'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php";
 						var RecaptachKey = "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";
 					</script>
-					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>
 					<script type="text/javascript" src="'.$this->_path.'/js/eicaptcha-modules.js"></script>';
             
             return $html;
@@ -277,6 +309,8 @@ class eicaptcha extends Module
             $this->context->smarty->assign('errorSelector', $error_selector);
             $this->context->smarty->assign('formSelector', $form_selector);
             $this->context->smarty->assign('prestashopVersion', $prestashop_version);
+            $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
+            $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
             
             return $this->display(__FILE__, 'hookDisplayCustomerAccountForm.tpl');
         }
@@ -324,10 +358,10 @@ class eicaptcha extends Module
             });
             
             //Recaptcha CallBack Function
-            var onloadCallback = function() {grecaptcha.render("captcha-box", {"sitekey" : "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'"});};
+            var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'", "sitekey" : "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'"});};
             </script>';
 
-        $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>';
+        $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>';
 
         return $js;
     }
