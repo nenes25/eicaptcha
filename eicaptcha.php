@@ -37,7 +37,7 @@ class eicaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.5';
+        $this->version = '0.4.6';
         $this->need_instance = 1;
         
         $this->bootstrap = true;
@@ -55,7 +55,7 @@ class eicaptcha extends Module
     public function install()
     {
         if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('displayCustomerAccountForm') || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
-            || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+            || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0) || !Configuration::updateValue('CAPTCHA_THEME', 0)
         ) {
             return false;
         }
@@ -70,7 +70,7 @@ class eicaptcha extends Module
         }
 
         if (!Configuration::deleteByName('CAPTCHA_PUBLIC_KEY') || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY') || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
-            || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
+            || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT') || !Configuration::deleteByName('CAPTCHA_FORCE_LANG') || !Configuration::deleteByName('CAPTCHA_THEME')
             ) {
             return false;
         }
@@ -89,7 +89,7 @@ class eicaptcha extends Module
             Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
-            Configuration::updateValue('CAPTCHA_THEME', Tools::getValue('CAPTCHA_THEME'));
+            Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
             
             $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
         }
@@ -259,6 +259,7 @@ class eicaptcha extends Module
             $html = '<script type="text/javascript"> 
 						var checkCaptchaUrl ="'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php";
 						var RecaptachKey = "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";
+						var RecaptchaTheme = "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'";
 					</script>
 					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>
 					<script type="text/javascript" src="'.$this->_path.'/js/eicaptcha-modules.js"></script>';
