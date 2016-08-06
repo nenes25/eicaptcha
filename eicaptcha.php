@@ -1,7 +1,6 @@
 <?php
-
 /**
- * 2007-2014 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,11 +23,12 @@
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class eicaptcha extends Module
+class EiCaptcha extends Module
 {
     private $_html = '';
 
@@ -37,7 +37,7 @@ class eicaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.6';
+        $this->version = '0.4.7';
         $this->need_instance = 1;
         
         $this->bootstrap = true;
@@ -262,7 +262,7 @@ class eicaptcha extends Module
 						var RecaptchaTheme = "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'";
 					</script>
 					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>
-					<script type="text/javascript" src="'.$this->_path.'/js/eicaptcha-modules.js"></script>';
+					<script type="text/javascript" src="'.$this->_path.'/views/js/eicaptcha-modules.js"></script>';
             
             return $html;
         }
@@ -296,7 +296,7 @@ class eicaptcha extends Module
                 $form_selector = '#account-creation_form';
                 $prestashop_version = '16';
             } else {
-                $this->context->controller->addCSS($this->_path.'/css/eicaptcha.css');
+                $this->context->controller->addCSS($this->_path.'/views/css/eicaptcha.css');
                 $error_selector = '.error';
                 $form_selector = '#account-creation_form';
                 $prestashop_version = '15';
