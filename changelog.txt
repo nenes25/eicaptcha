@@ -1,7 +1,7 @@
 /**
- * Module Captcha 
+ * Module Captcha
  * Mise en place d'un (re)captcha sur le formulaire de contact et de création de compte
- * © h-hennes 2013-2016 
+ * © h-hennes 2013-2016
  * http://www.h-hennes.fr/blog/
  */
 
@@ -15,7 +15,7 @@
 
  - V 0.2.0 - 2014-08-21 : Nouvelle version qui permets également de mettre en place le captcha dans le formulaire de création de compte (configurable ) // New version which allows to use the captcha on the account creation form (configurable)
  - V 0.2.1 - 2014-09-11 : Correction appel Ajax et constante DS // Ajax Call correction with DS constant
- - V 0.2.2 - 2014-10-06 : Correction désactivation captcha sur le formulaire de création de compte // Correction of captcha activation on create account form 
+ - V 0.2.2 - 2014-10-06 : Correction désactivation captcha sur le formulaire de création de compte // Correction of captcha activation on create account form
  - V 0.3.0 - 2015-01-20 : Option pour passer sur l'API V2 sur le formulaire de contact // Possibility to use API V2 for the contact form
  - V 0.3.1 - 2015-01-22 : Gestion de l'API V2 pour le formulaire de création de compte // API V2 for account creation
  - V 0.4.0 - 2015-02-12 : /!\ Compatible Prestashop > 1.5., API (Re)Captcha V2
@@ -26,3 +26,4 @@
  - V 0.4.5 - 2015-08-12 : Possibilité d'activer / désactiver le captcha sur le formulaire de contact // Add possibilty to enable/disable the captcha on the contact form
  - V 0.4.6 - 2016-03-31 : Configuration du thème et de la langue du captcha // Configuration of theme and lang of captcha ==>  BY PasiC
  - V 0.4.7 - 2016-08-06 : Optimisations code et sécurité // Code optimisations and security
+ - V 0.4.8 - 2016-10-11 : Fix js on account form

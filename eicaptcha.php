@@ -37,9 +37,9 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.7';
+        $this->version = '0.4.8';
         $this->need_instance = 1;
-        
+
         $this->bootstrap = true;
         parent::__construct();
 
@@ -90,7 +90,7 @@ class EiCaptcha extends Module
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
-            
+
             $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
         }
     }
@@ -102,7 +102,7 @@ class EiCaptcha extends Module
     {
         $this->_html .=$this->postProcess();
         $this->_html .= $this->renderForm();
-        
+
         return $this->_html;
     }
 
@@ -207,7 +207,7 @@ class EiCaptcha extends Module
                 )
             ),
             );
-        
+
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $helper->table =  $this->table;
@@ -225,10 +225,10 @@ class EiCaptcha extends Module
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id
         );
-        
+
         return $helper->generateForm(array($fields_form));
     }
-    
+
     /**
      * Get config values to hydrate the helperForm
      */
@@ -243,7 +243,7 @@ class EiCaptcha extends Module
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
         );
     }
-    
+
     /**
      * Hook Header
      */
@@ -253,17 +253,17 @@ class EiCaptcha extends Module
         if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
             return $this->displayCaptchaContactForm();
         }
-        
+
         //Add Javascript in product page in order to display the captcha for the module "sendToAFriend" and "ProductsComments"
         if ($this->context->controller instanceof ProductController) {
-            $html = '<script type="text/javascript"> 
+            $html = '<script type="text/javascript">
 						var checkCaptchaUrl ="'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php";
 						var RecaptachKey = "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";
 						var RecaptchaTheme = "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'";
 					</script>
 					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>
 					<script type="text/javascript" src="'.$this->_path.'/views/js/eicaptcha-modules.js"></script>';
-            
+
             return $html;
         }
     }
@@ -301,8 +301,8 @@ class EiCaptcha extends Module
                 $form_selector = '#account-creation_form';
                 $prestashop_version = '15';
             }
-            
-            $this->context->controller->addJS($this->_path.'/js/eicaptcha.js');
+
+            $this->context->controller->addJS($this->_path.'views/js/eicaptcha.js');
 
             $this->context->smarty->assign('publicKey', $publickey);
             $this->context->smarty->assign('waiting_message', $this->l('Please wait during captcha check'));
@@ -312,7 +312,7 @@ class EiCaptcha extends Module
             $this->context->smarty->assign('prestashopVersion', $prestashop_version);
             $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
             $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
-            
+
             return $this->display(__FILE__, 'hookDisplayCustomerAccountForm.tpl');
         }
     }
@@ -333,12 +333,12 @@ class EiCaptcha extends Module
 
         //Dynamic insertion of the content
         $js = '<script type="text/javascript">
-            
+
             $(document).ready(function(){
-            
+
                //Add div where the captcha will be displayed
                $(".submit").before("<div id=\"captcha-box\"></div>");
-               
+
                //Manage form submit
                 $("#submitMessage").click(function(){
                     //If no response we display an error
@@ -348,16 +348,16 @@ class EiCaptcha extends Module
 								url : "'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php",
 								data : "action=display_captcha_error",
 								success : function(msg){
-									$(".'.$error_class.'").remove();	
+									$(".'.$error_class.'").remove();
 									$("form.'.$form_class.'").before(msg);
 								}
 							});
-                       
+
                         return false;
                     }
                 });
             });
-            
+
             //Recaptcha CallBack Function
             var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'", "sitekey" : "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'"});};
             </script>';
