@@ -6,6 +6,11 @@ This module display Google recaptcha on the following forms :
  - account creation form
  - send to a friend form :( <a href="install-sendtoafriend.md">Installation procedure</a> )
  - product comments form : ( <a href="install-productcomments.md">Installation procedure</a> )
+
+ This module relies upon the override of the ContactController.
+
+ Don't forget to use `composer update` in order to download the necessary recaptcha composer package.
+
  
  For more details about this module  : 
  http://h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/ (FR)
