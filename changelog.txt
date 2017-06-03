@@ -27,3 +27,4 @@
  - V 0.4.6 - 2016-03-31 : Configuration du thème et de la langue du captcha // Configuration of theme and lang of captcha ==>  BY PasiC
  - V 0.4.7 - 2016-08-06 : Optimisations code et sécurité // Code optimisations and security
  - V 0.4.8 - 2016-10-11 : Fix js on account form
+ - V 0.4.9 - 2017-06-14 : Fix PR #7 issues
