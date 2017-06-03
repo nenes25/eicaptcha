@@ -9,7 +9,10 @@ This module display Google recaptcha on the following forms :
 
  This module relies upon the override of the ContactController.
 
- Don't forget to use `composer update` in order to download the necessary recaptcha composer package.
+ The last version used composer to get recaptcha lib.
+ 
+ If you clone the repository don't forget to use `composer update` in order to download the necessary recaptcha composer package.
+ Otherwise you could download the last release wich bundle all necessary files.
 
  
  For more details about this module  : 
