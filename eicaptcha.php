@@ -54,7 +54,7 @@ class EiCaptcha extends Module
 
     public function install()
     {
-        if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('displayCustomerAccountForm') || $this->registerHook('contactFormAccess') ||
+        if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('displayCustomerAccountForm') || !$this->registerHook('contactFormAccess') ||
             !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0) || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0) || !Configuration::updateValue('CAPTCHA_THEME', 0)
         ) {
             return false;
@@ -119,19 +119,19 @@ class EiCaptcha extends Module
                 ),
                 'description' => $this->l('To get your own public and private keys please click on the folowing link').'<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
                 'input' => array(
-                    array(
+					 array(
                         'type' => 'text',
-                        'label' => $this->l('Captcha private key'),
-                        'name' => 'CAPTCHA_PRIVATE_KEY',
-                        'required' => true,
-                        'empty_message' => $this->l('Please fill the captcha private key'),
-                    ),
-                    array(
-                        'type' => 'text',
-                        'label' => $this->l('Captcha public key'),
+                        'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha public key'),
+                    ),
+                    array(
+                        'type' => 'text',
+                        'label' => $this->l('Captcha private key (Secret key)'),
+                        'name' => 'CAPTCHA_PRIVATE_KEY',
+                        'required' => true,
+                        'empty_message' => $this->l('Please fill the captcha private key'),
                     ),
                     array(
                         'type' => 'radio',
@@ -221,11 +221,27 @@ class EiCaptcha extends Module
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id
         );
 
         return $helper->generateForm(array($fields_form));
+    }
+	
+	/**
+     * Get config values to hydrate the helperForm
+     */
+    public function getConfigFieldsValues()
+    {
+        return array(
+            'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
+            'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
+            'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
+            'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
+            'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
+            'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
+        );
     }
 
     /**
