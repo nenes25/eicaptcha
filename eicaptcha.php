@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    Hennes Hervé <contact@h-hennes.fr>
- *  @copyright 2013-2015 Hennes Hervé
+ *  @copyright 2013-2017 Hennes Hervé
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
@@ -59,8 +59,8 @@ class EiCaptcha extends Module
         if (!parent::install()
                 || !$this->registerHook('header')
                 || !$this->registerHook('displayCustomerAccountForm')
-                || !$this->registerHook('actionSubmitAccountBefore')
-                || !$this->registerHook('contactFormSubmitBefore')
+                || !$this->registerHook('actionContactFormSubmitCaptcha')
+                || !$this->registerHook('actionContactFormSubmitBefore')
                 || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
                 || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
                 || !Configuration::updateValue('CAPTCHA_THEME', 0)
@@ -284,20 +284,24 @@ class EiCaptcha extends Module
         }
     }
 
-    public function hookActionSubmitAccountBefore($params)
+    /**
+     * Check captcha before submit account
+     * Custom hook
+     * @param type $params
+     * @return boolean
+     */
+    public function hookActionContactFormSubmitCaptcha($params)
     {
-        /*$context = ContextCore::getContext();
-        $context->controller->errors[] = $this->l('Please validate the captcha field before submitting your request');*/
-
-        var_dump('Well called');
+        $context = ContextCore::getContext();
+        $context->controller->errors[] = $this->l('Please validate the captcha field before submitting your request');
     }
 
     /**
      * Check captcha before submit contact form
-     * new specific hook
+     * new custom hook
      * @return int
      */
-    public function hookContactFormSubmitBefore()
+    public function hookActionContactFormSubmitBefore()
     {
         $context = Context::getContext();
 
