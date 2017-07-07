@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.0';
+        $this->version = '2.0.0.beta';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -50,14 +50,20 @@ class EiCaptcha extends Module
             $this->warning = $this->l('Captcha Module need to be configurated');
         }
         $this->themes = array( 0 => 'light', 1 => 'dark');
-        //$this->dependencies = array('contactform');
+        $this->dependencies = array('contactform');
         $this->ps_versions_compliancy = array('min' => '1.7.1.0', 'max' => _PS_VERSION_);
     }
 
     public function install()
     {
-        if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('displayCustomerAccountForm') || !$this->registerHook('contactFormSubmitBefore') ||
-            !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0) || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0) || !Configuration::updateValue('CAPTCHA_THEME', 0)
+        if (!parent::install()
+                || !$this->registerHook('header')
+                || !$this->registerHook('displayCustomerAccountForm')
+                || !$this->registerHook('actionSubmitAccountBefore')
+                || !$this->registerHook('contactFormSubmitBefore')
+                || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
+                || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+                || !Configuration::updateValue('CAPTCHA_THEME', 0)
         ) {
             return false;
         }
@@ -228,7 +234,7 @@ class EiCaptcha extends Module
 
         return $helper->generateForm(array($fields_form));
     }
-	
+
 	/**
      * Get config values to hydrate the helperForm
      */
@@ -249,10 +255,19 @@ class EiCaptcha extends Module
      */
     public function hookHeader($params)
     {
-        //Display the captcha on the contact page if it's enabled
+        //Add Content box to contact form page in order to display captcha
         if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
-            $this->context->controller->registerJavascript('modules-eicaptcha-contact-form','modules/'.$this->name.'/views/js/eicaptcha-contact-form.js');
-            return $this->displayCaptchaContactForm();
+            $this->context->controller->registerJavascript('modules-eicaptcha-contact-form', 'modules/' . $this->name . '/views/js/eicaptcha-contact-form.js');
+        }
+
+        if ( $this->context->controller instanceof ContactController || $this->context->controller instanceof AuthController ) {
+            //Dynamic insertion of the content
+            $js = '<script type="text/javascript">
+            //Recaptcha CallBack Function
+            var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "' . $this->themes[Configuration::get('CAPTCHA_THEME')] . '", "sitekey" : "' . Configuration::get('CAPTCHA_PUBLIC_KEY') . '"});};
+            </script>';
+
+            $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . Configuration::get('CAPTCHA_FORCE_LANG') . '" async defer></script>';
         }
     }
 
@@ -262,56 +277,29 @@ class EiCaptcha extends Module
     public function hookDisplayCustomerAccountForm($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
-            $publickey = Configuration::get('CAPTCHA_PUBLIC_KEY');
-
-            if (_PS_VERSION_ > '1.6') {
-                $error_selector = '.alert';
-                $form_selector = '#account-creation_form';
-                $prestashop_version = '16';
-            } else {
-                $this->context->controller->addCSS($this->_path.'/views/css/eicaptcha.css');
-                $error_selector = '.error';
-                $form_selector = '#account-creation_form';
-                $prestashop_version = '15';
-            }
-
-            $this->context->controller->addJS($this->_path.'views/js/eicaptcha.js');
-
-            $this->context->smarty->assign('publicKey', $publickey);
-            $this->context->smarty->assign('waiting_message', $this->l('Please wait during captcha check'));
-            $this->context->smarty->assign('checkCaptchaUrl', _MODULE_DIR_.$this->name.'/eicaptcha-ajax.php');
-            $this->context->smarty->assign('errorSelector', $error_selector);
-            $this->context->smarty->assign('formSelector', $form_selector);
-            $this->context->smarty->assign('prestashopVersion', $prestashop_version);
+            $this->context->smarty->assign('publicKey', Configuration::get('CAPTCHA_PUBLIC_KEY'));
             $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
             $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
-
-            return $this->display(__FILE__, 'hookDisplayCustomerAccountForm.tpl');
+            return $this->display(__FILE__, 'views/templates/hook/hookDisplayCustomerAccountForm.tpl');
         }
     }
 
-    /**
-     * Display Captcha on the contact Form Page
-     */
-    private function displayCaptchaContactForm()
-    {   
-        //Dynamic insertion of the content
-        $js = '<script type="text/javascript">
-            //Recaptcha CallBack Function
-            var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'", "sitekey" : "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'"});};
-            </script>';
+    public function hookActionSubmitAccountBefore($params)
+    {
+        /*$context = ContextCore::getContext();
+        $context->controller->errors[] = $this->l('Please validate the captcha field before submitting your request');*/
 
-        $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>';
-
-        return $js;
+        var_dump('Well called');
     }
+
     /**
      * Check captcha before submit contact form
+     * new specific hook
      * @return int
      */
     public function hookContactFormSubmitBefore()
     {
-        $context = ContextCore::getContext();
+        $context = Context::getContext();
 
         // no restriction
         if (! Configuration::get('CAPTCHA_ENABLE_CONTACT', 0)) {

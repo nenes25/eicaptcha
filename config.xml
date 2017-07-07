@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>eicaptcha</name>
+    <displayName><![CDATA[Ei Captcha]]></displayName>
+    <version><![CDATA[2.0.0.beta]]></version>
+    <description><![CDATA[Add a captcha to your website form]]></description>
+    <author><![CDATA[hhennes]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

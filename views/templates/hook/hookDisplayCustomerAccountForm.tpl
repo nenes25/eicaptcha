@@ -23,26 +23,14 @@
 *  http://www.h-hennes.fr/blog/
 *}
 
-{if $prestashopVersion == 15 }
-	<fieldset class="account_creation account_eicaptcha">
-{/if}
-
-<label>{l s='Captcha' mod='eicaptcha'}</label>
-{**
- * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
- * Captcha content is automaticaly added into the selector #captcha-box
- *}
-<div class="g-recaptcha{if $prestashopVersion|escape:'html' == 16 } row {/if}" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
-
-{if $prestashopVersion|escape:'html' == 15 }
-	</fieldset>	
-{/if}
-
-{* Les variables nécessaires au bon fonctionnement du plugin *}
-<script type="text/javascript">
- waiting_message = '{$waiting_message|escape:'html'}';
- checkCaptchaUrl = '{$checkCaptchaUrl|escape:'html'}';
- errorSelector = '{$errorSelector|escape:'html'}';
- formSelector = '{$formSelector|escape:'html'}';
-</script>
-<script src="https://www.google.com/recaptcha/api.js?hl={$captchaforcelang}" async defer></script>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label">{l s='Captcha' mod='eicaptcha'}</label>
+    {**
+     * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
+     * Captcha content is automaticaly added into the selector #captcha-box
+     *}
+     <div class="col-md-9">
+        <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
+     </div>
+    <script src="https://www.google.com/recaptcha/api.js?hl={$captchaforcelang}" async defer></script>
+</div>
