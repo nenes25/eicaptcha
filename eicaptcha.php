@@ -268,6 +268,8 @@ class EiCaptcha extends Module
             </script>';
 
             $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . Configuration::get('CAPTCHA_FORCE_LANG') . '" async defer></script>';
+
+            return $js;
         }
     }
 
