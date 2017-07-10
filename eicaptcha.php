@@ -294,8 +294,9 @@ class EiCaptcha extends Module
      */
     public function hookActionContactFormSubmitCaptcha($params)
     {
-        $context = ContextCore::getContext();
-        $context->controller->errors[] = $this->l('Please validate the captcha field before submitting your request');
+        if ( Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+            $this->_validateCaptcha();
+        }
     }
 
     /**
@@ -305,13 +306,17 @@ class EiCaptcha extends Module
      */
     public function hookActionContactFormSubmitBefore()
     {
-        $context = Context::getContext();
-
-        // no restriction
-        if (! Configuration::get('CAPTCHA_ENABLE_CONTACT', 0)) {
-            return 1;
+        if (Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
+           $this->_validateCaptcha();
         }
+    }
 
+    /**
+     * Validate Captcha
+     */
+    protected function _validateCaptcha()
+    {
+        $context = Context::getContext();
         require_once(__DIR__ . '/vendor/autoload.php');
         $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
         $result = $captcha->verify(Tools::getValue('g-recaptcha-response'),

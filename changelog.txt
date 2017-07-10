@@ -29,4 +29,4 @@
  - V 0.4.8 - 2016-10-11 : Fix js on account form
  - V 0.4.9 - 2017-06-14 : Fix PR #7 issues
 
- - V 2.0.0 Beta - Work in progress for PS 1.7
+ - V 2.0.0 Beta - New version for prestashop 1.7, add only captcha for contact form and account creation
