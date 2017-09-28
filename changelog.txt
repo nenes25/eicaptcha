@@ -1,7 +1,7 @@
 /**
  * Module Captcha
  * Mise en place d'un (re)captcha sur le formulaire de contact et de création de compte
- * © h-hennes 2013-2016
+ * © h-hennes 2013-2017
  * http://www.h-hennes.fr/blog/
  */
 
@@ -28,3 +28,4 @@
  - V 0.4.7 - 2016-08-06 : Optimisations code et sécurité // Code optimisations and security
  - V 0.4.8 - 2016-10-11 : Fix js on account form
  - V 0.4.9 - 2017-06-14 : Fix PR #7 issues
+ - V 0.4.10 - 2017-09-28 : Détection automatique de la langue // Automatic Language detection  + romanian translations | Thank to igPetru 

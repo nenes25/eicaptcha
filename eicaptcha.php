@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.9';
+        $this->version = '0.4.10';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -176,7 +176,7 @@ class EiCaptcha extends Module
                     array(
                         'type' => 'text',
                         'label' => $this->l('Force Captcha language'),
-                        'hint' => $this->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for autodetect'),
+                        'hint' => $this->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for using customers FO language selection'),
                         'desc' => $this->l('For available language codes see: https://developers.google.com/recaptcha/docs/language'),
                         'name' => 'CAPTCHA_FORCE_LANG',
                         'required' => false,
@@ -243,12 +243,26 @@ class EiCaptcha extends Module
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
         );
     }
+	
+    /**
+     * Get lang settings
+     * @return string
+     */
+    public function langSettings() {
+        if (empty(Configuration::get('CAPTCHA_FORCE_LANG'))) {
+            return $iso_code = $this->context->language->iso_code;
+        } else {
+            return $iso_code = Configuration::get('CAPTCHA_FORCE_LANG');
+        }
+    }
 
     /**
      * Hook Header
      */
     public function hookHeader($params)
     {
+	$iso_code = $this->langSettings();
+        
         //Display the captcha on the contact page if it's enabled
         if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
             return $this->displayCaptchaContactForm();
@@ -261,7 +275,7 @@ class EiCaptcha extends Module
 						var RecaptachKey = "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";
 						var RecaptchaTheme = "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'";
 					</script>
-					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>
+					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.$iso_code.'" async defer></script>
 					<script type="text/javascript" src="'.$this->_path.'/views/js/eicaptcha-modules.js"></script>';
 
             return $html;
@@ -288,6 +302,8 @@ class EiCaptcha extends Module
      */
     public function hookDisplayCustomerAccountForm($params)
     {
+	$iso_code = $this->langSettings();
+        
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             $publickey = Configuration::get('CAPTCHA_PUBLIC_KEY');
 
@@ -303,14 +319,14 @@ class EiCaptcha extends Module
             }
 
             $this->context->controller->addJS($this->_path.'views/js/eicaptcha.js');
-
+			
             $this->context->smarty->assign('publicKey', $publickey);
             $this->context->smarty->assign('waiting_message', $this->l('Please wait during captcha check'));
             $this->context->smarty->assign('checkCaptchaUrl', _MODULE_DIR_.$this->name.'/eicaptcha-ajax.php');
             $this->context->smarty->assign('errorSelector', $error_selector);
             $this->context->smarty->assign('formSelector', $form_selector);
             $this->context->smarty->assign('prestashopVersion', $prestashop_version);
-            $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
+            $this->context->smarty->assign('captchaforcelang', $iso_code);
             $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
 
             return $this->display(__FILE__, 'hookDisplayCustomerAccountForm.tpl');
@@ -322,6 +338,7 @@ class EiCaptcha extends Module
      */
     private function displayCaptchaContactForm()
     {
+	$iso_code = $this->langSettings();
         //Css class depends from Prestashop version
         if (_PS_VERSION_ > '1.6') {
             $error_class = 'alert';
@@ -362,7 +379,7 @@ class EiCaptcha extends Module
             var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'", "sitekey" : "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'"});};
             </script>';
 
-        $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.Configuration::get('CAPTCHA_FORCE_LANG').'" async defer></script>';
+        $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.$iso_code.'" async defer></script>';
 
         return $js;
     }
