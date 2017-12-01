@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.0.beta';
+        $this->version = '2.0.1';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -256,11 +256,29 @@ class EiCaptcha extends Module
     public function hookHeader($params)
     {
         //Add Content box to contact form page in order to display captcha
-        if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
-            $this->context->controller->registerJavascript('modules-eicaptcha-contact-form', 'modules/' . $this->name . '/views/js/eicaptcha-contact-form.js');
+        if ( $this->context->controller instanceof ContactController
+             && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+            ) {
+            
+            $this->context->controller->registerJavascript(
+                'modules-eicaptcha-contact-form',
+                'modules/'.$this->name.'/views/js/eicaptcha-contact-form.js'
+            );
+            $this->context->controller->registerStylesheet(
+                'module-eicaptcha',
+                'modules/'.$this->name.'/views/css/eicaptcha.css'
+            );
         }
 
-        if ( $this->context->controller instanceof ContactController || $this->context->controller instanceof AuthController ) {
+        if ( $this->context->controller instanceof ContactController
+            || $this->context->controller instanceof AuthController 
+            ) {
+
+            $this->context->controller->registerStylesheet(
+                'module-eicaptcha',
+                'modules/'.$this->name.'/views/css/eicaptcha.css'
+            );
+
             //Dynamic insertion of the content
             $js = '<script type="text/javascript">
             //Recaptcha CallBack Function

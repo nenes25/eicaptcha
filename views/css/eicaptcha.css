@@ -1,0 +1,12 @@
+.contact-form form .form-fields #captcha-box > div{float: right;}
+.contact-form form .form-footer{clear: both;padding-top: 1rem;}
+@media screen and (max-width: 767px){
+    #contact #left-column,
+    #contact #content-wrapper{padding-left: 0!important;padding-right: 0!important;width: 100%;}
+    .contact-form form .form-fields #captcha-box{position: relative;min-height: 78px;}
+    .contact-form form .form-fields #captcha-box > div{float: none;position: absolute;left: 50%;top: 0;transform: translate(-50%,0);}
+}
+@media screen and (max-width: 379px){
+    .register-form form .form-group .g-recaptcha{position: relative;min-height: 78px;}
+    .register-form form .form-group .g-recaptcha > div{float: none;position: absolute;left: 50%;top: 0;transform: translate(-50%,0);}
+}
