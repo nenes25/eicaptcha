@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.10';
+        $this->version = '0.4.11';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -100,6 +100,7 @@ class EiCaptcha extends Module
      */
     public function getContent()
     {
+        $this->_html .= $this->_checkComposer();
         $this->_html .=$this->postProcess();
         $this->_html .= $this->renderForm();
 
@@ -407,5 +408,22 @@ class EiCaptcha extends Module
         }
 
         return 1;
+    }
+
+
+    /**
+     * Check if needed composer directory is present
+     */
+    protected function _checkComposer()
+    {
+        if (!is_dir(dirname(__FILE__).'/vendor')) {
+            $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
+            return $this->displayError(
+                    sprintf($errorMessage, dirname(__FILE__),
+                        'https://github.com/nenes25/eicaptcha/releases')
+            );
+        }
+
+        return '';
     }
 }
