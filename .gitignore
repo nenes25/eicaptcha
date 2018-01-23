@@ -1,2 +1,4 @@
 vendor
 composer.lock
+.github/config.php
+.github/eicaptcha.zip
