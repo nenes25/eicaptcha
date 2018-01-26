@@ -17,10 +17,24 @@ if ($argc < 2) {
 
 //On vérifie que le tag match bien le pattern
 $release = $argv[1];
-if (!preg_match('#^[0-2]{1}\.[0-9]{1}\.[0-9]{1,}$#', $release)) {
+if (!preg_match('#^([0-2]{1})\.[0-9]{1}\.[0-9]{1,}$#', $release,$version)) {
     exit("Le numero de release doit matcher le pattern ^[0-2]{1}\.[0-9]{1}\.[0-9]{1,}$# \n");
 }
 
+//Définition de la branche en fonction de la version
+switch ( $version[1]){
+    case 0:
+        $gitBranch='master';
+        $psVersion = ' Ps version under 1.7';
+        break;
+    case 2:
+        $gitBranch='17';
+        $psVersion = ' PS 1.7';
+        break;
+    default:
+        exit("Le pattern de version ne correspond pas à une branche");
+        break;
+}
 echo "Vérification de l'existance de la release \n";
 
 /**
@@ -59,9 +73,9 @@ echo "Création de la release \n";
 
 $releaseDatas = array(
     "tag_name" => $release,
-    "target_commit" => 'master',
+    "target_commit" => $gitBranch,
     "name" => $release,
-    "body" => "Release of version ".$release." see changelog.txt",
+    "body" => "Release of version ".$release." for ".$psVersion." see changelog.txt for details",
     //Passer à true pour debug
     "draft" => false,
     "prerelease" => false,

@@ -1,7 +1,7 @@
 /**
  * Module Captcha
  * Mise en place d'un (re)captcha sur le formulaire de contact et de création de compte
- * © h-hennes 2013-2017
+ * © h-hennes 2013-2018
  * http://www.h-hennes.fr/blog/
  */
 
@@ -29,4 +29,5 @@
  - V 0.4.8 - 2016-10-11 : Fix js on account form
  - V 0.4.9 - 2017-06-14 : Fix PR #7 issues
  - V 0.4.10 - 2017-09-28 : Détection automatique de la langue // Automatic Language detection  + romanian translations | Thank to igPetru
- - V 0.4.11 - 2018-01-05 : Message d'erreur si le dossier composer n'est pas présent // Warning message if composer directory is not present 
+ - V 0.4.11 - 2018-01-05 : Message d'erreur si le dossier composer n'est pas présent // Warning message if composer directory is not present
+ - V 0.4.12 - 2018-01-26 : Verification de la version de prestashop pour ne pas l'installer si supérieur à 1.7 //  Check if PS version is under 1.7 to allow install

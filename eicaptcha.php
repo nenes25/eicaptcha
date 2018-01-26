@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.11';
+        $this->version = '0.4.12';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -50,6 +50,7 @@ class EiCaptcha extends Module
             $this->warning = $this->l('Captcha Module need to be configurated');
         }
         $this->themes = array( 0 => 'light', 1 => 'dark');
+        $this->ps_versions_compliancy = array('min' => '1.5.0', 'max' => '1.7.0');
     }
 
     public function install()
