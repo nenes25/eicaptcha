@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.12';
+        $this->version = '0.5.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -50,7 +50,7 @@ class EiCaptcha extends Module
             $this->warning = $this->l('Captcha Module need to be configurated');
         }
         $this->themes = array( 0 => 'light', 1 => 'dark');
-        $this->ps_versions_compliancy = array('min' => '1.5.0', 'max' => '1.7.0');
+        $this->ps_versions_compliancy = array('min' => '1.6.1', 'max' => '1.7.0');
     }
 
     public function install()
@@ -89,6 +89,8 @@ class EiCaptcha extends Module
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
             Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_PRODUCTCOMMENTS', (int) Tools::getValue('CAPTCHA_ENABLE_PRODUCTCOMMENTS'));
+            Configuration::updateValue('CAPTCHA_ENABLE_SENDTOAFRIEND', (int) Tools::getValue('CAPTCHA_ENABLE_SENDTOAFRIEND'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
 
@@ -176,6 +178,46 @@ class EiCaptcha extends Module
                         ),
                     ),
                     array(
+                        'type' => 'radio',
+                        'label' => $this->l('Enable Captcha for sendtoafriend module'),
+                        'name' => 'CAPTCHA_ENABLE_SENDTOAFRIEND',
+                        'required' => true,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value'=> 1,
+                                'label'=> $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value'=> 0,
+                                'label'=> $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'radio',
+                        'label' => $this->l('Enable Captcha for productcomment module'),
+                        'name' => 'CAPTCHA_ENABLE_PRODUCTCOMMENTS',
+                        'required' => true,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value'=> 1,
+                                'label'=> $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value'=> 0,
+                                'label'=> $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
                         'type' => 'text',
                         'label' => $this->l('Force Captcha language'),
                         'hint' => $this->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for using customers FO language selection'),
@@ -224,8 +266,8 @@ class EiCaptcha extends Module
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
 			'fields_value' => $this->getConfigFieldsValues(),
-            'languages' => $this->context->controller->getLanguages(),
-            'id_language' => $this->context->language->id
+                        'languages' => $this->context->controller->getLanguages(),
+                        'id_language' => $this->context->language->id
         );
 
         return $helper->generateForm(array($fields_form));
@@ -241,6 +283,8 @@ class EiCaptcha extends Module
             'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
             'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
             'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
+            'CAPTCHA_ENABLE_PRODUCTCOMMENTS' => Tools::getValue('CAPTCHA_ENABLE_PRODUCTCOMMENTS', Configuration::get('CAPTCHA_ENABLE_PRODUCTCOMMENTS')),
+            'CAPTCHA_ENABLE_SENDTOAFRIEND' => Tools::getValue('CAPTCHA_ENABLE_SENDTOAFRIEND', Configuration::get('CAPTCHA_ENABLE_SENDTOAFRIEND')),
             'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
         );
@@ -272,6 +316,26 @@ class EiCaptcha extends Module
 
         //Add Javascript in product page in order to display the captcha for the module "sendToAFriend" and "ProductsComments"
         if ($this->context->controller instanceof ProductController) {
+
+            //Send to a friend functionnality
+            if ( Configuration::get('CAPTCHA_ENABLE_SENDTOAFRIEND')) {                
+                //Remove initial js of module sendtoafriend
+                $this->context->controller->removeJS(_THEME_JS_DIR_.'modules/sendtoafriend/sendtoafriend.js');
+                //Replace by a new specific one + new css file
+                $this->context->controller->addJs($this->_path.'views/js/sendtoafriend.js');
+                $this->context->controller->addCss($this->_path.'views/css/sendtoafriend.css');
+            }
+
+            //ProductComment functionnality
+            if ( Configuration::get('CAPTCHA_ENABLE_PRODUCTCOMMENTS')) {
+                //Remove initial js of module sendtoafriend
+                $this->context->controller->removeJS(_THEME_JS_DIR_.'modules/productcomments/productcomments.js');
+                //Replace by a new specific one + new css file
+                $this->context->controller->addJs($this->_path.'views/js/productcomments.js');
+                $this->context->controller->addCss($this->_path.'views/css/productcomments.css');
+            }
+
+            
             $html = '<script type="text/javascript">
 						var checkCaptchaUrl ="'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php";
 						var RecaptachKey = "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";
@@ -291,11 +355,40 @@ class EiCaptcha extends Module
     public function hookAjaxCall()
     {
         $action = Tools::getValue('action');
+        require_once(__DIR__.'/vendor/autoload.php');
 
+        //Display error messsage
         if ($action == 'display_captcha_error') {
-            $this->context->smarty->assign('errors', array($this->l('Please validate the captcha field before submitting your request')));
-            $error_block = trim(preg_replace("#\n#", '', $this->context->smarty->fetch(_PS_THEME_DIR_.'errors.tpl')));
+            $this->context->smarty->assign('errors',
+                array($this->l('Please validate the captcha field before submitting your request')));
+            $error_block = trim(preg_replace("#\n#", '',
+                    $this->context->smarty->fetch(_PS_THEME_DIR_.'errors.tpl')));
             echo $error_block;
+        }
+
+        //Send message to friend, check captcha before sending request to module
+        if ($action == 'sendToMyFriend') {
+            $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
+            $result  = $captcha->verify(Tools::getValue('g-recaptcha-response'),
+                Tools::getRemoteAddr());
+
+            if (!$result->isSuccess()) {
+                return '0';
+            } else {
+                $this->_sendToAFriendMessage();
+            }
+        }
+
+        if ( $action == 'add_comment'){
+               $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
+            $result  = $captcha->verify(Tools::getValue('g-recaptcha-response'),
+                Tools::getRemoteAddr());
+
+            if (!$result->isSuccess()) {
+                return '0';
+            } else {
+                $this->_AddComment();
+            }
         }
     }
 
@@ -308,11 +401,11 @@ class EiCaptcha extends Module
         
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             $publickey = Configuration::get('CAPTCHA_PUBLIC_KEY');
-
+            
             if (_PS_VERSION_ > '1.6') {
-                $error_selector = '.alert';
-                $form_selector = '#account-creation_form';
-                $prestashop_version = '16';
+            $error_selector = '.alert';
+            $form_selector = '#account-creation_form';
+            $prestashop_version = '16';
             } else {
                 $this->context->controller->addCSS($this->_path.'/views/css/eicaptcha.css');
                 $error_selector = '.error';
@@ -320,8 +413,8 @@ class EiCaptcha extends Module
                 $prestashop_version = '15';
             }
 
-            $this->context->controller->addJS($this->_path.'views/js/eicaptcha.js');
-			
+            $this->context->controller->addJS($this->_path.'views/js/eicaptcha.js');		
+
             $this->context->smarty->assign('publicKey', $publickey);
             $this->context->smarty->assign('waiting_message', $this->l('Please wait during captcha check'));
             $this->context->smarty->assign('checkCaptchaUrl', _MODULE_DIR_.$this->name.'/eicaptcha-ajax.php');
@@ -343,8 +436,8 @@ class EiCaptcha extends Module
 	$iso_code = $this->langSettings();
         //Css class depends from Prestashop version
         if (_PS_VERSION_ > '1.6') {
-            $error_class = 'alert';
-            $form_class = 'contact-form-box';
+        $error_class = 'alert';
+        $form_class = 'contact-form-box';
         } else {
             $error_class = 'error';
             $form_class = 'std';
@@ -427,4 +520,157 @@ class EiCaptcha extends Module
 
         return '';
     }
+
+    /**
+     * Send Message if Captcha is filled
+     */
+    protected function _sendToAFriendMessage()
+    {
+        include_once(_PS_MODULE_DIR_.'sendtoafriend/sendtoafriend.php');
+
+        $module = new SendToAFriend();
+
+        if (Module::isEnabled('sendtoafriend') && Tools::getValue('action') == 'sendToMyFriend'
+            && Tools::getValue('secure_key') == $module->secure_key) {
+            // Retrocompatibilty with old theme
+            if ($friend = Tools::getValue('friend')) {
+                $friend = Tools::jsonDecode($friend, true);
+
+                foreach ($friend as $key => $value) {
+                    if ($value['key'] == 'friend_name')
+                            $friendName = $value['value'];
+                    elseif ($value['key'] == 'friend_email')
+                            $friendMail = $value['value'];
+                    elseif ($value['key'] == 'id_product')
+                            $id_product = $value['value'];
+                }
+            }
+            else {
+                $friendName = Tools::getValue('name');
+                $friendMail = Tools::getValue('email');
+                $id_product = Tools::getValue('id_product');
+            }
+
+            if (!$friendName || !$friendMail || !$id_product) die('0');
+
+            $isValidEmail = Validate::isEmail($friendMail);
+            $isValidName  = $module->isValidName($friendName);
+
+            if (false === $isValidName || false === $isValidEmail) {
+                die('0');
+            }
+
+            /* Email generation */
+            $product     = new Product((int) $id_product, false,
+                $module->context->language->id);
+            $productLink = $module->context->link->getProductLink($product);
+            $customer    = $module->context->cookie->customer_firstname ? $module->context->cookie->customer_firstname.' '.$module->context->cookie->customer_lastname
+                    : $module->l('A friend', 'sendtoafriend_ajax');
+
+            $templateVars = array(
+                '{product}' => $product->name,
+                '{product_link}' => $productLink,
+                '{customer}' => $customer,
+                '{name}' => Tools::safeOutput($friendName)
+            );
+
+            /* Email sending */
+            if (!Mail::Send((int) $module->context->cookie->id_lang,
+                    'send_to_a_friend',
+                    sprintf(Mail::l('%1$s sent you a link to %2$s',
+                            (int) $module->context->cookie->id_lang), $customer,
+                        $product->name), $templateVars, $friendMail, null,
+                    ($module->context->cookie->email ? $module->context->cookie->email
+                            : null),
+                    ($module->context->cookie->customer_firstname ? $module->context->cookie->customer_firstname.' '.$module->context->cookie->customer_lastname
+                            : null), null, null,
+                    _PS_MODULE_DIR_.'sendtoafriend/mails/')) die('0');
+            die('1');
+        }
+        die('0');
+    }
+
+    /**
+     * Add Comment if captcha is filled
+     */
+    protected function _AddComment()
+	{
+		$module_instance = new ProductComments();
+
+		$result = true;
+		$id_guest = 0;
+		$id_customer = $this->context->customer->id;
+		if (!$id_customer)
+			$id_guest = $this->context->cookie->id_guest;
+
+		$errors = array();
+		// Validation
+		if (!Validate::isInt(Tools::getValue('id_product')))
+			$errors[] = $module_instance->l('Product ID is incorrect', 'default');
+		if (!Tools::getValue('title') || !Validate::isGenericName(Tools::getValue('title')))
+			$errors[] = $module_instance->l('Title is incorrect', 'default');
+		if (!Tools::getValue('content') || !Validate::isMessage(Tools::getValue('content')))
+			$errors[] = $module_instance->l('Comment is incorrect', 'default');
+		if (!$id_customer && (!Tools::isSubmit('customer_name') || !Tools::getValue('customer_name') || !Validate::isGenericName(Tools::getValue('customer_name'))))
+			$errors[] = $module_instance->l('Customer name is incorrect', 'default');
+		if (!$this->context->customer->id && !Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'))
+			$errors[] = $module_instance->l('You must be connected in order to send a comment', 'default');
+		if (!count(Tools::getValue('criterion')))
+			$errors[] = $module_instance->l('You must give a rating', 'default');
+
+		$product = new Product(Tools::getValue('id_product'));
+		if (!$product->id)
+			$errors[] = $module_instance->l('Product not found', 'default');
+
+		if (!count($errors))
+		{
+			$customer_comment = ProductComment::getByCustomer(Tools::getValue('id_product'), $id_customer, true, $id_guest);
+			if (!$customer_comment || ($customer_comment && (strtotime($customer_comment['date_add']) + (int)Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) < time()))
+			{
+
+				$comment = new ProductComment();
+				$comment->content = strip_tags(Tools::getValue('content'));
+				$comment->id_product = (int)Tools::getValue('id_product');
+				$comment->id_customer = (int)$id_customer;
+				$comment->id_guest = $id_guest;
+				$comment->customer_name = Tools::getValue('customer_name');
+				if (!$comment->customer_name)
+					$comment->customer_name = pSQL($this->context->customer->firstname.' '.$this->context->customer->lastname);
+				$comment->title = Tools::getValue('title');
+				$comment->grade = 0;
+				$comment->validate = 0;
+				$comment->save();
+
+				$grade_sum = 0;
+				foreach(Tools::getValue('criterion') as $id_product_comment_criterion => $grade)
+				{
+					$grade_sum += $grade;
+					$product_comment_criterion = new ProductCommentCriterion($id_product_comment_criterion);
+					if ($product_comment_criterion->id)
+						$product_comment_criterion->addGrade($comment->id, $grade);
+				}
+
+				if (count(Tools::getValue('criterion')) >= 1)
+				{
+					$comment->grade = $grade_sum / count(Tools::getValue('criterion'));
+					// Update Grade average of comment
+					$comment->save();
+				}
+				$result = true;
+				Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath('productcomments-reviews.tpl'));
+			}
+			else
+			{
+				$result = false;
+				$errors[] = $module_instance->l('Please wait before posting another comment', 'default').' '.Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME').' '.$module_instance->l('seconds before posting a new comment', 'default');
+			}
+		}
+		else
+			$result = false;
+
+		die(Tools::jsonEncode(array(
+			'result' => $result,
+			'errors' => $errors
+		)));
+	}
 }

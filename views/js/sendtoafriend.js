@@ -23,7 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-
+    
+    //Append a div at end of the form to hold the captcha
+    $('#send_friend_form_content .form_container')
+            .after('<div class="captcha-content"><label for="captcha">Captcha</label><div id="recaptchaSendToAFriend"></div>');
+    
 	if (!!$.prototype.fancybox)
 		$('#send_friend_button').fancybox({
 			'hideOnContentClick': false
@@ -37,8 +41,8 @@ $(document).ready(function(){
 	$('#sendEmail').click(function(){
 		var name = $('#friend_name').val();
 		var email = $('#friend_email').val();
-		
-                //GEstion Ajax du module eicaptcha
+                
+                //Vérification ajax du captcha
                  if (!grecaptcha.getResponse()) {
                     $.ajax({
                         method: "POST",
@@ -51,10 +55,11 @@ $(document).ready(function(){
 
                     return false;
                 } 
-                if (name && email && !isNaN(id_product))
+		if (name && email && !isNaN(id_product))
 		{
 			$.ajax({
-				url: baseDir + 'modules/sendtoafriend/sendtoafriend_ajax.php?rand=' + new Date().getTime(),
+                                //replace module original link by eicaptcha link
+				url: checkCaptchaUrl+'?rand=' + new Date().getTime(),
 				type: "POST",
 				headers: {"cache-control": "no-cache"},
 				data: {
@@ -62,7 +67,8 @@ $(document).ready(function(){
 					secure_key: stf_secure_key,
 					name: name, 
 					email: email, 
-					id_product: id_product
+					id_product: id_product,
+                                        'g-recaptcha-response': $('#g-recaptcha-response').val()
 				},
 				dataType: "json",
 				success: function(result) {

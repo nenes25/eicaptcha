@@ -29,7 +29,7 @@ $(document).ready(function(){
 	if (!!$.prototype.fancybox)
 		$('.open-comment-form').fancybox({
 			'autoSize' : false,
-			'width' : 700, // EiCaptcha Changement largeur fancyBox
+			'width' : 600,
 			'height' : 'auto',
 			'hideOnContentClick': false
 		});
@@ -95,8 +95,7 @@ $(document).ready(function(){
 	$(document).on('click', '#submitNewMessage', function(e){
 		// Kill default behaviour
 		e.preventDefault();
-
-                //GEstion Ajax du captcha
+                //EiCaptcha Js verification
                  if (!grecaptcha.getResponse(recaptchaProductComment)) {
                     $.ajax({
                         method: "POST",
@@ -106,7 +105,6 @@ $(document).ready(function(){
                             $("#new_comment_form_error").html("").html(msg).show();
                         }
                         });
-
                     return false;
                 }
                 else {
@@ -114,9 +112,6 @@ $(document).ready(function(){
                 }
 
 		// Form element
-                
-                
-                
 
         url_options = '?';
         if (!productcomments_url_rewrite)
