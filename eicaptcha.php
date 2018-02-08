@@ -55,8 +55,12 @@ class EiCaptcha extends Module
 
     public function install()
     {
-        if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('displayCustomerAccountForm') || !$this->registerHook('contactFormAccess') ||
-            !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0) || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0) || !Configuration::updateValue('CAPTCHA_THEME', 0)
+        if (!parent::install() || !$this->registerHook('header') 
+                || !$this->registerHook('displayCustomerAccountForm') 
+                || !$this->registerHook('contactFormAccess') 
+                || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0) 
+                || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+                || !Configuration::updateValue('CAPTCHA_THEME', 0)
         ) {
             return false;
         }
@@ -178,46 +182,6 @@ class EiCaptcha extends Module
                         ),
                     ),
                     array(
-                        'type' => 'radio',
-                        'label' => $this->l('Enable Captcha for sendtoafriend module'),
-                        'name' => 'CAPTCHA_ENABLE_SENDTOAFRIEND',
-                        'required' => true,
-                        'class' => 't',
-                        'is_bool' => true,
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value'=> 1,
-                                'label'=> $this->l('Enabled'),
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value'=> 0,
-                                'label'=> $this->l('Disabled'),
-                            ),
-                        ),
-                    ),
-                    array(
-                        'type' => 'radio',
-                        'label' => $this->l('Enable Captcha for productcomment module'),
-                        'name' => 'CAPTCHA_ENABLE_PRODUCTCOMMENTS',
-                        'required' => true,
-                        'class' => 't',
-                        'is_bool' => true,
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value'=> 1,
-                                'label'=> $this->l('Enabled'),
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value'=> 0,
-                                'label'=> $this->l('Disabled'),
-                            ),
-                        ),
-                    ),
-                    array(
                         'type' => 'text',
                         'label' => $this->l('Force Captcha language'),
                         'hint' => $this->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for using customers FO language selection'),
@@ -251,7 +215,74 @@ class EiCaptcha extends Module
                 )
             ),
             );
+        
+            //Sendtoafriend module
+            if ( Module::isInstalled('sendtoafriend') && Module::isEnabled('sendtoafriend')) {
 
+                $fields_form['form']['input'][] =  array(
+                            'type' => 'radio',
+                            'label' => $this->l('Enable Captcha for sendtoafriend module'),
+                            'name' => 'CAPTCHA_ENABLE_SENDTOAFRIEND',
+                            'required' => true,
+                            'class' => 't',
+                            'is_bool' => true,
+                            'values' => array(
+                                array(
+                                    'id' => 'active_on',
+                                    'value'=> 1,
+                                    'label'=> $this->l('Enabled'),
+                                ),
+                                array(
+                                    'id' => 'active_off',
+                                    'value'=> 0,
+                                    'label'=> $this->l('Disabled'),
+                                ),
+                            ),
+                        );
+            }
+            
+            //Productcomments module
+            if ( Module::isInstalled('productcomments') && Module::isEnabled('productcomments')) {
+
+                $fields_form['form']['input'][] =  array(
+                        'type' => 'radio',
+                        'label' => $this->l('Enable Captcha for productcomment module'),
+                        'name' => 'CAPTCHA_ENABLE_PRODUCTCOMMENTS',
+                        'required' => true,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value'=> 1,
+                                'label'=> $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value'=> 0,
+                                'label'=> $this->l('Disabled'),
+                            ),
+                        ),
+                    );
+            }
+             
+            //Warning for productcomment or sendtoafriend and theme
+            if ( 
+                  ( ( Module::isInstalled('productcomments') && Module::isEnabled('productcomments') )
+                    ||  ( Module::isInstalled('sendtoafriend') && Module::isEnabled('sendtoafriend') )
+                  )
+                  && _THEME_NAME_ != 'default-bootstrap'
+               ){
+                $instructionsUrl = '<a href="https://github.com/nenes25/eicaptcha/blob/master/install-sendtoafriend.md" target="_blank">github</a>';
+                $fields_form['form']['input'][] =  array(
+                    'type' => 'html',
+                    'name' => 'theme_warning',
+                    'html_content' => '<div class="alert alert-warning">'
+                    .sprintf($this->l('Warning : productscomments and/or sendtoafriend module captcha is only tested with default theme, please read instructions on %s'),$instructionsUrl).
+                    '</div>',
+                    );
+            }
+                
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $helper->table =  $this->table;
