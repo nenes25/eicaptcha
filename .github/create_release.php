@@ -1,10 +1,8 @@
 <?php
 /**
- * Script Beta de création de la release directement sur github
- * Améliorations à mettre en place
- *  - factorisation appels curls
- *  - Traduction script en anglais
- *  - 
+ * Php part of script to relase module on github
+ * Improvments needed
+ *  - curls call factorisation
  */
 require_once dirname(__FILE__).'/config.php';
 
@@ -12,13 +10,13 @@ $baseApiUrl = 'https://api.github.com/repos/nenes25/eicaptcha/';
 
 //On vérifie qu'un numéro de release est passé au script
 if ($argc < 2) {
-    exit("Merci de saisir un numéro de release \n");
+    exit("Please give a release number \n");
 }
 
 //On vérifie que le tag match bien le pattern
 $release = $argv[1];
 if (!preg_match('#^([0-2]{1})\.[0-9]{1}\.[0-9]{1,}$#', $release,$version)) {
-    exit("Le numero de release doit matcher le pattern ^[0-2]{1}\.[0-9]{1}\.[0-9]{1,}$# \n");
+    exit("Release number should match pattern : ^[0-2]{1}\.[0-9]{1}\.[0-9]{1,}$# \n");
 }
 
 //Définition de la branche en fonction de la version
@@ -32,44 +30,41 @@ switch ( $version[1]){
         $psVersion = ' PS 1.7';
         break;
     default:
-        exit("Le pattern de version ne correspond pas à une branche");
+        exit("This pattern doesn't match with a branch");
         break;
 }
-echo "Vérification de l'existance de la release \n";
+echo "Check if the release exists \n";
 
-/**
- * On vérifie que la release existe
- */
 $ch                = curl_init();
 curl_setopt($ch, CURLOPT_URL, $baseApiUrl.'releases/tags/'.$release);
 $curlGlobalOptions = array(
     CURLOPT_USERAGENT => $github_user,
     CURLOPT_USERNAME => $github_user,
     CURLOPT_PASSWORD => $github_password,
-    CURLOPT_RETURNTRANSFER => true, //Renvoie la réponse dans une variable
+    CURLOPT_RETURNTRANSFER => true, //Response in variable
 );
 
-//Définition des options curl
+//Curl options
 curl_setopt_array($ch, $curlGlobalOptions);
 
 $content = curl_exec($ch);
 $info    = curl_getinfo($ch);
 curl_close($ch);
 
-//Le tag existe déjà fin du script
+//It the tag already exists, end of the script
 if ($info['http_code'] == 200) {
-    echo "le tag existe déjà \n";
-    exit('fin du script');
+    echo "this tag already exists \n";
+    exit('end of the script');
 }
 
-//Le tag n'existe pas encore
+/*If the tag doesn't exist
 if ($info['http_code'] == 404) {
-    echo "le tag n'existe pas encore \n";
-}
+    echo "The tag doesn't exist \n";
+}*/
 
 //@Todo La version du tag ne doit pas être inférieure à la dernière release
-//Création de la release en mode brouillon
-echo "Création de la release \n";
+
+echo "Creation of the release \n";
 
 $releaseDatas = array(
     "tag_name" => $release,
@@ -90,9 +85,9 @@ $draftExec = curl_exec($curlDraft);
 $draftInfo = curl_getinfo($curlDraft);
 
 if ($draftInfo['http_code'] == '201') {
-    echo "Release créé avec succès \n";
+    echo "Release created with success \n";
 } else {
-    exit("Erreur dans la création de la release \n");
+    exit("Error during the creation of the release \n");
 }
 curl_close($curlDraft);
 
@@ -101,15 +96,21 @@ $draftResponse  = json_decode($draftExec);
 $assetUploadUrl = str_replace('{?name,label}', '', $draftResponse->upload_url);
 
 // Création de l'archive
-echo "Création de l'archive \n";
+$archiveName = 'eicaptcha.zip';
+echo "Creation of zip archive \n";
 
 //Vérification de l'existance du dossier vendor
 if (!is_dir(dirname(__FILE__).'/../vendor')) {
-    echo "Attention le dossier vendor n'existe pas : arrêt du script \n";
+    echo "Error : the vendor directory doesn't exist : end of the script \n";
+}
+
+//Suppression de l'archive si elle existe déjà
+if ( file_exists($archiveName)) {
+    unlink($archiveName);
 }
 
 $zip = new ZipArchive();
-$ret = $zip->open('eicaptcha.zip', ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
+$ret = $zip->open($archiveName, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
 if ($ret !== TRUE) {
     printf("Error unable to open archive %d", $ret);
 } else {
@@ -128,18 +129,16 @@ if ($ret !== TRUE) {
             continue;
         }
         if (is_dir($file) === true) {
-            $zip->addEmptyDir(str_replace($source.'/', '', $file.'/'));
+            $zip->addEmptyDir(str_replace($source.'/', '', 'eicaptcha/'.$file.'/'));
         } else if (is_file($file) === true) {
-            $zip->addFromString(str_replace($source.'/', '', $file),
+            $zip->addFromString(str_replace($source.'/', '', 'eicaptcha/'.$file),
                 file_get_contents($file));
         }
     }
 }
 $zip->close();
 
-echo "archive créée \n";
-
-echo "Ajout de la pièce jointe à la relase \n";
+echo "Add zip archive to release \n";
 //Ajout de la pièce jointe à la release
 $curlUpload = curl_init();
 curl_setopt_array($curlUpload, $curlGlobalOptions);
@@ -155,6 +154,6 @@ $uploadExec = curl_exec($curlUpload);
 $uploadInfo = curl_getinfo($curlUpload);
 curl_close($curlUpload);
 
-echo "La release est publiée \n";
+echo "The relase is published on github \n";
 
 
