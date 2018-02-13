@@ -1,29 +1,32 @@
 <?php
 
-class ContactController extends ContactControllerCore {
+class ContactController extends ContactControllerCore
+{
 
-  public function checkAccess() {
-    return (bool)Hook::exec('contactFormAccess');
-  }
-
-  public function initCursedPage() {
-    parent::setMedia();
-
-    if (!empty($this->redirect_after)) {
-      parent::redirect();
+    public function checkAccess()
+    {
+        return (bool)Hook::exec('contactFormAccess');
     }
 
-    if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className))) {
-      parent::initHeader();
-    }
+    public function initCursedPage()
+    {
+        parent::setMedia();
 
-    parent::initContent();
-    if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className))) {
-      parent::initFooter();
-    }
-    parent::display();
+        if (!empty($this->redirect_after)) {
+            parent::redirect();
+        }
 
-    // like returning Controller::run() < Dispatcher::dispatch() < index.php
-    die;
-  }
+        if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className))) {
+            parent::initHeader();
+        }
+
+        parent::initContent();
+        if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className))) {
+            parent::initFooter();
+        }
+        parent::display();
+
+        // like returning Controller::run() < Dispatcher::dispatch() < index.php
+        die;
+    }
 }

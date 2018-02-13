@@ -28,7 +28,7 @@
  * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
  * Captcha content is automaticaly added into the selector #captcha-box
  *}
-<div class="g-recaptcha row" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
+<div class="g-recaptcha row" data-sitekey="{$publicKey|escape:'htmlall':'UTF-8'}" id="captcha-box" data-theme="{$captchatheme|escape:'htmlall':'UTF-8'}"></div>
 
 {* Les variables nécessaires au bon fonctionnement du plugin *}
 {addJsDefL name='waiting_message'}{l s='Please wait during captcha check' mod='eicaptcha' js=1}{/addJsDefL}
@@ -36,4 +36,4 @@
 {addJsDef errorSelector=$checkCaptchaUrl|escape:'html'}
 {addJsDef checkCaptchaUrl=$errorSelector|escape:'html'}
 {addJsDef formSelector=$formSelector|escape:'html'}
-<script src="https://www.google.com/recaptcha/api.js?hl={$captchaforcelang}" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?hl={$captchaforcelang|escape:'htmlall':'UTF-8'}" async defer></script>
