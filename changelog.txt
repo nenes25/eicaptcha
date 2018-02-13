@@ -7,3 +7,4 @@
 
  - V 2.0.0 - 2017-07-10 : New version for prestashop 1.7, add only captcha for contact form and account creation
  - V 2.0.1 - 2017-12-01 : Css improvments thanks to Arnaud Merigeau
+ - V 2.0.2 - 2018-02-13 : Check if composer "vendor" directory is present
