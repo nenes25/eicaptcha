@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.12';
+        $this->version = '0.4.13';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -251,7 +251,7 @@ class EiCaptcha extends Module
      * @return string
      */
     public function langSettings() {
-        if (empty(Configuration::get('CAPTCHA_FORCE_LANG'))) {
+        if (!Configuration::get('CAPTCHA_FORCE_LANG')) {
             return $iso_code = $this->context->language->iso_code;
         } else {
             return $iso_code = Configuration::get('CAPTCHA_FORCE_LANG');
