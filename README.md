@@ -10,7 +10,7 @@ This module display Google recaptcha on the following forms :
 
  This module relies upon the override of the ContactController.
 
- Don't forget to use `composer update` in order to download the necessary recaptcha composer package.  
+ Don't forget to use `composer install` in order to download the necessary recaptcha composer package.  
  Otherwise you can go on the github release page https://github.com/nenes25/eicaptcha/releases and download the last 0.4.x version release to get the full package  
 
  
@@ -49,7 +49,7 @@ This module display Google recaptcha on the following forms :
 Module Captcha pour prestashop 1.6 et inférieur  
 Pour la version pour prestashop 1.7 merci de sélectionner la branche "17"  
 
-N'oubliez pas de lancer la commande "composer update" pour faire fonctionner le module si vous avez cloné ou téléchargé le dépot.  
+N'oubliez pas de lancer la commande "composer install" pour faire fonctionner le module si vous avez cloné ou téléchargé le dépot.  
 Sinon vous pouvez télécharger directement le module complet depuis la page des releases https://github.com/nenes25/eicaptcha/releases ( versions 0.4.x )  
 
 Permets d'afficher un captcha (ReCaptcha de google ) pour prestashop sur :
