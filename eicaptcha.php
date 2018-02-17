@@ -143,7 +143,7 @@ class EiCaptcha extends Module
                         'empty_message' => $this->l('Please fill the captcha private key'),
                     ),
                     array(
-                        'type' => 'radio',
+                        'type' => 'switch',
                         'label' => $this->l('Enable Captcha for contact form'),
                         'name' => 'CAPTCHA_ENABLE_CONTACT',
                         'required' => true,
@@ -163,7 +163,7 @@ class EiCaptcha extends Module
                         ),
                     ),
                     array(
-                        'type' => 'radio',
+                        'type' => 'switch',
                         'label' => $this->l('Enable Captcha for account creation'),
                         'name' => 'CAPTCHA_ENABLE_ACCOUNT',
                         'required' => true,
