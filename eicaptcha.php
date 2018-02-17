@@ -188,7 +188,6 @@ class EiCaptcha extends Module
                         'label' => $this->l('Theme'),
                         'name' => 'CAPTCHA_THEME',
                         'required' => true,
-                        'is_bool' => true,
                         'values' => array(
                             array(
                                 'id' => 'clight',
