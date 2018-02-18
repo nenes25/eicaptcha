@@ -132,6 +132,7 @@ class EiCaptcha extends Module
                         'type' => 'text',
                         'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
+			'size'=> 70, 
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha public key'),
                     ),
@@ -139,6 +140,7 @@ class EiCaptcha extends Module
                         'type' => 'text',
                         'label' => $this->l('Captcha private key (Secret key)'),
                         'name' => 'CAPTCHA_PRIVATE_KEY',
+			'size'=> 70,
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha private key'),
                     ),
@@ -195,7 +197,7 @@ class EiCaptcha extends Module
                         'label' => $this->l('Theme'),
                         'name' => 'CAPTCHA_THEME',
                         'required' => true,
-                        'is_bool' => true,
+                        'class' => 't',
                         'values' => array(
                             array(
                                 'id' => 'clight',
