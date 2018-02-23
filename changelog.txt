@@ -31,4 +31,7 @@
  - V 0.4.10 - 2017-09-28 : Détection automatique de la langue // Automatic Language detection  + romanian translations | Thank to igPetru
  - V 0.4.11 - 2018-01-05 : Message d'erreur si le dossier composer n'est pas présent // Warning message if composer directory is not present
  - V 0.4.12 - 2018-01-26 : Verification de la version de prestashop pour ne pas l'installer si supérieur à 1.7 //  Check if PS version is under 1.7 to allow install
- - V 0.4.13 - 2018-02-14 : Fix with PHP < 5.5
+ - V 0.4.13 - 2018-02-23 : - Fix with PHP < 5.5 ( #14 )
+                           - PS 1.5 fixes ( thanks to Nobodaddy ) 
+                           - German translations  ( thanks to Nobodaddy )
+                           - Add advanced configuration for captcha placeholder and contact form submit button

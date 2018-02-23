@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    Hennes Hervé <contact@h-hennes.fr>
- *  @copyright 2013-2015 Hennes Hervé
+ *  @copyright 2013-2018 Hennes Hervé
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
@@ -62,8 +62,8 @@ class EiCaptcha extends Module
                 || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0) 
                 || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0) 
                 || !Configuration::updateValue('CAPTCHA_THEME', 0)
-                || !Configuration::updateValue('CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR', '#submit')        
-                || !Configuration::updateValue('CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR', '#submit')       
+                || !Configuration::updateValue('CAPTCHA_CONTACTF_BTN_SELECTOR', '#submitMessage')
+                || !Configuration::updateValue('CAPTCHA_CONTACTF_INSERT_SELECTOR', '.submit')
         ) {
             return false;
         }
@@ -83,8 +83,8 @@ class EiCaptcha extends Module
                 || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT') 
                 || !Configuration::deleteByName('CAPTCHA_FORCE_LANG') 
                 || !Configuration::deleteByName('CAPTCHA_THEME')
-                || !Configuration::deleteByName('CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR')
-                || !Configuration::deleteByName('CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR')        
+                || !Configuration::deleteByName('CAPTCHA_CONTACTF_INSERT_SELECTOR')
+                || !Configuration::deleteByName('CAPTCHA_CONTACTF_BTN_SELECTOR')
             ) {
             return false;
         }
@@ -104,8 +104,8 @@ class EiCaptcha extends Module
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
-            Configuration::updateValue('CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR', Tools::getValue('CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR'));
-            Configuration::updateValue('CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR', Tools::getValue('CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR'));
+            Configuration::updateValue('CAPTCHA_CONTACTF_INSERT_SELECTOR', Tools::getValue('CAPTCHA_CONTACTF_INSERT_SELECTOR'));
+            Configuration::updateValue('CAPTCHA_CONTACTF_BTN_SELECTOR', Tools::getValue('CAPTCHA_CONTACTF_BTN_SELECTOR'));
           
             $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
         }
@@ -135,8 +135,8 @@ class EiCaptcha extends Module
                     'icon' => 'icon-cogs'
                 ),
                 'tabs' => array(
-                    'general' => 'General configuration',
-                    'advanced' => 'Advanded parameters',
+                    'general' => $this->l('General configuration'),
+                    'advanced' => $this->l('Advanded parameters'),
                 ),
                 'description' => $this->l('To get your own public and private keys please click on the folowing link').'<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
                 'input' => array(
@@ -144,7 +144,7 @@ class EiCaptcha extends Module
                         'type' => 'text',
                         'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
-			                  'size'=> 70,
+			'size'=> 70,
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha public key'),
                         'tab' => 'general', 
@@ -153,7 +153,7 @@ class EiCaptcha extends Module
                         'type' => 'text',
                         'label' => $this->l('Captcha private key (Secret key)'),
                         'name' => 'CAPTCHA_PRIVATE_KEY',
-			                  'size'=> 70,
+			'size'=> 70,
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha private key'),
                         'tab' => 'general',
@@ -215,7 +215,6 @@ class EiCaptcha extends Module
                         'name' => 'CAPTCHA_THEME',
                         'required' => true,
                         'class' => 't',
-                        'is_bool' => true,
                         'tab' => 'general',
                         'values' => array(
                             array(
@@ -234,22 +233,25 @@ class EiCaptcha extends Module
                        'type' => 'html',
                        'name' => 'advanced-warning',
                        'html_content' => '<div class="alert alert-warning">'
-                         .$this->l('Use with caution, invalid parameters may made the module not to works properly, check the blog article before (in french)').': <a href="http://www.my-url.test" target="_blank">Custom Css selection for contact form</a></div>',
+                         .$this->l('Use with caution, invalid parameters may made the module not to works properly, check the blog article before (in french)')
+                        .': <a href="https://www.h-hennes.fr/blog/2018/02/23/eicaptcha-ajout-dune-configuration-avancees-des-selecteurs" target="_blank">https://www.h-hennes.fr/blog/2018/02/23/eicaptcha-ajout-dune-configuration-avancees-des-selecteurs</a></div>',
                        'tab' => 'advanced' 
                     ),
                      array(
                        'type' => 'text',
                         'label' => $this->l('Contact Form submit button selector'),
+                        'hint' => $this->l('Use with caution, invalid parameters may made the module not to works properly'),
                         'desc' => $this->l('For specific theme you can edit css selector of the captcha submit button'),
-                        'name' => 'CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR',
+                        'name' => 'CAPTCHA_CONTACTF_BTN_SELECTOR',
                         'required' => false,
                         'tab' => 'advanced', 
                     ),
                     array(
                        'type' => 'text',
                         'label' => $this->l('Custom css selection contact form'),
+                        'hint' => $this->l('Use with caution, invalid parameters may made the module not to works properly'),
                         'desc' => $this->l('For specific theme you can edit css selector where to add captcha container before'),
-                        'name' => 'CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR',
+                        'name' => 'CAPTCHA_CONTACTF_INSERT_SELECTOR',
                         'required' => false,
                         'tab' => 'advanced', 
                     )
@@ -294,8 +296,8 @@ class EiCaptcha extends Module
             'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
             'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
-            'CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR' => Tools::getValue('CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR', Configuration::get('CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR')),
-            'CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR' => Tools::getValue('CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR', Configuration::get('CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR')),         
+            'CAPTCHA_CONTACTF_INSERT_SELECTOR' => Tools::getValue('CAPTCHA_CONTACTF_INSERT_SELECTOR', Configuration::get('CAPTCHA_CONTACTF_INSERT_SELECTOR')),
+            'CAPTCHA_CONTACTF_BTN_SELECTOR' => Tools::getValue('CAPTCHA_CONTACTF_BTN_SELECTOR', Configuration::get('CAPTCHA_CONTACTF_BTN_SELECTOR')),
         );
     }
 	
@@ -409,10 +411,10 @@ class EiCaptcha extends Module
             $(document).ready(function(){
 
                //Add div where the captcha will be displayed
-               $("'.Configuration::get('CAPTCHA_CONTACT_FORM_BOX_INSERT_SELECTOR').'").before("<div id=\"captcha-box\"></div>");
+               $("'.Configuration::get('CAPTCHA_CONTACTF_INSERT_SELECTOR').'").before("<div id=\"captcha-box\"></div>");
 
                //Manage form submit
-                $("'.Configuration::get('CAPTCHA_CONTACT_FORM_SUBMIT_BUTTON_SELECTOR').'").click(function(){
+                $("'.Configuration::get('CAPTCHA_CONTACTF_BTN_SELECTOR').'").click(function(){
                     //If no response we display an error
                     if ( ! grecaptcha.getResponse() ) {
 					    $.ajax({
