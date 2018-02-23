@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
+         backupGlobals="true"
+         backupStaticAttributes="false"
+         cacheTokens="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         forceCoversAnnotation="false"
+         mapTestClassNameToCoveredClassName="false"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         stopOnRisky="false"
+         timeoutForSmallTests="1"
+         timeoutForMediumTests="10"
+         timeoutForLargeTests="60"
+         verbose="true">
+    <testsuites>
+        <testsuite name="eicaptcha_unit">
+            <directory suffix="Test.php">./Unit/</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="junit" target="results/results.xml"/>
+    </logging>
+    <!-- Définition des variables de script -->
+    <php>
+        <env name="site_url" value="" />
+        <env name="captcha_site_key" value="6Le-FwATAAAAAJIQQhDPahuxSFiV8bwRZ6ejzEY9" />
+        <env name="captcha_private_key" value="6Le-FwATAAAAADYjH_lPNXLmxYXdbPnWpwNwYX0L" />
+    </php>
+</phpunit>
