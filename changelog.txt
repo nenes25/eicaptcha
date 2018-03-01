@@ -1,10 +1,11 @@
 /**
  * Module Captcha
  * Add (re)captcha on contact and account creation forms
- * © h-hennes 2013-2017
+ * © h-hennes 2013-2018
  * http://www.h-hennes.fr/blog/
  */
 
  - V 2.0.0 - 2017-07-10 : New version for prestashop 1.7, add only captcha for contact form and account creation
  - V 2.0.1 - 2017-12-01 : Css improvments thanks to Arnaud Merigeau
  - V 2.0.2 - 2018-02-13 : Check if composer "vendor" directory is present
+ - V 2.0.3 - 2018-03-01 : Add debug mode + activate compatibility for PS 1.7.0.x

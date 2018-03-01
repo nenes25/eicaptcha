@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.2';
+        $this->version = '2.0.3';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -51,7 +51,7 @@ class EiCaptcha extends Module
         }
         $this->themes = array( 0 => 'light', 1 => 'dark');
         $this->dependencies = array('contactform');
-        $this->ps_versions_compliancy = array('min' => '1.7.1.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
     }
 
     public function install()
@@ -64,6 +64,7 @@ class EiCaptcha extends Module
                 || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
                 || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
                 || !Configuration::updateValue('CAPTCHA_THEME', 0)
+                || !Configuration::updateValue('CAPTCHA_DEBUG', 0)        
         ) {
             return false;
         }
@@ -98,6 +99,7 @@ class EiCaptcha extends Module
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
+            Configuration::updateValue('CAPTCHA_DEBUG', (int)Tools::getValue('CAPTCHA_DEBUG'));
 
             $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
         }
@@ -126,14 +128,19 @@ class EiCaptcha extends Module
                     'title' => $this->l('Eicaptcha Configuration'),
                     'icon' => 'icon-cogs'
                 ),
+                'tabs' => array(
+                    'general' => $this->l('General configuration'),
+                    'advanced' => $this->l('Advanded parameters'),
+                ),
                 'description' => $this->l('To get your own public and private keys please click on the folowing link').'<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
                 'input' => array(
-					 array(
+		    array(
                         'type' => 'text',
                         'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha public key'),
+                        'tab' => 'general',
                     ),
                     array(
                         'type' => 'text',
@@ -141,6 +148,7 @@ class EiCaptcha extends Module
                         'name' => 'CAPTCHA_PRIVATE_KEY',
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha private key'),
+                        'tab' => 'general',
                     ),
                     array(
                         'type' => 'switch',
@@ -161,6 +169,7 @@ class EiCaptcha extends Module
                                 'label'=> $this->l('Disabled'),
                             ),
                         ),
+                        'tab' => 'general', 
                     ),
                     array(
                         'type' => 'switch',
@@ -181,6 +190,7 @@ class EiCaptcha extends Module
                                 'label'=> $this->l('Disabled'),
                             ),
                         ),
+                        'tab' => 'general',
                     ),
                     array(
                         'type' => 'text',
@@ -189,6 +199,7 @@ class EiCaptcha extends Module
                         'desc' => $this->l('For available language codes see: https://developers.google.com/recaptcha/docs/language'),
                         'name' => 'CAPTCHA_FORCE_LANG',
                         'required' => false,
+                        'tab' => 'general',
                     ),
                     array(
                         'type' => 'radio',
@@ -208,7 +219,31 @@ class EiCaptcha extends Module
                                 'label' => $this->l('Dark'),
                             ),
                         ),
+                        'tab' => 'general', 
                     ),
+                    array(
+                        'type' => 'switch',
+                        'name' => 'CAPTCHA_DEBUG',
+                        'label' => $this->l('Enable Debug'),
+                        'hint' => $this->l('Use only for debug'),
+                        'desc' => sprintf($this->l('Enable loging for debuging module, see file %s'),dirname(__FILE__).'/logs/debug.log'),
+                        'required' => false,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value'=> 1,
+                                'label'=> $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value'=> 0,
+                                'label'=> $this->l('Disabled'),
+                            ),
+                        ),
+                        'tab' => 'advanced',
+                    )
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
@@ -228,7 +263,7 @@ class EiCaptcha extends Module
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
-			'fields_value' => $this->getConfigFieldsValues(),
+	    'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id
         );
@@ -248,6 +283,7 @@ class EiCaptcha extends Module
             'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
             'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
+            'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
         );
     }
 
@@ -342,8 +378,14 @@ class EiCaptcha extends Module
                                    Tools::getRemoteAddr());
 
         if (! $result->isSuccess()) {
-            $context->controller->errors[] = $this->l('Please validate the captcha field before submitting your request');
+            $errorMessage = $this->l('Please validate the captcha field before submitting your request');
+            $this->_debug($errorMessage);
+            $this->_debug(sprintf($this->l('Recaptcha response %s'),print_r($result->getErrorCodes(),true)));
+            $context->controller->errors[] = $errorMessage;
+            return false;
         }
+        
+        $this->_debug($this->l('Captcha submited with success'));
     }
     
     /**
@@ -359,6 +401,27 @@ class EiCaptcha extends Module
             );
         }
         return '';
+    }
+    
+    /**
+     * Check if debug mode is enabled
+     * @return boolean
+     */
+    protected function _isDebugEnabled()
+    {
+        return Configuration::get('CAPTCHA_DEBUG');
+    }
+    
+    /**
+     * Log debug messages 
+     * @param type $message
+     */
+    protected function _debug($message) {
+        if ($this->_isDebugEnabled()) {
+            file_put_contents(
+                    dirname(__FILE__) . '/logs/debug.log', date('Y-m-d H:i:s') . ': ' . $message."\n", FILE_APPEND
+            );
+        }
     }
 
 }
