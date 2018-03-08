@@ -1,5 +1,5 @@
 # eicaptcha
-Module EiCaptcha for prestashop 1.6 and under 
+Module EiCaptcha for prestashop 1.6 and under  
 For prestashop 1.7 please switch to branch 17  
 
 This module display Google recaptcha on the following forms :
