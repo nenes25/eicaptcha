@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.3';
+        $this->version = '2.0.4';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -243,6 +243,14 @@ class EiCaptcha extends Module
                             ),
                         ),
                         'tab' => 'advanced',
+                    ),
+                    array(
+                        'type' => 'html',
+                        'label' => $this->l('Check module installation'),
+                        'name' => 'enable_debug_html',
+                        'html_content' => '<a href="'.$this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name.'&display_debug=1&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Check if module is well installed').'</a>',
+                        'desc' => $this->l('click on this link will reload the page, please go again in tab "advanced parameters" to see the results'),
+                        'tab' => 'advanced'
                     )
                 ),
                 'submit' => array(
@@ -251,6 +259,16 @@ class EiCaptcha extends Module
                 )
             ),
             );
+
+        //Display debug data to help detect issues
+        if ( Tools::getValue('display_debug')){
+            $fields_form['form']['input'][] = array(
+                'type' => 'html',
+                'name' => 'debug_html',
+                'html_content' => $this->_debugModuleInstall(),
+                'tab' => 'advanced'
+            );
+        }
 
         $helper = new HelperForm();
         $helper->show_toolbar = false;
@@ -424,4 +442,105 @@ class EiCaptcha extends Module
         }
     }
 
+    /**
+     * Debug module installation
+     */
+    protected function _debugModuleInstall()
+    {
+        $errors  = array();
+        $success = array();
+
+        //Check if module version is compatible with current PS version
+        if (!$this->checkCompliancy()) {
+            $errors[] = 'the module not compatible with your version';
+        } else {
+            $success[] = 'the module is compatible with your version';
+        }
+
+        //Check if module is well hooked on all necessary hooks
+        $modulesHooks = array('header', 'displayCustomerAccountForm', 'actionContactFormSubmitCaptcha',
+            'actionContactFormSubmitBefore');
+        foreach ($modulesHooks as $hook) {
+            if (!$this->isRegisteredInHook($hook)) {
+                $errors[] = 'the module is not registered in hook '.$hook;
+            } else {
+                $success[] = 'the module is well registered in hook '.$hook;
+            }
+        }
+
+        //Check if module contactform is installed
+        if (!Module::isInstalled('contactform')) {
+            $errors[] = 'the module contacform is not installed';
+        } else {
+            $success[] = 'the module contacform is installed';
+        }
+
+        //Check if override are disabled in configuration
+        if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
+            $errors[] = 'Overrides are disable on your website';
+        } else {
+            $success[] = 'Overrides are enabled on your website';
+        }
+
+        //Check if file overrides exists
+        if (!file_exists(_PS_OVERRIDE_DIR_.'controllers/front/AuthController.php')) {
+            $errors[] = 'AuthController.php override does not exists';
+        } else {
+            $success[] = 'AuthController.php override exists';
+        }
+
+        if (!file_exists(_PS_OVERRIDE_DIR_.'controllers/modules/contactform/contactform.php')) {
+            $errors[] = 'contacform.php override does not exists';
+        } else {
+            $success[] = 'contacform.php override exists';
+        }
+
+        //@Todo : check the content of the override file
+        //Check if file override is written in class_index.php files
+        if (file_exists(_PS_CACHE_DIR_.'/class_index.php')) {
+            $classesArray = (include _PS_CACHE_DIR_.'/class_index.php' );
+            if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
+                $errors[] = 'Authcontroller override not present in class_index.php';
+            } else {
+                $success[] = 'Authcontroller override is present in class_index.php';
+            }
+        } else {
+            $errors[] = 'no class_index.php found';
+        }
+
+        //@Todo Check if log file can be filled
+        //Display errors
+        if (sizeof($errors)) {
+            $errorsHtml = '<div class="alert alert-warning"> Errors <br />'
+                .'<ul>';
+            foreach ($errors as $error) {
+                $errorsHtml .= '<li>'.$error.'</li>';
+            }
+            $errorsHtml .= '</ul></div>';
+        }
+
+        //Display success
+        if (sizeof($success)) {
+            $successHtml = '<div class="alert alert-success"> Success <br />'
+                .'<ul>';
+            foreach ($success as $msg) {
+                $successHtml .= '<li>'.$msg.'</li>';
+            }
+            $successHtml .= '</ul></div>';
+        }
+
+        //Additionnal informations
+        $informations = '<div class="alert alert-info">Aditionnal informations <br />'
+            .'<ul>';
+        //PS version
+        $informations .= '<li>Prestashop version <strong>'._PS_VERSION_.'</strong></li>';
+        //Theme
+        $informations .= '<li>Theme name <strong>'._THEME_NAME_.'</strong></li>';
+        //Check php version
+        $informations .= '<li>Php version <strong>'.phpversion().'</strong></li>';
+
+        $informations .= '</ul></div>';
+
+        return $errorsHtml.' '.$successHtml.' '.$informations;
+    }
 }
