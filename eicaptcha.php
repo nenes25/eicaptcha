@@ -452,7 +452,7 @@ class EiCaptcha extends Module
 
         //Check if module version is compatible with current PS version
         if (!$this->checkCompliancy()) {
-            $errors[] = 'the module not compatible with your version';
+            $errors[] = 'the module is not compatible with your version';
         } else {
             $success[] = 'the module is compatible with your version';
         }
@@ -477,7 +477,7 @@ class EiCaptcha extends Module
 
         //Check if override are disabled in configuration
         if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
-            $errors[] = 'Overrides are disable on your website';
+            $errors[] = 'Overrides are disabled on your website';
         } else {
             $success[] = 'Overrides are enabled on your website';
         }
@@ -500,7 +500,7 @@ class EiCaptcha extends Module
         if (file_exists(_PS_CACHE_DIR_.'/class_index.php')) {
             $classesArray = (include _PS_CACHE_DIR_.'/class_index.php' );
             if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
-                $errors[] = 'Authcontroller override not present in class_index.php';
+                $errors[] = 'Authcontroller override is not present in class_index.php';
             } else {
                 $success[] = 'Authcontroller override is present in class_index.php';
             }
