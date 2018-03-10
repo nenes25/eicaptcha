@@ -538,10 +538,9 @@ class EiCaptcha extends Module
         }
         //@Todo : check the content of the override file
         //Check if file override is written in class_index.php files
-        var_dump(_PS_CACHE_DIR_.'class_index.php');
         if (file_exists(_PS_CACHE_DIR_.'class_index.php')) {
             $classesArray = (include _PS_CACHE_DIR_.'class_index.php' );
-            if ($classesArray['ContactController.php']['path'] != 'override/controllers/front/ContactController.php') {
+            if ($classesArray['ContactController']['path'] != 'override/controllers/front/ContactController.php') {
                 $errors[] = 'ContactController.php override is not present in class_index.php <br />'
                     . 'Please remove file cache/class_index.php in order to fix the issue';
             } else {
