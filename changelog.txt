@@ -35,3 +35,4 @@
                            - PS 1.5 fixes ( thanks to Nobodaddy ) 
                            - German translations  ( thanks to Nobodaddy )
                            - Add advanced configuration for captcha placeholder and contact form submit button
+ - V 0.4.14 - 2018-03-10 : - Add tool to check if module is well installed in back office
