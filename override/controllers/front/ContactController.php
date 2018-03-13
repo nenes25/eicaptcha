@@ -1,7 +1,7 @@
 <?php
 
-class ContactController extends ContactControllerCore {
-
+class ContactController extends ContactControllerCore
+{
   public function checkAccess() {
     return (bool)Hook::exec('contactFormAccess');
   }
