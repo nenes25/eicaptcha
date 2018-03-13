@@ -459,7 +459,7 @@ class EiCaptcha extends Module
                                    Tools::getRemoteAddr());
 
         if (! $result->isSuccess()) {
-            $this->errors[] = Tools::displayError('incorrect response to CAPTCHA challenge. Please try again.');
+            $this->context->controller->errors[] = Tools::displayError('incorrect response to CAPTCHA challenge. Please try again.');
             return 0;
         }
 
