@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.4';
+        $this->version = '2.0.5';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -470,9 +470,9 @@ class EiCaptcha extends Module
 
         //Check if module contactform is installed
         if (!Module::isInstalled('contactform')) {
-            $errors[] = 'the module contacform is not installed';
+            $errors[] = 'the module contatcform is not installed';
         } else {
-            $success[] = 'the module contacform is installed';
+            $success[] = 'the module contactform is installed';
         }
 
         //Check if override are disabled in configuration
@@ -490,9 +490,9 @@ class EiCaptcha extends Module
         }
 
         if (!file_exists(_PS_OVERRIDE_DIR_.'controllers/modules/contactform/contactform.php')) {
-            $errors[] = 'contacform.php override does not exists';
+            $errors[] = 'contactform.php override does not exists';
         } else {
-            $success[] = 'contacform.php override exists';
+            $success[] = 'contactform.php override exists';
         }
 
         //@Todo : check the content of the override file

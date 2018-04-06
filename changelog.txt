@@ -10,3 +10,4 @@
  - V 2.0.2 - 2018-02-13 : Check if composer "vendor" directory is present
  - V 2.0.3 - 2018-03-01 : Add debug mode + activate compatibility for PS 1.7.0.x
  - V 2.0.4 - 2018-03-09 : Display debug information in back-office
+ - V 2.0.5 - In progress
