@@ -489,7 +489,7 @@ class EiCaptcha extends Module
             $success[] = 'AuthController.php override exists';
         }
 
-        if (!file_exists(_PS_OVERRIDE_DIR_.'controllers/modules/contactform/contactform.php')) {
+        if (!file_exists(_PS_OVERRIDE_DIR_.'modules/contactform/contactform.php')) {
             $errors[] = 'contactform.php override does not exists';
         } else {
             $success[] = 'contactform.php override exists';
@@ -510,8 +510,9 @@ class EiCaptcha extends Module
 
         //@Todo Check if log file can be filled
         //Display errors
+        $errorsHtml ='';
         if (sizeof($errors)) {
-            $errorsHtml = '<div class="alert alert-warning"> Errors <br />'
+            $errorsHtml .= '<div class="alert alert-warning"> Errors <br />'
                 .'<ul>';
             foreach ($errors as $error) {
                 $errorsHtml .= '<li>'.$error.'</li>';
@@ -520,8 +521,9 @@ class EiCaptcha extends Module
         }
 
         //Display success
+        $successHtml ='';
         if (sizeof($success)) {
-            $successHtml = '<div class="alert alert-success"> Success <br />'
+            $successHtml .= '<div class="alert alert-success"> Success <br />'
                 .'<ul>';
             foreach ($success as $msg) {
                 $successHtml .= '<li>'.$msg.'</li>';
