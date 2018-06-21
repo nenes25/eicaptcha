@@ -32,5 +32,5 @@
      <div class="col-md-9">
         <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
      </div>
-    <script src="https://www.google.com/recaptcha/api.js{if isset($captchaforcelang)}?hl={$captchaforcelang)}{/if}" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js{if isset($captchaforcelang)}?hl={$captchaforcelang}{/if}" async defer></script>
 </div>
