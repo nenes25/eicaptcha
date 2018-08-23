@@ -36,3 +36,7 @@
                            - German translations  ( thanks to Nobodaddy )
                            - Add advanced configuration for captcha placeholder and contact form submit button
  - V 0.4.14 - 2018-03-10 : - Add tool to check if module is well installed in back office
+ - V 0.4.15 - 2018-08-13 : - Fix messed up override code injection when the controller is already overrided (thanks Bm-services)
+                           - Fix error message display
+                           - Add it translations thanks to Michele Zucal
+ 
