@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    Hennes Hervé <contact@h-hennes.fr>
- *  @copyright 2013-2017 Hennes Hervé
- *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @author    Hennes Hervé <contact@h-hennes.fr>
+ * @copyright 2013-2019 Hennes Hervé
+ * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
 
@@ -49,22 +49,26 @@ class EiCaptcha extends Module
         if ($this->active && (!Configuration::get('CAPTCHA_PUBLIC_KEY') || !Configuration::get('CAPTCHA_PRIVATE_KEY'))) {
             $this->warning = $this->l('Captcha Module need to be configurated');
         }
-        $this->themes = array( 0 => 'light', 1 => 'dark');
-        $this->dependencies = array('contactform');
-        $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
+        $this->themes = [0 => 'light', 1 => 'dark'];
+        $this->dependencies = ['contactform'];
+        $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
     }
 
+    /**
+     * Install Module
+     * @return bool
+     */
     public function install()
     {
         if (!parent::install()
-                || !$this->registerHook('header')
-                || !$this->registerHook('displayCustomerAccountForm')
-                || !$this->registerHook('actionContactFormSubmitCaptcha')
-                || !$this->registerHook('actionContactFormSubmitBefore')
-                || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
-                || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
-                || !Configuration::updateValue('CAPTCHA_THEME', 0)
-                || !Configuration::updateValue('CAPTCHA_DEBUG', 0)        
+            || !$this->registerHook('header')
+            || !$this->registerHook('displayCustomerAccountForm')
+            || !$this->registerHook('actionContactFormSubmitCaptcha')
+            || !$this->registerHook('actionContactFormSubmitBefore')
+            || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
+            || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+            || !Configuration::updateValue('CAPTCHA_THEME', 0)
+            || !Configuration::updateValue('CAPTCHA_DEBUG', 0)
         ) {
             return false;
         }
@@ -72,6 +76,10 @@ class EiCaptcha extends Module
         return true;
     }
 
+    /**
+     * Uninstall Module
+     * @return bool
+     */
     public function uninstall()
     {
         if (!parent::uninstall()) {
@@ -80,7 +88,7 @@ class EiCaptcha extends Module
 
         if (!Configuration::deleteByName('CAPTCHA_PUBLIC_KEY') || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY') || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
             || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT') || !Configuration::deleteByName('CAPTCHA_FORCE_LANG') || !Configuration::deleteByName('CAPTCHA_THEME')
-            ) {
+        ) {
             return false;
         }
 
@@ -95,8 +103,8 @@ class EiCaptcha extends Module
         if (Tools::isSubmit('SubmitCaptchaConfiguration')) {
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
-            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int)Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int)Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
             Configuration::updateValue('CAPTCHA_DEBUG', (int)Tools::getValue('CAPTCHA_DEBUG'));
@@ -122,77 +130,77 @@ class EiCaptcha extends Module
      */
     public function renderForm()
     {
-        $fields_form = array(
-            'form' => array(
-                'legend' => array(
+        $fields_form = [
+            'form' => [
+                'legend' => [
                     'title' => $this->l('Eicaptcha Configuration'),
                     'icon' => 'icon-cogs'
-                ),
-                'tabs' => array(
+                ],
+                'tabs' => [
                     'general' => $this->l('General configuration'),
                     'advanced' => $this->l('Advanded parameters'),
-                ),
-                'description' => $this->l('To get your own public and private keys please click on the folowing link').'<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
-                'input' => array(
-		    array(
+                ],
+                'description' => $this->l('To get your own public and private keys please click on the folowing link') . '<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
+                'input' => [
+                    [
                         'type' => 'text',
                         'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha public key'),
                         'tab' => 'general',
-                    ),
-                    array(
+                    ],
+                    [
                         'type' => 'text',
                         'label' => $this->l('Captcha private key (Secret key)'),
                         'name' => 'CAPTCHA_PRIVATE_KEY',
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha private key'),
                         'tab' => 'general',
-                    ),
-                    array(
+                    ],
+                    [
                         'type' => 'switch',
                         'label' => $this->l('Enable Captcha for contact form'),
                         'name' => 'CAPTCHA_ENABLE_CONTACT',
                         'required' => true,
                         'class' => 't',
                         'is_bool' => true,
-                        'values' => array(
-                            array(
+                        'values' => [
+                            [
                                 'id' => 'active_on',
-                                'value'=> 1,
-                                'label'=> $this->l('Enabled'),
-                            ),
-                            array(
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
                                 'id' => 'active_off',
-                                'value'=> 0,
-                                'label'=> $this->l('Disabled'),
-                            ),
-                        ),
-                        'tab' => 'general', 
-                    ),
-                    array(
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                        'tab' => 'general',
+                    ],
+                    [
                         'type' => 'switch',
                         'label' => $this->l('Enable Captcha for account creation'),
                         'name' => 'CAPTCHA_ENABLE_ACCOUNT',
                         'required' => true,
                         'class' => 't',
                         'is_bool' => true,
-                        'values' => array(
-                            array(
+                        'values' => [
+                            [
                                 'id' => 'active_on',
-                                'value'=> 1,
-                                'label'=> $this->l('Enabled'),
-                            ),
-                            array(
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
                                 'id' => 'active_off',
-                                'value'=> 0,
-                                'label'=> $this->l('Disabled'),
-                            ),
-                        ),
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
                         'tab' => 'general',
-                    ),
-                    array(
+                    ],
+                    [
                         'type' => 'text',
                         'label' => $this->l('Force Captcha language'),
                         'hint' => $this->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for autodetect'),
@@ -200,74 +208,74 @@ class EiCaptcha extends Module
                         'name' => 'CAPTCHA_FORCE_LANG',
                         'required' => false,
                         'tab' => 'general',
-                    ),
-                    array(
+                    ],
+                    [
                         'type' => 'radio',
                         'label' => $this->l('Theme'),
                         'name' => 'CAPTCHA_THEME',
                         'required' => true,
                         'is_bool' => true,
-                        'values' => array(
-                            array(
+                        'values' => [
+                            [
                                 'id' => 'clight',
                                 'value' => 0,
                                 'label' => $this->l('Light'),
-                            ),
-                            array(
+                            ],
+                            [
                                 'id' => 'cdark',
                                 'value' => 1,
                                 'label' => $this->l('Dark'),
-                            ),
-                        ),
-                        'tab' => 'general', 
-                    ),
-                    array(
+                            ],
+                        ],
+                        'tab' => 'general',
+                    ],
+                    [
                         'type' => 'switch',
                         'name' => 'CAPTCHA_DEBUG',
                         'label' => $this->l('Enable Debug'),
                         'hint' => $this->l('Use only for debug'),
-                        'desc' => sprintf($this->l('Enable loging for debuging module, see file %s'),dirname(__FILE__).'/logs/debug.log'),
+                        'desc' => sprintf($this->l('Enable loging for debuging module, see file %s'), dirname(__FILE__) . '/logs/debug.log'),
                         'required' => false,
                         'class' => 't',
                         'is_bool' => true,
-                        'values' => array(
-                            array(
+                        'values' => [
+                            [
                                 'id' => 'active_on',
-                                'value'=> 1,
-                                'label'=> $this->l('Enabled'),
-                            ),
-                            array(
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
                                 'id' => 'active_off',
-                                'value'=> 0,
-                                'label'=> $this->l('Disabled'),
-                            ),
-                        ),
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
                         'tab' => 'advanced',
-                    ),
-                    array(
+                    ],
+                    [
                         'type' => 'html',
                         'label' => $this->l('Check module installation'),
                         'name' => 'enable_debug_html',
-                        'html_content' => '<a href="'.$this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name.'&display_debug=1&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Check if module is well installed').'</a>',
+                        'html_content' => '<a href="' . $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name . '&display_debug=1&token=' . Tools::getAdminTokenLite('AdminModules') . '">' . $this->l('Check if module is well installed') . '</a>',
                         'desc' => $this->l('click on this link will reload the page, please go again in tab "advanced parameters" to see the results'),
                         'tab' => 'advanced'
-                    )
-                ),
-                'submit' => array(
+                    ]
+                ],
+                'submit' => [
                     'title' => $this->l('Save'),
                     'class' => 'button btn btn-default pull-right',
-                )
-            ),
-            );
+                ]
+            ],
+        ];
 
         //Display debug data to help detect issues
-        if ( Tools::getValue('display_debug')){
-            $fields_form['form']['input'][] = array(
+        if (Tools::getValue('display_debug')) {
+            $fields_form['form']['input'][] = [
                 'type' => 'html',
                 'name' => 'debug_html',
                 'html_content' => $this->_debugModuleInstall(),
                 'tab' => 'advanced'
-            );
+            ];
         }
 
         $helper = new HelperForm();
@@ -278,23 +286,23 @@ class EiCaptcha extends Module
         $helper->id = 'eicaptcha';
         //$helper->identifier = $this->identifier;
         $helper->submit_action = 'SubmitCaptchaConfiguration';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->tpl_vars = array(
-	    'fields_value' => $this->getConfigFieldsValues(),
+        $helper->tpl_vars = [
+            'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id
-        );
+        ];
 
-        return $helper->generateForm(array($fields_form));
+        return $helper->generateForm([$fields_form]);
     }
 
-	/**
+    /**
      * Get config values to hydrate the helperForm
      */
     public function getConfigFieldsValues()
     {
-        return array(
+        return [
             'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
             'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
             'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
@@ -302,7 +310,7 @@ class EiCaptcha extends Module
             'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
-        );
+        ];
     }
 
     /**
@@ -311,27 +319,27 @@ class EiCaptcha extends Module
     public function hookHeader($params)
     {
         //Add Content box to contact form page in order to display captcha
-        if ( $this->context->controller instanceof ContactController
-             && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
-            ) {
-            
+        if ($this->context->controller instanceof ContactController
+            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+        ) {
+
             $this->context->controller->registerJavascript(
                 'modules-eicaptcha-contact-form',
-                'modules/'.$this->name.'/views/js/eicaptcha-contact-form.js'
+                'modules/' . $this->name . '/views/js/eicaptcha-contact-form.js'
             );
             $this->context->controller->registerStylesheet(
                 'module-eicaptcha',
-                'modules/'.$this->name.'/views/css/eicaptcha.css'
+                'modules/' . $this->name . '/views/css/eicaptcha.css'
             );
         }
 
-        if ( $this->context->controller instanceof ContactController
-            || $this->context->controller instanceof AuthController 
-            ) {
+        if ($this->context->controller instanceof ContactController
+            || $this->context->controller instanceof AuthController
+        ) {
 
             $this->context->controller->registerStylesheet(
                 'module-eicaptcha',
-                'modules/'.$this->name.'/views/css/eicaptcha.css'
+                'modules/' . $this->name . '/views/css/eicaptcha.css'
             );
 
             //Dynamic insertion of the content
@@ -367,7 +375,7 @@ class EiCaptcha extends Module
      */
     public function hookActionContactFormSubmitCaptcha($params)
     {
-        if ( Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             $this->_validateCaptcha();
         }
     }
@@ -380,7 +388,7 @@ class EiCaptcha extends Module
     public function hookActionContactFormSubmitBefore()
     {
         if (Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
-           $this->_validateCaptcha();
+            $this->_validateCaptcha();
         }
     }
 
@@ -393,34 +401,34 @@ class EiCaptcha extends Module
         require_once(__DIR__ . '/vendor/autoload.php');
         $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
         $result = $captcha->verify(Tools::getValue('g-recaptcha-response'),
-                                   Tools::getRemoteAddr());
+            Tools::getRemoteAddr());
 
-        if (! $result->isSuccess()) {
+        if (!$result->isSuccess()) {
             $errorMessage = $this->l('Please validate the captcha field before submitting your request');
             $this->_debug($errorMessage);
-            $this->_debug(sprintf($this->l('Recaptcha response %s'),print_r($result->getErrorCodes(),true)));
+            $this->_debug(sprintf($this->l('Recaptcha response %s'), print_r($result->getErrorCodes(), true)));
             $context->controller->errors[] = $errorMessage;
             return false;
         }
-        
+
         $this->_debug($this->l('Captcha submited with success'));
     }
-    
+
     /**
      * Check if needed composer directory is present
      */
     protected function _checkComposer()
     {
-        if (!is_dir(dirname(__FILE__).'/vendor')) {
+        if (!is_dir(dirname(__FILE__) . '/vendor')) {
             $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
             return $this->displayError(
-                    sprintf($errorMessage, dirname(__FILE__),
-                        'https://github.com/nenes25/eicaptcha/releases')
+                sprintf($errorMessage, dirname(__FILE__),
+                    'https://github.com/nenes25/eicaptcha/releases')
             );
         }
         return '';
     }
-    
+
     /**
      * Check if debug mode is enabled
      * @return boolean
@@ -429,15 +437,18 @@ class EiCaptcha extends Module
     {
         return Configuration::get('CAPTCHA_DEBUG');
     }
-    
+
     /**
-     * Log debug messages 
+     * Log debug messages
      * @param type $message
      */
-    protected function _debug($message) {
+    protected function _debug($message)
+    {
         if ($this->_isDebugEnabled()) {
             file_put_contents(
-                    dirname(__FILE__) . '/logs/debug.log', date('Y-m-d H:i:s') . ': ' . $message."\n", FILE_APPEND
+                dirname(__FILE__) . '/logs/debug.log',
+                date('Y-m-d H:i:s') . ': ' . $message . "\n",
+                FILE_APPEND
             );
         }
     }
@@ -447,8 +458,8 @@ class EiCaptcha extends Module
      */
     protected function _debugModuleInstall()
     {
-        $errors  = array();
-        $success = array();
+        $errors = [];
+        $success = [];
 
         //Check if module version is compatible with current PS version
         if (!$this->checkCompliancy()) {
@@ -458,13 +469,15 @@ class EiCaptcha extends Module
         }
 
         //Check if module is well hooked on all necessary hooks
-        $modulesHooks = array('header', 'displayCustomerAccountForm', 'actionContactFormSubmitCaptcha',
-            'actionContactFormSubmitBefore');
+        $modulesHooks = [
+            'header', 'displayCustomerAccountForm', 'actionContactFormSubmitCaptcha',
+            'actionContactFormSubmitBefore'
+        ];
         foreach ($modulesHooks as $hook) {
             if (!$this->isRegisteredInHook($hook)) {
-                $errors[] = 'the module is not registered in hook '.$hook;
+                $errors[] = 'the module is not registered in hook ' . $hook;
             } else {
-                $success[] = 'the module is well registered in hook '.$hook;
+                $success[] = 'the module is well registered in hook ' . $hook;
             }
         }
 
@@ -483,13 +496,13 @@ class EiCaptcha extends Module
         }
 
         //Check if file overrides exists
-        if (!file_exists(_PS_OVERRIDE_DIR_.'controllers/front/AuthController.php')) {
+        if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/AuthController.php')) {
             $errors[] = 'AuthController.php override does not exists';
         } else {
             $success[] = 'AuthController.php override exists';
         }
 
-        if (!file_exists(_PS_OVERRIDE_DIR_.'modules/contactform/contactform.php')) {
+        if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
             $errors[] = 'contactform.php override does not exists';
         } else {
             $success[] = 'contactform.php override exists';
@@ -497,8 +510,8 @@ class EiCaptcha extends Module
 
         //@Todo : check the content of the override file
         //Check if file override is written in class_index.php files
-        if (file_exists(_PS_CACHE_DIR_.'/class_index.php')) {
-            $classesArray = (include _PS_CACHE_DIR_.'/class_index.php' );
+        if (file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
+            $classesArray = (include _PS_CACHE_DIR_ . '/class_index.php');
             if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
                 $errors[] = 'Authcontroller override is not present in class_index.php';
             } else {
@@ -510,39 +523,39 @@ class EiCaptcha extends Module
 
         //@Todo Check if log file can be filled
         //Display errors
-        $errorsHtml ='';
+        $errorsHtml = '';
         if (sizeof($errors)) {
             $errorsHtml .= '<div class="alert alert-warning"> Errors <br />'
-                .'<ul>';
+                . '<ul>';
             foreach ($errors as $error) {
-                $errorsHtml .= '<li>'.$error.'</li>';
+                $errorsHtml .= '<li>' . $error . '</li>';
             }
             $errorsHtml .= '</ul></div>';
         }
 
         //Display success
-        $successHtml ='';
+        $successHtml = '';
         if (sizeof($success)) {
             $successHtml .= '<div class="alert alert-success"> Success <br />'
-                .'<ul>';
+                . '<ul>';
             foreach ($success as $msg) {
-                $successHtml .= '<li>'.$msg.'</li>';
+                $successHtml .= '<li>' . $msg . '</li>';
             }
             $successHtml .= '</ul></div>';
         }
 
         //Additionnal informations
         $informations = '<div class="alert alert-info">Aditionnal informations <br />'
-            .'<ul>';
+            . '<ul>';
         //PS version
-        $informations .= '<li>Prestashop version <strong>'._PS_VERSION_.'</strong></li>';
+        $informations .= '<li>Prestashop version <strong>' . _PS_VERSION_ . '</strong></li>';
         //Theme
-        $informations .= '<li>Theme name <strong>'._THEME_NAME_.'</strong></li>';
+        $informations .= '<li>Theme name <strong>' . _THEME_NAME_ . '</strong></li>';
         //Check php version
-        $informations .= '<li>Php version <strong>'.phpversion().'</strong></li>';
+        $informations .= '<li>Php version <strong>' . phpversion() . '</strong></li>';
 
         $informations .= '</ul></div>';
 
-        return $errorsHtml.' '.$successHtml.' '.$informations;
+        return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
     }
 }
