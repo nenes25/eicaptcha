@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.15';
+        $this->version = '0.4.16';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -58,7 +58,8 @@ class EiCaptcha extends Module
         if (!parent::install() 
                 || !$this->registerHook('header') 
                 || !$this->registerHook('displayCustomerAccountForm') 
-                || !$this->registerHook('contactFormAccess') 
+                || !$this->registerHook('contactFormAccess')
+                || !$this->registerHook('actionBeforeSubmitAccount')
                 || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0) 
                 || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0) 
                 || !Configuration::updateValue('CAPTCHA_THEME', 0)
@@ -409,6 +410,25 @@ class EiCaptcha extends Module
     }
 
     /**
+     * Check if customer account can be created
+     * @param $params
+     */
+    public function hookActionBeforeSubmitAccount($params)
+    {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1 && Tools::isSubmit('submitAccount')) {
+            require_once(__DIR__ . '/vendor/autoload.php');
+            $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
+            $result = $captcha->verify(
+                Tools::getValue('g-recaptcha-response'),
+                Tools::getRemoteAddr()
+            );
+            if (!$result->isSuccess()) {
+                $this->context->controller->errors[] = Tools::displayError('incorrect response to CAPTCHA challenge. Please try again.');
+            }
+        }
+    }
+
+    /**
      * Display Captcha on the contact Form Page
      */
     private function displayCaptchaContactForm()
@@ -515,7 +535,7 @@ class EiCaptcha extends Module
             $success[] = 'the module is compatible with your version';
         }
         //Check if module is well hooked on all necessary hooks
-        $modulesHooks = array('header', 'displayCustomerAccountForm', 'contactFormAccess');
+        $modulesHooks = array('header', 'displayCustomerAccountForm', 'contactFormAccess','actionBeforeSubmitAccount');
         foreach ($modulesHooks as $hook) {
             if (!$this->isRegisteredInHook($hook)) {
                 $errors[] = 'the module is not registered in hook '.$hook;
