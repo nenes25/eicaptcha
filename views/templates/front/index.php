@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2016 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *

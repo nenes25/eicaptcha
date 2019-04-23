@@ -3,3 +3,4 @@ vendor
 .github/eicaptcha.zip
 config.xml
 config_*.xml
+tests/
