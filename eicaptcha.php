@@ -18,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    Hennes Hervé <contact@h-hennes.fr>
- *  @copyright 2013-2019 Hennes Hervé
- *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @author    Hennes Hervé <contact@h-hennes.fr>
+ * @copyright 2013-2019 Hennes Hervé
+ * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
 
@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.17';
+        $this->version = '0.5.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -49,22 +49,22 @@ class EiCaptcha extends Module
         if ($this->active && (!Configuration::get('CAPTCHA_PUBLIC_KEY') || !Configuration::get('CAPTCHA_PRIVATE_KEY'))) {
             $this->warning = $this->l('Captcha Module need to be configurated');
         }
-        $this->themes = array( 0 => 'light', 1 => 'dark');
+        $this->themes = array(0 => 'light', 1 => 'dark');
         $this->ps_versions_compliancy = array('min' => '1.5.0', 'max' => '1.7.0');
     }
 
     public function install()
     {
-        if (!parent::install() 
-                || !$this->registerHook('header') 
-                || !$this->registerHook('displayCustomerAccountForm') 
-                || !$this->registerHook('contactFormAccess')
-                || !$this->registerHook('actionBeforeSubmitAccount')
-                || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0) 
-                || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0) 
-                || !Configuration::updateValue('CAPTCHA_THEME', 0)
-                || !Configuration::updateValue('CAPTCHA_CONTACTF_BTN_SELECTOR', '#submitMessage')
-                || !Configuration::updateValue('CAPTCHA_CONTACTF_INSERT_SELECTOR', '.submit')
+        if (!parent::install()
+            || !$this->registerHook('header')
+            || !$this->registerHook('displayCustomerAccountForm')
+            || !$this->registerHook('contactFormAccess')
+            || !$this->registerHook('actionBeforeSubmitAccount')
+            || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
+            || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+            || !Configuration::updateValue('CAPTCHA_THEME', 0)
+            || !Configuration::updateValue('CAPTCHA_CONTACTF_BTN_SELECTOR', '#submitMessage')
+            || !Configuration::updateValue('CAPTCHA_CONTACTF_INSERT_SELECTOR', '.submit')
         ) {
             return false;
         }
@@ -78,15 +78,15 @@ class EiCaptcha extends Module
             return false;
         }
 
-        if (!Configuration::deleteByName('CAPTCHA_PUBLIC_KEY') 
-                || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY') 
-                || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
-                || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT') 
-                || !Configuration::deleteByName('CAPTCHA_FORCE_LANG') 
-                || !Configuration::deleteByName('CAPTCHA_THEME')
-                || !Configuration::deleteByName('CAPTCHA_CONTACTF_INSERT_SELECTOR')
-                || !Configuration::deleteByName('CAPTCHA_CONTACTF_BTN_SELECTOR')
-            ) {
+        if (!Configuration::deleteByName('CAPTCHA_PUBLIC_KEY')
+            || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY')
+            || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
+            || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
+            || !Configuration::deleteByName('CAPTCHA_FORCE_LANG')
+            || !Configuration::deleteByName('CAPTCHA_THEME')
+            || !Configuration::deleteByName('CAPTCHA_CONTACTF_INSERT_SELECTOR')
+            || !Configuration::deleteByName('CAPTCHA_CONTACTF_BTN_SELECTOR')
+        ) {
             return false;
         }
 
@@ -101,13 +101,13 @@ class EiCaptcha extends Module
         if (Tools::isSubmit('SubmitCaptchaConfiguration')) {
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
-            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int)Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int)Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
             Configuration::updateValue('CAPTCHA_CONTACTF_INSERT_SELECTOR', Tools::getValue('CAPTCHA_CONTACTF_INSERT_SELECTOR'));
             Configuration::updateValue('CAPTCHA_CONTACTF_BTN_SELECTOR', Tools::getValue('CAPTCHA_CONTACTF_BTN_SELECTOR'));
-          
+
             $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
         }
     }
@@ -118,7 +118,7 @@ class EiCaptcha extends Module
     public function getContent()
     {
         $this->_html .= $this->_checkComposer();
-        $this->_html .=$this->postProcess();
+        $this->_html .= $this->postProcess();
         $this->_html .= $this->renderForm();
 
         return $this->_html;
@@ -139,22 +139,22 @@ class EiCaptcha extends Module
                     'general' => $this->l('General configuration'),
                     'advanced' => $this->l('Advanded parameters'),
                 ),
-                'description' => $this->l('To get your own public and private keys please click on the folowing link').'<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
+                'description' => $this->l('To get your own public and private keys please click on the folowing link') . '<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
                 'input' => array(
-		     array(
+                    array(
                         'type' => 'text',
                         'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
-			'size'=> 70,
+                        'size' => 70,
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha public key'),
-                        'tab' => 'general', 
+                        'tab' => 'general',
                     ),
                     array(
                         'type' => 'text',
                         'label' => $this->l('Captcha private key (Secret key)'),
                         'name' => 'CAPTCHA_PRIVATE_KEY',
-			'size'=> 70,
+                        'size' => 70,
                         'required' => true,
                         'empty_message' => $this->l('Please fill the captcha private key'),
                         'tab' => 'general',
@@ -170,13 +170,13 @@ class EiCaptcha extends Module
                         'values' => array(
                             array(
                                 'id' => 'active_on',
-                                'value'=> 1,
-                                'label'=> $this->l('Enabled'),
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
                             ),
                             array(
                                 'id' => 'active_off',
-                                'value'=> 0,
-                                'label'=> $this->l('Disabled'),
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
                             ),
                         ),
                     ),
@@ -191,8 +191,8 @@ class EiCaptcha extends Module
                         'values' => array(
                             array(
                                 'id' => 'active_on',
-                                'value'=> 1,
-                                'label'=> $this->l('Enabled'),
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
                             ),
                             array(
                                 'id' => 'active_off',
@@ -230,37 +230,37 @@ class EiCaptcha extends Module
                             ),
                         ),
                     ),
-                     array(
-                       'type' => 'html',
-                       'name' => 'advanced-warning',
-                       'html_content' => '<div class="alert alert-warning">'
-                         .$this->l('Use with caution, invalid parameters may made the module not to works properly, check the blog article before (in french)')
-                        .': <a href="https://www.h-hennes.fr/blog/2018/02/23/eicaptcha-ajout-dune-configuration-avancees-des-selecteurs" target="_blank">https://www.h-hennes.fr/blog/2018/02/23/eicaptcha-ajout-dune-configuration-avancees-des-selecteurs</a></div>',
-                       'tab' => 'advanced' 
+                    array(
+                        'type' => 'html',
+                        'name' => 'advanced-warning',
+                        'html_content' => '<div class="alert alert-warning">'
+                            . $this->l('Use with caution, invalid parameters may made the module not to works properly, check the blog article before (in french)')
+                            . ': <a href="https://www.h-hennes.fr/blog/2018/02/23/eicaptcha-ajout-dune-configuration-avancees-des-selecteurs" target="_blank">https://www.h-hennes.fr/blog/2018/02/23/eicaptcha-ajout-dune-configuration-avancees-des-selecteurs</a></div>',
+                        'tab' => 'advanced'
                     ),
-                     array(
-                       'type' => 'text',
+                    array(
+                        'type' => 'text',
                         'label' => $this->l('Contact Form submit button selector'),
                         'hint' => $this->l('Use with caution, invalid parameters may made the module not to works properly'),
                         'desc' => $this->l('For specific theme you can edit css selector of the captcha submit button'),
                         'name' => 'CAPTCHA_CONTACTF_BTN_SELECTOR',
                         'required' => false,
-                        'tab' => 'advanced', 
+                        'tab' => 'advanced',
                     ),
                     array(
-                       'type' => 'text',
+                        'type' => 'text',
                         'label' => $this->l('Custom css selection contact form'),
                         'hint' => $this->l('Use with caution, invalid parameters may made the module not to works properly'),
                         'desc' => $this->l('For specific theme you can edit css selector where to add captcha container before'),
                         'name' => 'CAPTCHA_CONTACTF_INSERT_SELECTOR',
                         'required' => false,
-                        'tab' => 'advanced', 
+                        'tab' => 'advanced',
                     ),
                     array(
                         'type' => 'html',
                         'label' => $this->l('Check module installation'),
                         'name' => 'enable_debug_html',
-                        'html_content' => '<a class="btn btn-info" href="'.$this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name.'&display_debug=1&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Check if module is well installed').'</a>',
+                        'html_content' => '<a class="btn btn-info" href="' . $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name . '&display_debug=1&token=' . Tools::getAdminTokenLite('AdminModules') . '">' . $this->l('Check if module is well installed') . '</a>',
                         'desc' => $this->l('click on this link will reload the page, please go again in tab "advanced parameters" to see the results'),
                         'tab' => 'advanced'
                     )
@@ -270,10 +270,10 @@ class EiCaptcha extends Module
                     'class' => 'button btn btn-default pull-right',
                 )
             ),
-            );
+        );
 
         //Display debug data to help detect issues
-        if ( Tools::getValue('display_debug')){
+        if (Tools::getValue('display_debug')) {
             $fields_form['form']['input'][] = array(
                 'type' => 'html',
                 'name' => 'debug_html',
@@ -343,19 +343,6 @@ class EiCaptcha extends Module
         if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
             return $this->displayCaptchaContactForm();
         }
-
-        //Add Javascript in product page in order to display the captcha for the module "sendToAFriend" and "ProductsComments"
-        if ($this->context->controller instanceof ProductController) {
-            $html = '<script type="text/javascript">
-						var checkCaptchaUrl ="'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php";
-						var RecaptachKey = "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'";
-						var RecaptchaTheme = "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'";
-					</script>
-					<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.$iso_code.'" async defer></script>
-					<script type="text/javascript" src="'.$this->_path.'/views/js/eicaptcha-modules.js"></script>';
-
-            return $html;
-        }
     }
 
     /**
@@ -395,7 +382,7 @@ class EiCaptcha extends Module
                 $form_selector = '#account-creation_form';
                 $prestashop_version = '16';
             } else {
-                $this->context->controller->addCSS($this->_path.'/views/css/eicaptcha.css');
+                $this->context->controller->addCSS($this->_path . '/views/css/eicaptcha.css');
                 $error_selector = '.error';
                 $form_selector = '#account-creation_form';
                 $prestashop_version = '15';
@@ -492,8 +479,12 @@ class EiCaptcha extends Module
         return $js;
     }
 
-    /* return true|false : whether to allow access (before postProcess()) */
-    public function hookContactFormAccess() {
+    /**
+     * whether to allow access (before postProcess())
+     * @return int
+     */
+    public function hookContactFormAccess()
+    {
         if (! Tools::isSubmit('submitMessage')) {
             // postProcess will take care of this
             return 1;
@@ -506,10 +497,12 @@ class EiCaptcha extends Module
 
         require_once(__DIR__ . '/vendor/autoload.php');
         $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
-        $result = $captcha->verify(Tools::getValue('g-recaptcha-response'),
-                                   Tools::getRemoteAddr());
+        $result = $captcha->verify(
+            Tools::getValue('g-recaptcha-response'),
+            Tools::getRemoteAddr()
+        );
 
-        if (! $result->isSuccess()) {
+        if (!$result->isSuccess()) {
             $this->context->controller->errors[] = $this->l('incorrect response to CAPTCHA challenge. Please try again.');
             return 0;
         }
