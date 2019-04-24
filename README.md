@@ -5,8 +5,6 @@ For prestashop 1.7 please switch to branch 17
 This module display Google recaptcha on the following forms :
  - contact form
  - account creation form
- - send to a friend form :( <a href="install-sendtoafriend.md">Installation procedure</a> )
- - product comments form : ( <a href="install-productcomments.md">Installation procedure</a> )
 
  This module relies upon the override of the ContactController.
 
@@ -30,18 +28,6 @@ This module display Google recaptcha on the following forms :
 	<img src="http://www.h-hennes.fr/blog/wp-content/uploads/2015/06/eicaptcha-v2-account.jpg" alt="Captcha on account creation form" />
 </p>
 
-<p align="center">
-	Captcha on send to a friend form <br />
-	<img src="http://www.h-hennes.fr/blog/wp-content/uploads/2015/06/eicaptcha-v2-sendtoafriend-form.jpg" alt="Captcha on send to a friend form" />
-</p>
-
-<p align="center">
-	Captcha on Product Comment Form <br />
-	<img src="http://www.h-hennes.fr/blog/wp-content/uploads/2015/06/eicaptcha-v2-productcomment-form.jpg" alt="Captcha on Product Comment Form" />
-</p>
-
-
-
 
 
 #FR
@@ -55,8 +41,6 @@ Sinon vous pouvez télécharger directement le module complet depuis la page des
 Permets d'afficher un captcha (ReCaptcha de google ) pour prestashop sur :
  - Le formulaire de contact
  - Le formulaire de création de compte
- - Le formulaire de partage à un ami ( <a href="http://www.h-hennes.fr/blog/2015/05/22/prestashop-mettre-en-place-un-captcha-sur-le-formulaire-envoyer-a-un-ami/" target="_blank">Procédure</a>  )
- - Le formulaire de commentaire produit (  <a href="http://www.h-hennes.fr/blog/2015/06/17/prestashop-captcha-commentaires-produit/" target="_blank">Procédure</a>  )
- 
+
  Pour plus de détails sur l'installation et l'historique du module : 
  http://h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/
