@@ -36,5 +36,7 @@ $_MODULE['<{eicaptcha}prestashop>eicaptcha_935300aa46a1fb0c2f1ae2d444608232'] = 
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_c9cc8cce247e49bae79f15173ce97354'] = 'Sauvegarder';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_632ee8e447c5c09ca7577f9281cbb999'] = 'Merci de valider le captcha';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_2422cb22995f528cda5e7d40750c2a55'] = 'Merci de patienter pendant la validation du captcha';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_b7daa88f90777a758d4f87457bc9e202'] = 'Captcha Incorrect, merci d\'essayer à nouveau';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_01447f1863a21f8171b5894cc3e535ac'] = 'Ce module a besoin de composer pour fonctionner, merci de vous rendre dans le répertoire %s et de lancer \"composer install\" ou de télécharger la dernière release depuis l\'adresse %s';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_a7dd8ae5fd8698ae7daf419638de528d'] = 'Le processus de commande \"One Page Checkout\" est actif. Le captcha n\'est pas compatible il est donc désactivé dans cette partie. ( Mais fonctionnel sur la création de compte standard )';
 $_MODULE['<{eicaptcha}prestashop>hookdisplaycustomeraccountform_45d048c35e3cfd449dc0a1b503cd103a'] = 'Captcha';

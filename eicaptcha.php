@@ -37,7 +37,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '0.4.16';
+        $this->version = '0.4.17';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -378,9 +378,16 @@ class EiCaptcha extends Module
      */
     public function hookDisplayCustomerAccountForm($params)
     {
-	$iso_code = $this->langSettings();
+
+        $iso_code = $this->langSettings();
         
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+
+            // Do not display on OPC
+            if ( $this->context->controller->php_self == 'order-opc'){
+                return ;
+            }
+
             $publickey = Configuration::get('CAPTCHA_PUBLIC_KEY');
 
             if (_PS_VERSION_ > '1.6') {
@@ -416,6 +423,12 @@ class EiCaptcha extends Module
     public function hookActionBeforeSubmitAccount($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1 && Tools::isSubmit('submitAccount')) {
+
+            //Disable on OPC
+            if ( $this->isOpcCheckout()){
+                return;
+            }
+
             require_once(__DIR__ . '/vendor/autoload.php');
             $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
             $result = $captcha->verify(
@@ -556,6 +569,12 @@ class EiCaptcha extends Module
         } else {
             $success[] = 'ContactController.php override exists';
         }
+
+        //Warning about OPC
+        if ( Configuration::get("PS_ORDER_PROCESS_TYPE") == 1 ){
+            $errors[] = $this->l('OPC checkout is enable, be aware that the captcha won\'t be displayed on it');
+        }
+
         //@Todo : check the content of the override file
         //Check if file override is written in class_index.php files
         if (file_exists(_PS_CACHE_DIR_.'class_index.php')) {
@@ -599,5 +618,18 @@ class EiCaptcha extends Module
         $informations .= '<li>Php version <strong>'.phpversion().'</strong></li>';
         $informations .= '</ul></div>';
         return $errorsHtml.' '.$successHtml.' '.$informations;
+    }
+
+    /**
+     * Detect if we are in opc checkout
+     * @return bool
+     */
+    protected function isOpcCheckout()
+    {
+        return
+            Configuration::get("PS_ORDER_PROCESS_TYPE") == 1
+            && Tools::getValue('ajax') !== false
+            && Tools::getValue('opc_id_customer') !== false
+        ;
     }
 }
