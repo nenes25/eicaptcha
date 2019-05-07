@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: You've got a problem with this module, open a new issue
 title: ''
 labels: ''
 assignees: nenes25
