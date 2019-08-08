@@ -319,37 +319,32 @@ class EiCaptcha extends Module
     public function hookHeader($params)
     {
         //Add Content box to contact form page in order to display captcha
-        if ($this->context->controller instanceof ContactController
-            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
-        ) {
-
+        if ( $this->context->controller instanceof ContactController
+             && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+            ) {
+            
             $this->context->controller->registerJavascript(
                 'modules-eicaptcha-contact-form',
-                'modules/' . $this->name . '/views/js/eicaptcha-contact-form.js'
-            );
-            $this->context->controller->registerStylesheet(
-                'module-eicaptcha',
-                'modules/' . $this->name . '/views/css/eicaptcha.css'
+                'modules/'.$this->name.'/views/js/eicaptcha-contact-form.js'
             );
         }
-
-        if ($this->context->controller instanceof ContactController
-            || $this->context->controller instanceof AuthController
-        ) {
-
-            $this->context->controller->registerStylesheet(
+		
+        if ( ($this->context->controller instanceof AuthController && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) ||
+             ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)
+			) {
+			$this->context->controller->registerStylesheet(
                 'module-eicaptcha',
-                'modules/' . $this->name . '/views/css/eicaptcha.css'
+                'modules/'.$this->name.'/views/css/eicaptcha.css'
             );
-
             //Dynamic insertion of the content
             $js = '<script type="text/javascript">
             //Recaptcha CallBack Function
             var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "' . $this->themes[Configuration::get('CAPTCHA_THEME')] . '", "sitekey" : "' . Configuration::get('CAPTCHA_PUBLIC_KEY') . '"});};
             </script>';
-
-            $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . Configuration::get('CAPTCHA_FORCE_LANG') . '" async defer></script>';
-
+			
+			if ( ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) ){
+				$js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . Configuration::get('CAPTCHA_FORCE_LANG') . '" async defer></script>';
+			}
             return $js;
         }
     }
