@@ -2,7 +2,7 @@
 Module EiCaptcha for prestashop 1.6 and under  
 For prestashop 1.7 please switch to branch 17  
 
-This module display Google recaptcha on the following forms :
+This module display Google recaptcha **( V2 Only )** on the following forms :
  - contact form
  - account creation form
  - send to a friend form :( <a href="install-sendtoafriend.md">Installation procedure</a> )
@@ -52,7 +52,7 @@ Pour la version pour prestashop 1.7 merci de sélectionner la branche "17"
 N'oubliez pas de lancer la commande "composer install" pour faire fonctionner le module si vous avez cloné ou téléchargé le dépot.  
 Sinon vous pouvez télécharger directement le module complet depuis la page des releases https://github.com/nenes25/eicaptcha/releases ( versions 0.4.x )  
 
-Permets d'afficher un captcha (ReCaptcha de google ) pour prestashop sur :
+Permets d'afficher un captcha (ReCaptcha de google: **V2 uniquement** ) pour prestashop sur :
  - Le formulaire de contact
  - Le formulaire de création de compte
  - Le formulaire de partage à un ami ( <a href="http://www.h-hennes.fr/blog/2015/05/22/prestashop-mettre-en-place-un-captcha-sur-le-formulaire-envoyer-a-un-ami/" target="_blank">Procédure</a>  )
