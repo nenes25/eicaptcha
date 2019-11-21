@@ -27,20 +27,3 @@ This module display Google recaptcha **( V2 Only )** on the following forms :
 	Captcha on account creation form <br />
 	<img src="http://www.h-hennes.fr/blog/wp-content/uploads/2015/06/eicaptcha-v2-account.jpg" alt="Captcha on account creation form" />
 </p>
-
-
-
-#FR
-
-Module Captcha pour prestashop 1.6 et inférieur  
-Pour la version pour prestashop 1.7 merci de sélectionner la branche "17"  
-
-N'oubliez pas de lancer la commande "composer install" pour faire fonctionner le module si vous avez cloné ou téléchargé le dépot.  
-Sinon vous pouvez télécharger directement le module complet depuis la page des releases https://github.com/nenes25/eicaptcha/releases ( versions 0.4.x )  
-
-Permets d'afficher un captcha (ReCaptcha de google: **V2 uniquement** ) pour prestashop sur :
- - Le formulaire de contact
- - Le formulaire de création de compte
-
- Pour plus de détails sur l'installation et l'historique du module : 
- http://h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/
