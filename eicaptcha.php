@@ -196,8 +196,8 @@ class EiCaptcha extends Module
                             ),
                             array(
                                 'id' => 'active_off',
-                                'value'=> 0,
-                                'label'=> $this->l('Disabled'),
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
                             ),
                         ),
                     ),
@@ -281,10 +281,10 @@ class EiCaptcha extends Module
                 'tab' => 'advanced'
             );
         }
-        
+
         $helper = new HelperForm();
         $helper->show_toolbar = false;
-        $helper->table =  $this->table;
+        $helper->table = $this->table;
         $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -292,18 +292,18 @@ class EiCaptcha extends Module
         $helper->id = (int)Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'SubmitCaptchaConfiguration';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
-			'fields_value' => $this->getConfigFieldsValues(),
+            'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id
         );
 
         return $helper->generateForm(array($fields_form));
     }
-	
-	/**
+
+    /**
      * Get config values to hydrate the helperForm
      */
     public function getConfigFieldsValues()
@@ -319,12 +319,13 @@ class EiCaptcha extends Module
             'CAPTCHA_CONTACTF_BTN_SELECTOR' => Tools::getValue('CAPTCHA_CONTACTF_BTN_SELECTOR', Configuration::get('CAPTCHA_CONTACTF_BTN_SELECTOR')),
         );
     }
-	
+
     /**
      * Get lang settings
      * @return string
      */
-    public function langSettings() {
+    public function langSettings()
+    {
         if (!Configuration::get('CAPTCHA_FORCE_LANG')) {
             return $iso_code = $this->context->language->iso_code;
         } else {
@@ -337,8 +338,7 @@ class EiCaptcha extends Module
      */
     public function hookHeader($params)
     {
-	$iso_code = $this->langSettings();
-        
+
         //Display the captcha on the contact page if it's enabled
         if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
             return $this->displayCaptchaContactForm();
@@ -355,7 +355,7 @@ class EiCaptcha extends Module
 
         if ($action == 'display_captcha_error') {
             $this->context->smarty->assign('errors', array($this->l('Please validate the captcha field before submitting your request')));
-            $error_block = trim(preg_replace("#\n#", '', $this->context->smarty->fetch(_PS_THEME_DIR_.'errors.tpl')));
+            $error_block = trim(preg_replace("#\n#", '', $this->context->smarty->fetch(_PS_THEME_DIR_ . 'errors.tpl')));
             echo $error_block;
         }
     }
@@ -367,12 +367,12 @@ class EiCaptcha extends Module
     {
 
         $iso_code = $this->langSettings();
-        
+
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
 
             // Do not display on OPC
-            if ( $this->context->controller->php_self == 'order-opc'){
-                return ;
+            if ($this->context->controller->php_self == 'order-opc') {
+                return;
             }
 
             $publickey = Configuration::get('CAPTCHA_PUBLIC_KEY');
@@ -388,11 +388,11 @@ class EiCaptcha extends Module
                 $prestashop_version = '15';
             }
 
-            $this->context->controller->addJS($this->_path.'views/js/eicaptcha.js');
-			
+            $this->context->controller->addJS($this->_path . 'views/js/eicaptcha.js');
+
             $this->context->smarty->assign('publicKey', $publickey);
             $this->context->smarty->assign('waiting_message', $this->l('Please wait during captcha check'));
-            $this->context->smarty->assign('checkCaptchaUrl', _MODULE_DIR_.$this->name.'/eicaptcha-ajax.php');
+            $this->context->smarty->assign('checkCaptchaUrl', _MODULE_DIR_ . $this->name . '/eicaptcha-ajax.php');
             $this->context->smarty->assign('errorSelector', $error_selector);
             $this->context->smarty->assign('formSelector', $form_selector);
             $this->context->smarty->assign('prestashopVersion', $prestashop_version);
@@ -412,7 +412,7 @@ class EiCaptcha extends Module
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1 && Tools::isSubmit('submitAccount')) {
 
             //Disable on OPC
-            if ( $this->isOpcCheckout()){
+            if ($this->isOpcCheckout()) {
                 return;
             }
 
@@ -433,7 +433,7 @@ class EiCaptcha extends Module
      */
     private function displayCaptchaContactForm()
     {
-	$iso_code = $this->langSettings();
+        $iso_code = $this->langSettings();
         //Css class depends from Prestashop version
         if (_PS_VERSION_ > '1.6') {
             $error_class = 'alert';
@@ -442,26 +442,26 @@ class EiCaptcha extends Module
             $error_class = 'error';
             $form_class = 'std';
         }
-        
+
         //Dynamic insertion of the content
         $js = '<script type="text/javascript">
 
             $(document).ready(function(){
 
                //Add div where the captcha will be displayed
-               $("'.Configuration::get('CAPTCHA_CONTACTF_INSERT_SELECTOR').'").before("<div id=\"captcha-box\"></div>");
+               $("' . Configuration::get('CAPTCHA_CONTACTF_INSERT_SELECTOR') . '").before("<div id=\"captcha-box\"></div>");
 
                //Manage form submit
-                $("'.Configuration::get('CAPTCHA_CONTACTF_BTN_SELECTOR').'").click(function(){
+                $("' . Configuration::get('CAPTCHA_CONTACTF_BTN_SELECTOR') . '").click(function(){
                     //If no response we display an error
                     if ( ! grecaptcha.getResponse() ) {
 					    $.ajax({
 								method : "POST",
-								url : "'._MODULE_DIR_.$this->name.'/eicaptcha-ajax.php",
+								url : "' . _MODULE_DIR_ . $this->name . '/eicaptcha-ajax.php",
 								data : "action=display_captcha_error",
 								success : function(msg){
-									$(".'.$error_class.'").remove();
-									$("form.'.$form_class.'").before(msg);
+									$(".' . $error_class . '").remove();
+									$("form.' . $form_class . '").before(msg);
 								}
 							});
 
@@ -471,10 +471,10 @@ class EiCaptcha extends Module
             });
 
             //Recaptcha CallBack Function
-            var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "'.$this->themes[Configuration::get('CAPTCHA_THEME')].'", "sitekey" : "'.Configuration::get('CAPTCHA_PUBLIC_KEY').'"});};
+            var onloadCallback = function() {grecaptcha.render("captcha-box", {"theme" : "' . $this->themes[Configuration::get('CAPTCHA_THEME')] . '", "sitekey" : "' . Configuration::get('CAPTCHA_PUBLIC_KEY') . '"});};
             </script>';
 
-        $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.$iso_code.'" async defer></script>';
+        $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . $iso_code . '" async defer></script>';
 
         return $js;
     }
@@ -485,13 +485,13 @@ class EiCaptcha extends Module
      */
     public function hookContactFormAccess()
     {
-        if (! Tools::isSubmit('submitMessage')) {
+        if (!Tools::isSubmit('submitMessage')) {
             // postProcess will take care of this
             return 1;
         }
 
         // no restriction
-        if (! Configuration::get('CAPTCHA_ENABLE_CONTACT', 0)) {
+        if (!Configuration::get('CAPTCHA_ENABLE_CONTACT', 0)) {
             return 1;
         }
 
@@ -516,11 +516,11 @@ class EiCaptcha extends Module
      */
     protected function _checkComposer()
     {
-        if (!is_dir(dirname(__FILE__).'/vendor')) {
+        if (!is_dir(dirname(__FILE__) . '/vendor')) {
             $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
             return $this->displayError(
-                    sprintf($errorMessage, dirname(__FILE__),
-                        'https://github.com/nenes25/eicaptcha/releases')
+                sprintf($errorMessage, dirname(__FILE__),
+                    'https://github.com/nenes25/eicaptcha/releases')
             );
         }
 
@@ -532,7 +532,7 @@ class EiCaptcha extends Module
      */
     protected function _debugModuleInstall()
     {
-        $errors  = array();
+        $errors = array();
         $success = array();
         //Check if module version is compatible with current PS version
         if (!$this->checkCompliancy()) {
@@ -541,15 +541,15 @@ class EiCaptcha extends Module
             $success[] = 'the module is compatible with your version';
         }
         //Check if module is well hooked on all necessary hooks
-        $modulesHooks = array('header', 'displayCustomerAccountForm', 'contactFormAccess','actionBeforeSubmitAccount');
+        $modulesHooks = array('header', 'displayCustomerAccountForm', 'contactFormAccess', 'actionBeforeSubmitAccount');
         foreach ($modulesHooks as $hook) {
             if (!$this->isRegisteredInHook($hook)) {
-                $errors[] = 'the module is not registered in hook '.$hook;
+                $errors[] = 'the module is not registered in hook ' . $hook;
             } else {
-                $success[] = 'the module is well registered in hook '.$hook;
+                $success[] = 'the module is well registered in hook ' . $hook;
             }
         }
-        
+
         //Check if override are disabled in configuration
         if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
             $errors[] = 'Overrides are disable on your website';
@@ -557,21 +557,21 @@ class EiCaptcha extends Module
             $success[] = 'Overrides are enabled on your website';
         }
         //Check if file overrides exists
-        if (!file_exists(_PS_OVERRIDE_DIR_.'controllers/front/ContactController.php')) {
+        if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/ContactController.php')) {
             $errors[] = 'ContactController.php override does not exists';
         } else {
             $success[] = 'ContactController.php override exists';
         }
 
         //Warning about OPC
-        if ( Configuration::get("PS_ORDER_PROCESS_TYPE") == 1 ){
+        if (Configuration::get("PS_ORDER_PROCESS_TYPE") == 1) {
             $errors[] = $this->l('OPC checkout is enable, be aware that the captcha won\'t be displayed on it');
         }
 
         //@Todo : check the content of the override file
         //Check if file override is written in class_index.php files
-        if (file_exists(_PS_CACHE_DIR_.'class_index.php')) {
-            $classesArray = (include _PS_CACHE_DIR_.'class_index.php' );
+        if (file_exists(_PS_CACHE_DIR_ . 'class_index.php')) {
+            $classesArray = (include _PS_CACHE_DIR_ . 'class_index.php');
             if ($classesArray['ContactController']['path'] != 'override/controllers/front/ContactController.php') {
                 $errors[] = 'ContactController.php override is not present in class_index.php <br />'
                     . 'Please remove file cache/class_index.php in order to fix the issue';
@@ -585,32 +585,32 @@ class EiCaptcha extends Module
         //Display errors
         if (sizeof($errors)) {
             $errorsHtml = '<div class="alert alert-warning"> Errors <br />'
-                .'<ul>';
+                . '<ul>';
             foreach ($errors as $error) {
-                $errorsHtml .= '<li>'.$error.'</li>';
+                $errorsHtml .= '<li>' . $error . '</li>';
             }
             $errorsHtml .= '</ul></div>';
         }
         //Display success
         if (sizeof($success)) {
             $successHtml = '<div class="alert alert-success"> Success <br />'
-                .'<ul>';
+                . '<ul>';
             foreach ($success as $msg) {
-                $successHtml .= '<li>'.$msg.'</li>';
+                $successHtml .= '<li>' . $msg . '</li>';
             }
             $successHtml .= '</ul></div>';
         }
         //Additionnal informations
         $informations = '<div class="alert alert-info">Aditionnal informations <br />'
-            .'<ul>';
+            . '<ul>';
         //PS version
-        $informations .= '<li>Prestashop version <strong>'._PS_VERSION_.'</strong></li>';
+        $informations .= '<li>Prestashop version <strong>' . _PS_VERSION_ . '</strong></li>';
         //Theme
-        $informations .= '<li>Theme name <strong>'._THEME_NAME_.'</strong></li>';
+        $informations .= '<li>Theme name <strong>' . _THEME_NAME_ . '</strong></li>';
         //Check php version
-        $informations .= '<li>Php version <strong>'.phpversion().'</strong></li>';
+        $informations .= '<li>Php version <strong>' . phpversion() . '</strong></li>';
         $informations .= '</ul></div>';
-        return $errorsHtml.' '.$successHtml.' '.$informations;
+        return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
     }
 
     /**
@@ -622,7 +622,6 @@ class EiCaptcha extends Module
         return
             Configuration::get("PS_ORDER_PROCESS_TYPE") == 1
             && Tools::getValue('ajax') !== false
-            && Tools::getValue('opc_id_customer') !== false
-        ;
+            && Tools::getValue('opc_id_customer') !== false;
     }
 }
