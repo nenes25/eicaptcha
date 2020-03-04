@@ -1,8 +1,9 @@
 /**
  * Module Captcha
  * Add (re)captcha on contact and account creation forms
- * © h-hennes 2013-2018
- * http://www.h-hennes.fr/blog/
+ * © Hervé Hennes 2013-2020
+ * https://github.com/nenes25/eicaptcha
+ * https://www.h-hennes.fr/blog/
  */
 
  - V 2.0.5 - 2019-04-23 : Small fixes
