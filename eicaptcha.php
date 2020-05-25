@@ -534,6 +534,9 @@ class EiCaptcha extends Module
     {
         $errors = array();
         $success = array();
+        $errorsHtml = '';
+        $successHtml = '';
+
         //Check if module version is compatible with current PS version
         if (!$this->checkCompliancy()) {
             $errors[] = 'the module is not compatible with your version';
@@ -601,7 +604,7 @@ class EiCaptcha extends Module
             $successHtml .= '</ul></div>';
         }
         //Additionnal informations
-        $informations = '<div class="alert alert-info">Aditionnal informations <br />'
+        $informations = '<div class="alert alert-info">Additionnal informations <br />'
             . '<ul>';
         //PS version
         $informations .= '<li>Prestashop version <strong>' . _PS_VERSION_ . '</strong></li>';
