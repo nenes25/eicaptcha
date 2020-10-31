@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_')) {
 
 /**
  * Install new hook to check captcha on customer account
- * @param Module $module
+ * @param EiCaptcha $module
  * @return bool
  */
 function upgrade_module_0_4_16($module)

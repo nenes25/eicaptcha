@@ -30,7 +30,11 @@ if (!defined('_PS_VERSION_')) {
 
 class EiCaptcha extends Module
 {
+    /** @var string module output  */
     private $_html = '';
+
+    /** @var array Captcha Themes list */
+    private $themes = array();
 
     public function __construct()
     {
@@ -53,6 +57,10 @@ class EiCaptcha extends Module
         $this->ps_versions_compliancy = array('min' => '1.5.0', 'max' => '1.7.0');
     }
 
+    /**
+     * Install Module
+     * @return bool
+     */
     public function install()
     {
         if (!parent::install()
@@ -72,6 +80,10 @@ class EiCaptcha extends Module
         return true;
     }
 
+    /**
+     * Uninstall module
+     * @return bool
+     */
     public function uninstall()
     {
         if (!parent::uninstall()) {
@@ -95,6 +107,7 @@ class EiCaptcha extends Module
 
     /**
      * Post Process in back office
+     * @return string|void
      */
     public function postProcess()
     {
@@ -114,6 +127,9 @@ class EiCaptcha extends Module
 
     /**
      * Module Configuration in Back Office
+     * @return string
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function getContent()
     {
@@ -126,6 +142,9 @@ class EiCaptcha extends Module
 
     /**
      * Admin Form for module Configuration
+     * @return string
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function renderForm()
     {
@@ -287,12 +306,13 @@ class EiCaptcha extends Module
         $helper->table = $this->table;
         $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-        $this->fields_form = array();
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?
+            Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
         $helper->id = (int)Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'SubmitCaptchaConfiguration';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) .
+            '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFieldsValues(),
@@ -305,6 +325,7 @@ class EiCaptcha extends Module
 
     /**
      * Get config values to hydrate the helperForm
+     * @return array
      */
     public function getConfigFieldsValues()
     {
@@ -335,6 +356,8 @@ class EiCaptcha extends Module
 
     /**
      * Hook Header
+     * @param array $params
+     * @return string|void
      */
     public function hookHeader($params)
     {
@@ -348,6 +371,8 @@ class EiCaptcha extends Module
     /**
      * Ajax Actions of the module
      * (Error displaying with smarty template)
+     * @return string|void
+     * @throws SmartyException
      */
     public function hookAjaxCall()
     {
@@ -362,6 +387,8 @@ class EiCaptcha extends Module
 
     /**
      * Add Captcha on the Customer Registration Form
+     * @param array $params
+     * @return string|void
      */
     public function hookDisplayCustomerAccountForm($params)
     {
@@ -405,7 +432,8 @@ class EiCaptcha extends Module
 
     /**
      * Check if customer account can be created
-     * @param $params
+     * @param array $params
+     * @return void
      */
     public function hookActionBeforeSubmitAccount($params)
     {
@@ -430,6 +458,7 @@ class EiCaptcha extends Module
 
     /**
      * Display Captcha on the contact Form Page
+     * @return string
      */
     private function displayCaptchaContactForm()
     {
@@ -513,6 +542,7 @@ class EiCaptcha extends Module
 
     /**
      * Check if needed composer directory is present
+     * @return string
      */
     protected function _checkComposer()
     {
@@ -529,6 +559,7 @@ class EiCaptcha extends Module
 
     /**
      * Debug module installation
+     * @return string
      */
     protected function _debugModuleInstall()
     {

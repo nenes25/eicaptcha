@@ -28,6 +28,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+/**
+ * @param EiCaptcha $object
+ * @return bool
+ */
 function upgrade_module_0_4_13($object)
 {
     return (
