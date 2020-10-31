@@ -3,8 +3,8 @@
 [![Github All Releases](https://img.shields.io/github/downloads/nenes25/eicaptcha/total.svg)]()
 
 # eicaptcha
-Module EiCaptcha for prestashop 1.6 and under  
-For prestashop 1.7 please switch to branch 17  
+Module EiCaptcha for **prestashop 1.6 and under**  
+A version for prestashop 1.7 is also available, please switch to branch 17 to get the code.
 
 This module display Google recaptcha **( V2 Only )** on the following forms :
  - contact form
@@ -12,8 +12,12 @@ This module display Google recaptcha **( V2 Only )** on the following forms :
 
  This module relies upon the override of the ContactController.
 
- Don't forget to use `composer install` in order to download the necessary recaptcha composer package.  
- Otherwise you can go on the github release page https://github.com/nenes25/eicaptcha/releases and download the last 0.4.x version release to get the full package  
+ Installation
+ ----
+ For non technicals users, go to <a href="https://github.com/nenes25/eicaptcha/releases">github release page</a> and download the last one with the tag 0.4.x  
+ 
+ If you clone or download the package form this page, don't forget to use `composer install` in order to download the necessary recaptcha composer package.  
+ 
 
  
  For more details about this module  : 
