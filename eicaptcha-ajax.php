@@ -27,7 +27,6 @@
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/eicaptcha.php');
 
-/* Instanciation du controller */
 $controller = new FrontController();
 if (Configuration::get('PS_SSL_ENABLED') == 1) {
     $controller->ssl = true;

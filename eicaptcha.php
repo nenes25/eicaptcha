@@ -308,7 +308,6 @@ class EiCaptcha extends Module
         $helper->default_form_language = $lang->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?
             Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-        $helper->id = (int)Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'SubmitCaptchaConfiguration';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) .
@@ -361,7 +360,6 @@ class EiCaptcha extends Module
      */
     public function hookHeader($params)
     {
-
         //Display the captcha on the contact page if it's enabled
         if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
             return $this->displayCaptchaContactForm();
@@ -404,16 +402,9 @@ class EiCaptcha extends Module
 
             $publickey = Configuration::get('CAPTCHA_PUBLIC_KEY');
 
-            if (_PS_VERSION_ > '1.6') {
-                $error_selector = '.alert';
-                $form_selector = '#account-creation_form';
-                $prestashop_version = '16';
-            } else {
-                $this->context->controller->addCSS($this->_path . '/views/css/eicaptcha.css');
-                $error_selector = '.error';
-                $form_selector = '#account-creation_form';
-                $prestashop_version = '15';
-            }
+            $error_selector = '.alert';
+            $form_selector = '#account-creation_form';
+            $prestashop_version = '16';
 
             $this->context->controller->addJS($this->_path . 'views/js/eicaptcha.js');
 

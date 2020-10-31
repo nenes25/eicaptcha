@@ -1,11 +1,12 @@
 /**
  * Module Captcha
- * Add (re)captcha on contact and customer account
- * © h-hennes 2013-2019
- * http://www.h-hennes.fr/blog/
+ * Add (re)captcha on contact form and customer account form
+ * © h-hennes 2013-2020
+ * https://www.h-hennes.fr/blog/
  */
 
- - V 0.5.0  - 2019-11-21 : - Drop Support for productcomments and sendtoafriend modules (was only in js)
+ - V 0.5.0  - 2020-11- : - Drop Support for productcomments and sendtoafriend modules (was only in js)
+                         - Drop support for prestashop version < 1.6
  - V 0.4.17 - 2019-04-29 : - Disallow captcha check on opc checkout
  - V 0.4.16 - 2019-04-23 : - Fix verification on customer account creation
  - V 0.4.15 - 2018-08-13 : - Fix messed up override code injection when the controller is already overrided (thanks Bm-services)

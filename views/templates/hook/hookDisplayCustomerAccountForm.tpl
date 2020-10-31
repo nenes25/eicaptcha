@@ -23,22 +23,14 @@
 *  http://www.h-hennes.fr/blog/
 *}
 
-{if $prestashopVersion == 15 }
-	<fieldset class="account_creation account_eicaptcha">
-{/if}
 
 <label>{l s='Captcha' mod='eicaptcha'}</label>
 {**
- * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
  * Captcha content is automaticaly added into the selector #captcha-box
  *}
-<div class="g-recaptcha{if $prestashopVersion|escape:'html' == 16 } row {/if}" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
+<div class="g-recaptcha row" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
 
-{if $prestashopVersion|escape:'html' == 15 }
-	</fieldset>	
-{/if}
-
-{* Les variables nécessaires au bon fonctionnement du plugin *}
+{* Variables necessary for the module *}
 <script type="text/javascript">
  waiting_message = '{$waiting_message|escape:'html'}';
  checkCaptchaUrl = '{$checkCaptchaUrl|escape:'html'}';
