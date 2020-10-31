@@ -3,13 +3,11 @@
 class AuthController extends AuthControllerCore
 {
 
-    /**
-     * Surcharge specifique eicaptcha
-     */
     public function initContent()
     {
         if ( Tools::isSubmit('submitCreate') ) {
-              Hook::exec('actionContactFormSubmitCaptcha');
+
+            Hook::exec('actionContactFormSubmitCaptcha');
 
               if ( ! sizeof( $this->context->controller->errors ) ) {
                 parent::initContent();

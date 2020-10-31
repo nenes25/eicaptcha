@@ -6,7 +6,8 @@
  * https://www.h-hennes.fr/blog/
  */
 
- - V 2.0.5 - 2019-04-23 : Small fixes
+ - V 2.0.6 - 2020-10-31 : Improve code + fix OPC verification
+ - V 2.0.5 - 2019-04-23 : Small fixes - Not released
  - V 2.0.4 - 2018-03-09 : Display debug information in back-office
  - V 2.0.3 - 2018-03-01 : Add debug mode + activate compatibility for PS 1.7.0.x
  - V 2.0.2 - 2018-02-13 : Check if composer "vendor" directory is present

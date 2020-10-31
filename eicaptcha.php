@@ -41,7 +41,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.5';
+        $this->version = '2.0.6';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -397,7 +397,7 @@ class EiCaptcha extends Module
     public function hookActionContactFormSubmitCaptcha($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
-            $this->_validateCaptcha();
+            return $this->_validateCaptcha();
         }
     }
 
@@ -409,13 +409,13 @@ class EiCaptcha extends Module
     public function hookActionContactFormSubmitBefore()
     {
         if (Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
-            $this->_validateCaptcha();
+            return $this->_validateCaptcha();
         }
     }
 
     /**
      * Validate Captcha
-     * @return bool|void
+     * @return bool
      */
     protected function _validateCaptcha()
     {
@@ -434,6 +434,8 @@ class EiCaptcha extends Module
         }
 
         $this->_debug($this->l('Captcha submited with success'));
+
+        return true;
     }
 
     /**
