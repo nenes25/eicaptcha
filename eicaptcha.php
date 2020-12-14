@@ -367,7 +367,7 @@ class EiCaptcha extends Module
                  //Fix captcha box issue in ps 1.7.7
                 if ( ! document.getElementById("captcha-box")){
                         var container = document.createElement("div");
-                        container.prop("id","captcha-box");
+                        container.setAttribute("id","captcha-box");
                         document.querySelector(".form-fields").appendChild(container);
                 }
                 grecaptcha.render("captcha-box", {"theme" : "' . $this->themes[Configuration::get('CAPTCHA_THEME')] . '", "sitekey" : "' . Configuration::get('CAPTCHA_PUBLIC_KEY') . '"});
