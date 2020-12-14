@@ -364,13 +364,19 @@ class EiCaptcha extends Module
             $js = '<script type="text/javascript">
             //Recaptcha CallBack Function
             var onloadCallback = function() {
-                 //Fix captcha box issue in ps 1.7.7
+                //Fix captcha box issue in ps 1.7.7
                 if ( ! document.getElementById("captcha-box")){
                         var container = document.createElement("div");
                         container.setAttribute("id","captcha-box");
-                        document.querySelector(".form-fields").appendChild(container);
+                        if ( null !== document.querySelector(".form-fields") ){
+                             document.querySelector(".form-fields").appendChild(container);
+                        }
                 }
-                grecaptcha.render("captcha-box", {"theme" : "' . $this->themes[Configuration::get('CAPTCHA_THEME')] . '", "sitekey" : "' . Configuration::get('CAPTCHA_PUBLIC_KEY') . '"});
+                if ( document.getElementById("captcha-box")){
+                    grecaptcha.render("captcha-box", {"theme" : "' . $this->themes[Configuration::get('CAPTCHA_THEME')] . '", "sitekey" : "' . Configuration::get('CAPTCHA_PUBLIC_KEY') . '"});
+                } else {
+                    console.warn("eicaptcha: unable to add captcha-box placeholder to display captcha ( not an error when form is submited sucessfully )");
+                }
             };
             </script>';
 
@@ -430,8 +436,10 @@ class EiCaptcha extends Module
         $context = Context::getContext();
         require_once(__DIR__ . '/vendor/autoload.php');
         $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
-        $result = $captcha->verify(Tools::getValue('g-recaptcha-response'),
-            Tools::getRemoteAddr());
+        $result = $captcha->verify(
+            Tools::getValue('g-recaptcha-response'),
+            Tools::getRemoteAddr()
+        );
 
         if (!$result->isSuccess()) {
             $errorMessage = $this->l('Please validate the captcha field before submitting your request');
@@ -455,8 +463,11 @@ class EiCaptcha extends Module
         if (!is_dir(dirname(__FILE__) . '/vendor')) {
             $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
             return $this->displayError(
-                sprintf($errorMessage, dirname(__FILE__),
-                    'https://github.com/nenes25/eicaptcha/releases')
+                sprintf(
+                    $errorMessage,
+                    dirname(__FILE__),
+                    'https://github.com/nenes25/eicaptcha/releases'
+                )
             );
         }
         return '';
