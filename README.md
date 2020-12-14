@@ -31,3 +31,20 @@ This module display Google recaptcha on the following forms :
 
 https://www.h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/  
 https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
+
+ Compatibility
+---
+
+| Prestashop Version | Compatible |
+| ------------------ | -----------|
+| 1.5.x | :x: use version 0.4.x or 0.5.x instead |
+| 1.6.x | :x: use version 0.4.x or 0.5.x instead |
+| 1.6.1.x | :x:use version 0.4.x or 0.5.x instead |
+| 1.7.0.x | :heavy_check_mark: |
+| 1.7.1.x | :heavy_check_mark: |
+| 1.7.2.x | :heavy_check_mark: |
+| 1.7.3.x | :heavy_check_mark: |
+| 1.7.4.x | :heavy_check_mark: |
+| 1.7.5.x | :heavy_check_mark: |
+| 1.7.6.x | :heavy_check_mark: |
+| 1.7.7.x | :x: fixes in progress |
