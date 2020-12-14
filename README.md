@@ -23,6 +23,16 @@ This module display Google recaptcha **( V2 Only )** on the following forms :
  For more details about this module  : 
  http://h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/ (FR)
  
+  Compatibility
+ ---
+ 
+ | Prestashop Version | Compatible |
+ | ------------------ | -----------|
+ | 1.5.x | :heavy_check_mark: |
+ | 1.6.x | :heavy_check_mark:|
+ | 1.6.1.x | :heavy_check_mark: |
+ | 1.7.x.| :x: use version 2.0.x instead|
+ 
  Screenshots
 --- 
 
