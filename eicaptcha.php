@@ -41,7 +41,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.6';
+        $this->version = '2.0.7';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
