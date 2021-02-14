@@ -1,9 +1,0 @@
-name: PHP tests
-on: [push, pull_request]
-jobs:
-  php-linter:
-    name: PHP Syntax check 5.6
-    runs-on: ubuntu-latest
-    steps:
-      - name: PHP syntax checker 5.6
-        uses: prestashop/github-action-php-lint/5.6@master
