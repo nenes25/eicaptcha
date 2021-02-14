@@ -1,3 +1,8 @@
+[![GitHub stars](https://img.shields.io/github/stars/nenes25/eicaptcha)](https://github.com/nenes25/eicaptcha/stargazers) 
+[![GitHub forks](https://img.shields.io/github/forks/nenes25/eicaptcha)](https://github.com/nenes25/eicaptcha/network) 
+[![GitHub release](https://img.shields.io/github/v/release/nenes25/eicaptcha)](https://github.com/nenes25/eicaptcha/)
+[![Github All Releases](https://img.shields.io/github/downloads/nenes25/eicaptcha/total.svg)]()
+
 # eicaptcha
 Module EiCaptcha for prestashop 1.7
 
