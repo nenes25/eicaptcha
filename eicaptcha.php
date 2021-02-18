@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2021 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -12,14 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    Hennes Hervé <contact@h-hennes.fr>
- * @copyright 2013-2019 Hennes Hervé
+ * @copyright 2013-2021 Hennes Hervé
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
@@ -41,7 +36,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.7';
+        $this->version = '2.1.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -72,8 +67,11 @@ class EiCaptcha extends Module
             || !$this->registerHook('displayCustomerAccountForm')
             || !$this->registerHook('actionContactFormSubmitCaptcha')
             || !$this->registerHook('actionContactFormSubmitBefore')
+            || !$this->registerHook('displayNewsletterRegistration')
+            || !$this->registerHook('actionNewsletterRegistrationBefore')
             || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
             || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+            || !Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
             || !Configuration::updateValue('CAPTCHA_THEME', 0)
             || !Configuration::updateValue('CAPTCHA_DEBUG', 0)
         ) {
@@ -89,14 +87,12 @@ class EiCaptcha extends Module
      */
     public function uninstall()
     {
-        if (!parent::uninstall()) {
-            return false;
-        }
-
-        if (!Configuration::deleteByName('CAPTCHA_PUBLIC_KEY')
+        if ( !parent::uninstall()
+            || !Configuration::deleteByName('CAPTCHA_PUBLIC_KEY')
             || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY')
             || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
             || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
+            || !Configuration::deleteByName('CAPTCHA_ENABLE_NEWSLETTER')
             || !Configuration::deleteByName('CAPTCHA_FORCE_LANG')
             || !Configuration::deleteByName('CAPTCHA_THEME')
         ) {
@@ -117,6 +113,7 @@ class EiCaptcha extends Module
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
             Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int)Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int)Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int)Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
             Configuration::updateValue('CAPTCHA_DEBUG', (int)Tools::getValue('CAPTCHA_DEBUG'));
@@ -200,6 +197,28 @@ class EiCaptcha extends Module
                         'type' => 'switch',
                         'label' => $this->l('Enable Captcha for account creation'),
                         'name' => 'CAPTCHA_ENABLE_ACCOUNT',
+                        'required' => true,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'values' => [
+                            [
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                        'tab' => 'general',
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Enable Captcha for newsletter registration'),
+                        'hint' => $this->l('Only availaibles in certain conditions*'),
+                        'name' => 'CAPTCHA_ENABLE_NEWSLETTER',
                         'required' => true,
                         'class' => 't',
                         'is_bool' => true,
@@ -329,6 +348,7 @@ class EiCaptcha extends Module
             'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
             'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
             'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
+            'CAPTCHA_ENABLE_NEWSLETTER' => Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER', Configuration::get('CAPTCHA_ENABLE_NEWSLETTER')),
             'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
@@ -424,6 +444,38 @@ class EiCaptcha extends Module
     {
         if (Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
             return $this->_validateCaptcha();
+        }
+    }
+
+    /**
+     * New hook to display content for newsletter registration
+     * ( Need to override theme template for themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl
+     * @param array $params
+     * @return string|void
+     * @since 2.1.0
+     */
+    public function hookDisplayNewsletterRegistration($params)
+    {
+        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter() ) {
+            $this->context->smarty->assign('publicKey', Configuration::get('CAPTCHA_PUBLIC_KEY'));
+            $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
+            $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
+            return $this->display(__FILE__, 'views/templates/hook/hookDisplayNewsletterRegistration.tpl');
+        }
+    }
+
+    /**
+     * New Hook to validate newsletter registration
+     * @param array $params
+     * @return void
+     * @since 2.1.0
+     */
+    public function hookActionNewsletterRegistrationBefore($params)
+    {
+        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter()) {
+            if (  ! $this->_validateCaptcha() ) {
+                $params['hookError'] = $this->l('Please validate the captcha field before submitting your request');
+            }
         }
     }
 
@@ -601,5 +653,21 @@ class EiCaptcha extends Module
         $informations .= '</ul></div>';
 
         return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
+    }
+
+    /**
+     * Define if captcha can be use on newsletter form
+     * Needs a recent version of ps_emailsubscription which implements new hooks required
+     * @return bool
+     */
+    protected function _canUseCaptchaOnNewsletter()
+    {
+        if ( Module::isInstalled('ps_emailsubscription') ) {
+            $emailSubcription = Module::getInstanceByName('ps_emailsubscription');
+            if ( version_compare('2.6.0',$emailSubcription->version) >= 0){
+                return true;
+            }
+        }
+        return false;
     }
 }

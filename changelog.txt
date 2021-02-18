@@ -1,11 +1,12 @@
 /**
  * Module Captcha
  * Add (re)captcha on contact and account creation forms
- * © Hervé Hennes 2013-2020
+ * © Hervé Hennes 2013-2021
  * https://github.com/nenes25/eicaptcha
  * https://www.h-hennes.fr/blog/
  */
 
+ - V 2.1.0 - 2021-02-18 : Add support for newsletter registration ( in certain conditions )
  - V 2.0.7 - 2020-12-22 : Fix prestashop 1.7.7 compatibility
  - V 2.0.6 - 2020-10-31 : Improve code + fix OPC verification
  - V 2.0.5 - 2019-04-23 : Small fixes - Not released
