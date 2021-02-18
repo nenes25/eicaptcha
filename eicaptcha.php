@@ -23,6 +23,11 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once(__DIR__ . '/vendor/autoload.php');
+
+use EiCaptcha\Module\Installer;
+use EiCaptcha\Module\Debugger;
+
 class EiCaptcha extends Module
 {
     /** @var string */
@@ -30,13 +35,17 @@ class EiCaptcha extends Module
 
     /** @var array */
     protected $themes = [];
+    /**
+     * @var Debugger
+     */
+    protected Debugger $debugger;
 
     public function __construct()
     {
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.1.0';
+        $this->version = '2.2.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -54,6 +63,8 @@ class EiCaptcha extends Module
         $this->themes = [0 => 'light', 1 => 'dark'];
         $this->dependencies = ['contactform'];
         $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
+
+        $this->debugger = new Debugger($this);
     }
 
     /**
@@ -62,18 +73,9 @@ class EiCaptcha extends Module
      */
     public function install()
     {
+        $installer = new Installer($this);
         if (!parent::install()
-            || !$this->registerHook('header')
-            || !$this->registerHook('displayCustomerAccountForm')
-            || !$this->registerHook('actionContactFormSubmitCaptcha')
-            || !$this->registerHook('actionContactFormSubmitBefore')
-            || !$this->registerHook('displayNewsletterRegistration')
-            || !$this->registerHook('actionNewsletterRegistrationBefore')
-            || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
-            || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
-            || !Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
-            || !Configuration::updateValue('CAPTCHA_THEME', 0)
-            || !Configuration::updateValue('CAPTCHA_DEBUG', 0)
+            || !$installer->install()
         ) {
             return false;
         }
@@ -87,14 +89,9 @@ class EiCaptcha extends Module
      */
     public function uninstall()
     {
-        if ( !parent::uninstall()
-            || !Configuration::deleteByName('CAPTCHA_PUBLIC_KEY')
-            || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY')
-            || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
-            || !Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
-            || !Configuration::deleteByName('CAPTCHA_ENABLE_NEWSLETTER')
-            || !Configuration::deleteByName('CAPTCHA_FORCE_LANG')
-            || !Configuration::deleteByName('CAPTCHA_THEME')
+        $installer = new Installer($this);
+        if (!parent::uninstall()
+            || !$installer->uninstall()
         ) {
             return false;
         }
@@ -128,7 +125,7 @@ class EiCaptcha extends Module
      */
     public function getContent()
     {
-        $this->_html .= $this->_checkComposer();
+        $this->_html .= $this->debugger->checkComposer();
         $this->_html .= $this->postProcess();
         $this->_html .= $this->renderForm();
 
@@ -312,7 +309,7 @@ class EiCaptcha extends Module
             $fields_form['form']['input'][] = [
                 'type' => 'html',
                 'name' => 'debug_html',
-                'html_content' => $this->_debugModuleInstall(),
+                'html_content' => $this->debugger->debugModuleInstall(),
                 'tab' => 'advanced'
             ];
         }
@@ -415,9 +412,11 @@ class EiCaptcha extends Module
     public function hookDisplayCustomerAccountForm($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
-            $this->context->smarty->assign('publicKey', Configuration::get('CAPTCHA_PUBLIC_KEY'));
-            $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
-            $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
+            $this->context->smarty->assign([
+                'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
+                'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
+                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+            ]);
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayCustomerAccountForm.tpl');
         }
     }
@@ -456,7 +455,7 @@ class EiCaptcha extends Module
      */
     public function hookDisplayNewsletterRegistration($params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter() ) {
+        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter()) {
             $this->context->smarty->assign('publicKey', Configuration::get('CAPTCHA_PUBLIC_KEY'));
             $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
             $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
@@ -473,7 +472,7 @@ class EiCaptcha extends Module
     public function hookActionNewsletterRegistrationBefore($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter()) {
-            if (  ! $this->_validateCaptcha() ) {
+            if (!$this->_validateCaptcha()) {
                 $params['hookError'] = $this->l('Please validate the captcha field before submitting your request');
             }
         }
@@ -486,7 +485,6 @@ class EiCaptcha extends Module
     protected function _validateCaptcha()
     {
         $context = Context::getContext();
-        require_once(__DIR__ . '/vendor/autoload.php');
         $captcha = new \ReCaptcha\ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
         $result = $captcha->verify(
             Tools::getValue('g-recaptcha-response'),
@@ -495,165 +493,17 @@ class EiCaptcha extends Module
 
         if (!$result->isSuccess()) {
             $errorMessage = $this->l('Please validate the captcha field before submitting your request');
-            $this->_debug($errorMessage);
-            $this->_debug(sprintf($this->l('Recaptcha response %s'), print_r($result->getErrorCodes(), true)));
+            $this->debugger->log($errorMessage);
+            $this->debugger->log(sprintf($this->l('Recaptcha response %s'), print_r($result->getErrorCodes(), true)));
             $context->controller->errors[] = $errorMessage;
             return false;
         }
 
-        $this->_debug($this->l('Captcha submited with success'));
+        $this->debugger->log($this->l('Captcha submited with success'));
 
         return true;
     }
 
-    /**
-     * Check if needed composer directory is present
-     * @return string
-     */
-    protected function _checkComposer()
-    {
-        if (!is_dir(dirname(__FILE__) . '/vendor')) {
-            $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
-            return $this->displayError(
-                sprintf(
-                    $errorMessage,
-                    dirname(__FILE__),
-                    'https://github.com/nenes25/eicaptcha/releases'
-                )
-            );
-        }
-        return '';
-    }
-
-    /**
-     * Check if debug mode is enabled
-     * @return boolean
-     */
-    protected function _isDebugEnabled()
-    {
-        return (bool)Configuration::get('CAPTCHA_DEBUG');
-    }
-
-    /**
-     * Log debug messages
-     * @param string $message
-     * @return void
-     */
-    protected function _debug($message)
-    {
-        if ($this->_isDebugEnabled()) {
-            file_put_contents(
-                dirname(__FILE__) . '/logs/debug.log',
-                date('Y-m-d H:i:s') . ': ' . $message . "\n",
-                FILE_APPEND
-            );
-        }
-    }
-
-    /**
-     * Debug module installation
-     * @return string
-     */
-    protected function _debugModuleInstall()
-    {
-        $errors = [];
-        $success = [];
-
-        //Check if module version is compatible with current PS version
-        if (!$this->checkCompliancy()) {
-            $errors[] = 'the module is not compatible with your version';
-        } else {
-            $success[] = 'the module is compatible with your version';
-        }
-
-        //Check if module is well hooked on all necessary hooks
-        $modulesHooks = [
-            'header', 'displayCustomerAccountForm', 'actionContactFormSubmitCaptcha',
-            'actionContactFormSubmitBefore'
-        ];
-        foreach ($modulesHooks as $hook) {
-            if (!$this->isRegisteredInHook($hook)) {
-                $errors[] = 'the module is not registered in hook ' . $hook;
-            } else {
-                $success[] = 'the module is well registered in hook ' . $hook;
-            }
-        }
-
-        //Check if module contactform is installed
-        if (!Module::isInstalled('contactform')) {
-            $errors[] = 'the module contatcform is not installed';
-        } else {
-            $success[] = 'the module contactform is installed';
-        }
-
-        //Check if override are disabled in configuration
-        if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
-            $errors[] = 'Overrides are disabled on your website';
-        } else {
-            $success[] = 'Overrides are enabled on your website';
-        }
-
-        //Check if file overrides exists
-        if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/AuthController.php')) {
-            $errors[] = 'AuthController.php override does not exists';
-        } else {
-            $success[] = 'AuthController.php override exists';
-        }
-
-        if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
-            $errors[] = 'contactform.php override does not exists';
-        } else {
-            $success[] = 'contactform.php override exists';
-        }
-
-        //Check if file override is written in class_index.php files
-        if (file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
-            $classesArray = (include _PS_CACHE_DIR_ . '/class_index.php');
-            if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
-                $errors[] = 'Authcontroller override is not present in class_index.php';
-            } else {
-                $success[] = 'Authcontroller override is present in class_index.php';
-            }
-        } else {
-            $errors[] = 'no class_index.php found';
-        }
-
-        //Display errors
-        $errorsHtml = '';
-        if (sizeof($errors)) {
-            $errorsHtml .= '<div class="alert alert-warning"> Errors <br />'
-                . '<ul>';
-            foreach ($errors as $error) {
-                $errorsHtml .= '<li>' . $error . '</li>';
-            }
-            $errorsHtml .= '</ul></div>';
-        }
-
-        //Display success
-        $successHtml = '';
-        if (sizeof($success)) {
-            $successHtml .= '<div class="alert alert-success"> Success <br />'
-                . '<ul>';
-            foreach ($success as $msg) {
-                $successHtml .= '<li>' . $msg . '</li>';
-            }
-            $successHtml .= '</ul></div>';
-        }
-
-        //Additionnal informations
-        $informations = '<div class="alert alert-info">Aditionnal informations <br />'
-            . '<ul>';
-        //PS version
-        $informations .= '<li>Prestashop version <strong>' . _PS_VERSION_ . '</strong></li>';
-        //Theme
-        $informations .= '<li>Theme name <strong>' . _THEME_NAME_ . '</strong></li>';
-        //Check php version
-        $informations .= '<li>Php version <strong>' . phpversion() . '</strong></li>';
-
-        $informations .= '</ul></div>';
-
-        return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
-    }
 
     /**
      * Define if captcha can be use on newsletter form
@@ -662,9 +512,9 @@ class EiCaptcha extends Module
      */
     protected function _canUseCaptchaOnNewsletter()
     {
-        if ( Module::isInstalled('ps_emailsubscription') ) {
+        if (Module::isInstalled('ps_emailsubscription')) {
             $emailSubcription = Module::getInstanceByName('ps_emailsubscription');
-            if ( version_compare('2.6.0',$emailSubcription->version) >= 0){
+            if (version_compare('2.6.0', $emailSubcription->version) >= 0) {
                 return true;
             }
         }

@@ -18,6 +18,11 @@
     "php": ">=5.6",
     "google/recaptcha": "~1.1"
   },
+  "autoload": {
+    "psr-4": {
+      "Eicaptcha\\Module\\": "src/"
+    }
+  },
   "config": {
     "preferred-install": "dist",
     "prepend-autoloader": false
