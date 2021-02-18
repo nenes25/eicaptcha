@@ -23,10 +23,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(dirname(__FILE__) . '/vendor/autoload.php');
 
-use EiCaptcha\Module\Installer;
-use EiCaptcha\Module\Debugger;
+use Eicaptcha\Module\Installer;
+use Eicaptcha\Module\Debugger;
 
 class EiCaptcha extends Module
 {
@@ -38,7 +38,7 @@ class EiCaptcha extends Module
     /**
      * @var Debugger
      */
-    protected Debugger $debugger;
+    protected $debugger;
 
     public function __construct()
     {

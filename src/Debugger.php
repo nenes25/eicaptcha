@@ -21,6 +21,7 @@
 
 namespace Eicaptcha\Module;
 
+use EiCaptcha;
 use Module;
 use Configuration;
 
@@ -30,7 +31,7 @@ class Debugger
     /**
      * @var EiCaptcha
      */
-    private EiCaptcha $module;
+    private $module;
 
     /**
      * Installer constructor.
@@ -76,6 +77,7 @@ class Debugger
      */
     public function debugModuleInstall()
     {
+
         $errors = [];
         $success = [];
 
