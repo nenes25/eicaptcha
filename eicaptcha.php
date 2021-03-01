@@ -40,6 +40,11 @@ class EiCaptcha extends Module
      */
     protected $debugger;
 
+    /**
+     * @var Installer
+     */
+    protected $installer;
+
     public function __construct()
     {
         $this->author = 'hhennes';
@@ -73,9 +78,8 @@ class EiCaptcha extends Module
      */
     public function install()
     {
-        $installer = new Installer($this);
         if (!parent::install()
-            || !$installer->install()
+            || !$this->_getInstaller()->install()
         ) {
             return false;
         }
@@ -89,14 +93,24 @@ class EiCaptcha extends Module
      */
     public function uninstall()
     {
-        $installer = new Installer($this);
         if (!parent::uninstall()
-            || !$installer->uninstall()
+            || !$this->_getInstaller()->uninstall()
         ) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @return Installer
+     */
+    protected function _getInstaller()
+    {
+        if (null === $this->installer) {
+            $this->installer = new Installer($this);
+        }
+        return $this->installer;
     }
 
     /**
