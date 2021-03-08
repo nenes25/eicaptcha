@@ -6,6 +6,9 @@
 # eicaptcha
 Module EiCaptcha for prestashop 1.7
 
+The module is also available for prestashop version 1.6.x see here : https://github.com/nenes25/eicaptcha/tree/master  
+or download 0.4.x releases
+
 This module display Google recaptcha on the following forms :
  - contact form
  - account creation form
