@@ -53,7 +53,10 @@ class EiCaptcha extends Module
         }
         $this->themes = [0 => 'light', 1 => 'dark'];
         $this->dependencies = ['contactform'];
-        $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = [
+            'min' => '1.7.0.0',
+            'max' => _PS_VERSION_
+        ];
     }
 
     /**
@@ -87,7 +90,7 @@ class EiCaptcha extends Module
      */
     public function uninstall()
     {
-        if ( !parent::uninstall()
+        if (!parent::uninstall()
             || !Configuration::deleteByName('CAPTCHA_PUBLIC_KEY')
             || !Configuration::deleteByName('CAPTCHA_PRIVATE_KEY')
             || !Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
@@ -125,6 +128,9 @@ class EiCaptcha extends Module
     /**
      * Module Configuration in Back Office
      * @return string
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function getContent()
     {
@@ -138,6 +144,7 @@ class EiCaptcha extends Module
     /**
      * Admin Form for module Configuration
      * @return string
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -366,7 +373,6 @@ class EiCaptcha extends Module
         if ($this->context->controller instanceof ContactController
             && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
         ) {
-
             $this->context->controller->registerJavascript(
                 'modules-eicaptcha-contact-form',
                 'modules/' . $this->name . '/views/js/eicaptcha-contact-form.js'
@@ -456,7 +462,7 @@ class EiCaptcha extends Module
      */
     public function hookDisplayNewsletterRegistration($params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter() ) {
+        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter()) {
             $this->context->smarty->assign('publicKey', Configuration::get('CAPTCHA_PUBLIC_KEY'));
             $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
             $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
@@ -473,7 +479,7 @@ class EiCaptcha extends Module
     public function hookActionNewsletterRegistrationBefore($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->_canUseCaptchaOnNewsletter()) {
-            if (  ! $this->_validateCaptcha() ) {
+            if (!$this->_validateCaptcha()) {
                 $params['hookError'] = $this->l('Please validate the captcha field before submitting your request');
             }
         }
@@ -618,6 +624,20 @@ class EiCaptcha extends Module
             $errors[] = 'no class_index.php found';
         }
 
+        //Check if we can display the captcha in the newsletter
+        if (!Module::isInstalled('ps_emailsubscription')) {
+            $errors[] = 'the module ps_emailsubscription is not installed you will not be able to use captcha on newslettter';
+        } else {
+            if ($this->_canUseCaptchaOnNewsletter()) {
+                $success[] = 'Module ps_emailsubscription version allow to use captcha on newsletter';
+                //@todo Check if the hook displayNewsletterRegistration is present in current theme
+                //First iteration will not deal with multi-shop stores
+            } else {
+                $errors[] = 'Module ps_emailsubscription version do not allow to use captcha on newsletter';
+            }
+        }
+
+
         //Display errors
         $errorsHtml = '';
         if (sizeof($errors)) {
@@ -649,22 +669,27 @@ class EiCaptcha extends Module
         $informations .= '<li>Theme name <strong>' . _THEME_NAME_ . '</strong></li>';
         //Check php version
         $informations .= '<li>Php version <strong>' . phpversion() . '</strong></li>';
-
-        $informations .= '</ul></div>';
+        $informations .= '</ul>';
+        $informations .= sprintf(
+            '<p>&nbsp;</p>
+                    <p>If case of problem please open an issue on <a href="%s">github</a> with the asked information</p>',
+            'https://github.com/nenes25/eicaptcha/issues'
+        );
+        $informations .= '</div>';
 
         return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
     }
 
     /**
      * Define if captcha can be use on newsletter form
-     * Needs a recent version of ps_emailsubscription which implements new hooks required
+     * Needs a recent version of ps_emailsubscription which implements new required hooks
      * @return bool
      */
     protected function _canUseCaptchaOnNewsletter()
     {
-        if ( Module::isInstalled('ps_emailsubscription') ) {
+        if (Module::isInstalled('ps_emailsubscription')) {
             $emailSubcription = Module::getInstanceByName('ps_emailsubscription');
-            if ( version_compare('2.6.0',$emailSubcription->version) >= 0){
+            if (version_compare('2.6.0', $emailSubcription->version) >= 0) {
                 return true;
             }
         }
