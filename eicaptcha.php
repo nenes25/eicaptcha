@@ -72,6 +72,7 @@ class EiCaptcha extends Module
             || !$this->registerHook('actionContactFormSubmitBefore')
             || !$this->registerHook('displayNewsletterRegistration')
             || !$this->registerHook('actionNewsletterRegistrationBefore')
+            || !$this->registerHook('actionAdminControllerSetMedia')
             || !Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', 0)
             || !Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
             || !Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
@@ -454,6 +455,25 @@ class EiCaptcha extends Module
     }
 
     /**
+     * Register media in back office
+     * @param array $params
+     * @return void
+     * @since 2.1.0
+     */
+    public function hookActionAdminControllerSetMedia($params)
+    {
+        if (
+            $this->context->controller instanceof AdminModulesController
+            && Tools::getValue('configure') == $this->name
+            && Tools::getValue('display_debug') == 1
+        ) {
+            $this->context->controller->addJS(
+                $this->_path.'views/js/admin.js'
+            );
+        }
+    }
+
+    /**
      * New hook to display content for newsletter registration
      * ( Need to override theme template for themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl
      * @param array $params
@@ -630,10 +650,20 @@ class EiCaptcha extends Module
         } else {
             if ($this->_canUseCaptchaOnNewsletter()) {
                 $success[] = 'Module ps_emailsubscription version allow to use captcha on newsletter';
-                //@todo Check if the hook displayNewsletterRegistration is present in current theme
-                //First iteration will not deal with multi-shop stores
+                //First iteration will not deal with multi-shop stores and themes
+                $newsletterTemplateFile = _PS_THEME_DIR_.'/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
+                if (is_file($newsletterTemplateFile)) {
+                    $newsletterTemplateContent = file_get_contents($newsletterTemplateFile);
+                    if (!preg_match('#displayNewsletterRegistration#', $newsletterTemplateContent)) {
+                        $moduleDefaultFile = _PS_MODULE_DIR_.'ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
+                        $errors[] = 'Missing hook <strong>displayNewsletterRegistration</strong> in template <i>'.$newsletterTemplateFile.'</i>'
+                        .'<br />Please check in original module file to adapt : <i>'.$moduleDefaultFile.'</i>';
+                    }
+                } else {
+                    $errors[] = 'Unable to find file '.$newsletterTemplateFile.' to check newsletter hook';
+                }
             } else {
-                $errors[] = 'Module ps_emailsubscription version do not allow to use captcha on newsletter';
+                $errors[] = 'Module ps_emailsubscription version do not allow to use captcha on newsletter ( minimum version 2.6.0 required)';
             }
         }
 
@@ -641,7 +671,8 @@ class EiCaptcha extends Module
         //Display errors
         $errorsHtml = '';
         if (sizeof($errors)) {
-            $errorsHtml .= '<div class="alert alert-warning"> Errors <br />'
+            $errorsHtml .= '<div class="alert alert-warning" role="alert"> 
+                       <h4 class="alert-heading">'.$this->l('Errors').'</h4>'
                 . '<ul>';
             foreach ($errors as $error) {
                 $errorsHtml .= '<li>' . $error . '</li>';
@@ -652,7 +683,8 @@ class EiCaptcha extends Module
         //Display success
         $successHtml = '';
         if (sizeof($success)) {
-            $successHtml .= '<div class="alert alert-success"> Success <br />'
+            $successHtml .= '<div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">'.$this->l('Success').'</h4>'
                 . '<ul>';
             foreach ($success as $msg) {
                 $successHtml .= '<li>' . $msg . '</li>';
@@ -661,7 +693,8 @@ class EiCaptcha extends Module
         }
 
         //Additionnal informations
-        $informations = '<div class="alert alert-info">Aditionnal informations <br />'
+        $informations = '<div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">'.$this->l('Aditionnal information').'</h4>'
             . '<ul>';
         //PS version
         $informations .= '<li>Prestashop version <strong>' . _PS_VERSION_ . '</strong></li>';
@@ -670,14 +703,18 @@ class EiCaptcha extends Module
         //Check php version
         $informations .= '<li>Php version <strong>' . phpversion() . '</strong></li>';
         $informations .= '</ul>';
-        $informations .= sprintf(
-            '<p>&nbsp;</p>
+        $informations .= '</div>';
+
+        $issueBox = '<div class="alert alert-info" role="alert">
+                    <h4>'.$this->l('Open an issue').'</h4>';
+        $issueBox .= sprintf('
                     <p>If case of problem please open an issue on <a href="%s">github</a> with the asked information</p>',
             'https://github.com/nenes25/eicaptcha/issues'
         );
-        $informations .= '</div>';
+        $issueBox .= '<p>You can provide a capture of this page as additional information</p>';
+        $issueBox .= '</div>';
 
-        return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
+        return $errorsHtml . ' ' . $successHtml . ' ' . $informations .' '.$issueBox;
     }
 
     /**

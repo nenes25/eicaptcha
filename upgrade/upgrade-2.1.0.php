@@ -33,6 +33,7 @@ function upgrade_module_2_1_0($module)
 {
     return $module->registerHook([
         'displayNewsletterRegistration',
-        'actionNewsletterRegistrationBefore'
+        'actionNewsletterRegistrationBefore',
+        'actionAdminControllerSetMedia'
     ]);
 }
