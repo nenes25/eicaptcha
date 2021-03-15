@@ -24,6 +24,6 @@
 *}
 
 <div class="col-xs-12 pull-right">
-    <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
+    <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box-newsletter" data-theme="{$captchatheme}"></div>
     <script src="https://www.google.com/recaptcha/api.js{if isset($captchaforcelang)}?hl={$captchaforcelang}{/if}" async defer></script>
 </div>
