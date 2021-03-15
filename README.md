@@ -12,10 +12,13 @@ or download 0.4.x releases
 This module display Google recaptcha on the following forms :
  - contact form
  - account creation form
+ - newsletter subscription ( since 2.1.0)
 
  This module relies upon the override of the folowing files :
  - AuthController
  - ContactForm Module
+
+For newsletter subscription implementation it needs module **ps_emailsubscription at least  2.6.0**
 
  The last version used composer to get recaptcha lib.  
  Don't forget to use `composer install` in order to download the necessary recaptcha composer package.  
@@ -32,6 +35,11 @@ This module display Google recaptcha on the following forms :
 <p align="center">
 	Captcha on account creation form <br />
 	<img src="https://www.h-hennes.fr/blog/wp-content/uploads/2017/07/eicaptcha-17-account.jpg" alt="Captcha on account creation form" />
+</p>
+
+<p align="center">
+	Captcha on newsletter form <br />
+	<img src="https://www.h-hennes.fr/blog/wp-content/uploads/2021/03/captcha-newsletter.png" alt="Captcha on newsletter subscription form" />
 </p>
 
  Additionnal informations (French)
