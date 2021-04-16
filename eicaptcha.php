@@ -726,7 +726,7 @@ class EiCaptcha extends Module
     {
         if (Module::isInstalled('ps_emailsubscription')) {
             $emailSubcription = Module::getInstanceByName('ps_emailsubscription');
-            if (version_compare('2.6.0', $emailSubcription->version) >= 0) {
+            if (version_compare('2.6.0', $emailSubcription->version) <= 0) {
                 return true;
             }
         }
