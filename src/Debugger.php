@@ -77,7 +77,6 @@ class Debugger
      */
     public function debugModuleInstall()
     {
-
         $errors = [];
         $success = [];
 
@@ -192,5 +191,4 @@ class Debugger
             );
         }
     }
-
 }
