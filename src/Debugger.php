@@ -139,6 +139,19 @@ class Debugger
             $errors[] = 'no class_index.php found';
         }
 
+        //Check if we can display the captcha in the newsletter
+        if (!Module::isInstalled('ps_emailsubscription')) {
+            $errors[] = 'the module ps_emailsubscription is not installed you will not be able to use captcha on newslettter';
+        } else {
+            if ($this->module->canUseCaptchaOnNewsletter()) {
+                $success[] = 'Module ps_emailsubscription version allow to use captcha on newsletter';
+            //@todo Check if the hook displayNewsletterRegistration is present in current theme
+                //First iteration will not deal with multi-shop stores
+            } else {
+                $errors[] = 'Module ps_emailsubscription version do not allow to use captcha on newsletter';
+            }
+        }
+
         //Display errors
         $errorsHtml = '';
         if (sizeof($errors)) {
@@ -170,8 +183,12 @@ class Debugger
         $informations .= '<li>Theme name <strong>' . _THEME_NAME_ . '</strong></li>';
         //Check php version
         $informations .= '<li>Php version <strong>' . phpversion() . '</strong></li>';
-
-        $informations .= '</ul></div>';
+        $informations .= sprintf(
+            '<p>&nbsp;</p>
+                    <p>If case of problem please open an issue on <a href="%s">github</a> with the asked information</p>',
+            'https://github.com/nenes25/eicaptcha/issues'
+        );
+        $informations .= '</div>';
 
         return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
     }

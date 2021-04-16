@@ -40,7 +40,8 @@ class Installer
         'displayCustomerAccountForm',
         'actionContactFormSubmitCaptcha',
         'actionContactFormSubmitBefore',
-        'actionNewsletterRegistrationBefore'
+        'actionNewsletterRegistrationBefore',
+        'actionAdminControllerSetMedia'
     ];
 
     /**
