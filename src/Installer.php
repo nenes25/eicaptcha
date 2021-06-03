@@ -30,7 +30,7 @@ class Installer
     /**
      * @var EiCaptcha
      */
-    private EiCaptcha $module;
+    private $module;
 
     /**
      * @var array
@@ -99,11 +99,9 @@ class Installer
     protected function uninstallConfigurations()
     {
         return Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
-        && Configuration::updateValue('CAPTCHA_ENABLE_CONTACT')
-        && Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER')
-        && Configuration::updateValue('CAPTCHA_THEME')
-        && Configuration::updateValue('CAPTCHA_DEBUG');
-
+        && Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
+        && Configuration::deleteByName('CAPTCHA_ENABLE_NEWSLETTER')
+        && Configuration::deleteByName('CAPTCHA_THEME')
+        && Configuration::deleteByName('CAPTCHA_DEBUG');
     }
-
 }
