@@ -6,7 +6,11 @@
  * https://www.h-hennes.fr/blog/
  */
 
- - V 2.1.0 - 2021-02-18 : Add support for newsletter registration ( in certain conditions )
+ - V 2.1.1 - 2021-04-16 : #186 Wrong ps_emailsubscription version comparison
+ - V 2.1.0 - 2021-03-15 : Add support for newsletter registration ( in certain conditions )
+                          #164 eicaptcha newsletter filtering
+                          #179 Better display debug mode in back office
+                          #180 Display link to github issues in debug module
  - V 2.0.7 - 2020-12-22 : Fix prestashop 1.7.7 compatibility
  - V 2.0.6 - 2020-10-31 : Improve code + fix OPC verification
  - V 2.0.5 - 2019-04-23 : Small fixes - Not released

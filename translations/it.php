@@ -1,0 +1,36 @@
+<?php
+
+global $_MODULE;
+$_MODULE = array();
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_3e87eed4786fe702ae961b55bbf02c6a'] = 'Ei Captcha';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_76870a3a596aa5fe3b836a20e53c7698'] = 'Aggiungi un captcha al tuo web form';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_793b58515cefe26f6a3c5ab782460a69'] = 'Il modulo Captcha deve essere configurato';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_c888438d14855d7d96a2724ee9c306bd'] = 'Configurazione aggiornata';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_fabff9d49a682feeffead298a9801c2b'] = 'Configurazione di Eicaptcha';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_d2126da975d5b9a5b846efaf57d3fd53'] = 'Configurazione generale';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_a88fa0f6033212151410a58809337c83'] = 'Parametri avanzati';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_77f682c46c4c98d39cfb703d3606f505'] = 'Click sul seguente link per ottenere le tue chiavi (pubblica e privata)';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_2d6759f60f165404e274683029df8e5b'] = 'Captcha chiave pubblica (Chiave del sito)';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_de7e39ae12eb7d5e08c84ff8739ee5fc'] = 'Per favore inserisci la chiave pubblica';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_532719b9b22c0444d8c65bdc6b80fa1e'] = 'Captcha chiave privata (Chiave segreta)';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_30c1139b1b654780ec1ef5c35323806d'] = 'Per favore inserisci la chiave privata';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_8734cb06c440a837b751eb664be56f3c'] = 'Abilita Captcha per il form contatti';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Abilitato';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_b9f5c797ebbf55adccdd8539a65a0241'] = 'Disabilitato';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_4d43056cebf6d60747ad8064a941b8cd'] = 'Abilità Captcha per la creazione dell\'account';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_2f298dd749c5c927a272586189aecaa9'] = 'Forza il linguaggio per Captcha';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_50db68af68d07f407b398f20788e6277'] = 'Codice lingua ( en-GB | fr | de | de-AT | ... ) - Lascia vuoto se il cliente seglie da se la lingua preferita.';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_43ec71bfafdad1482bff90168f80531b'] = 'Per i codici di lingua disponibili guarda al seguente link: https://developers.google.com/recaptcha/docs/language';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_d721757161f7f70c5b0949fdb6ec2c30'] = 'Tema';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_9914a0ce04a7b7b6a8e39bec55064b82'] = 'Light';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_a18366b217ebf811ad1886e4f4f865b2'] = 'Dark';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_a7c24565aa1c5b1d6591a3c55f27782b'] = 'Usa con cautela, parametri invalidi possono creare malfunzionamenti del modulo';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_53fd91f30b2ebe9feaeca2c114671c07'] = 'Usa con cautela, parametri invalidi possono creare malfunzionamenti del modulo';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_98cb786afc3502f43a2f156ade6a5167'] = 'Per specifici temi puoi modificare il file css per il bottone di conferma';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_c4e00009bc799091d7a05f34537f721e'] = 'Controlla l\'installazione del modulo';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_697a883b69deceeae91ca157b17cbb09'] = 'Controlla se il modulo è ben installato';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_935300aa46a1fb0c2f1ae2d444608232'] = 'Click su questo link per ricaricare la pagina, per favore ancora nella pagina \"parametri avanzati\" per vedere il risultato';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_632ee8e447c5c09ca7577f9281cbb999'] = 'Per favore convalida il campo reCaptcha prima di inviare la richiesta per dimostrare che non sei un robot';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_2422cb22995f528cda5e7d40750c2a55'] = 'Per favore attendi durante il controllo';
+$_MODULE['<{eicaptcha}prestashop>eicaptcha_01447f1863a21f8171b5894cc3e535ac'] = 'This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s';

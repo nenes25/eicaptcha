@@ -319,7 +319,7 @@ class EiCaptcha extends Module
 
     /**
      * Define if captcha can be use on newsletter form
-     * Needs a recent version of ps_emailsubscription which implements new hooks required
+     * Needs a recent version of ps_emailsubscription which implements new required hooks
      * @return bool
      */
     public function canUseCaptchaOnNewsletter()
