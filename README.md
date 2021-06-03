@@ -8,7 +8,7 @@
 Module EiCaptcha for prestashop 1.7
 
 The module is also available for prestashop version 1.6.x see here : https://github.com/nenes25/eicaptcha/tree/master  
-or download 0.4.x releases ( This version remains available but support and evolutions are stopped )
+or download 0.4.x releases ( This version remains available but support and evolutions are stopped )   
 
 This module display Google recaptcha on the following forms :
  - contact form
@@ -21,9 +21,12 @@ This module display Google recaptcha on the following forms :
 
 For newsletter subscription implementation it needs module **ps_emailsubscription at least  2.6.0**
 
- The last version used composer to get recaptcha lib.  
- Don't forget to use `composer install` in order to download the necessary recaptcha composer package.  
- Otherwise you can go on the github release page https://github.com/nenes25/eicaptcha/releases and download the last 2.0.x version release to get the full package  
+ This module use composer to get recaptcha lib.  
+ Don't forget to use `composer install` in order to download the necessary recaptcha composer package.   
+ 
+ Otherwise you can go on the github release page https://github.com/nenes25/eicaptcha/releases and download the last 2.0.x version release to get the full package    
+ 
+`Please do not use the github function "download as zip" which will not works`
 
  Screenshots
 ---
