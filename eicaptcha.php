@@ -253,14 +253,14 @@ class EiCaptcha extends Module
             && Tools::getValue('display_debug') == 1
         ) {
             $this->context->controller->addJS(
-                $this->_path.'views/js/admin.js'
+                $this->_path . 'views/js/admin.js'
             );
         }
     }
 
     /**
      * New hook to display content for newsletter registration
-     * ( Need to override theme template for themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl
+     * ( Need to override theme template for themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl )
      * @param array $params
      * @return string|void
      * @since 2.1.0
