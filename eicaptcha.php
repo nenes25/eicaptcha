@@ -52,7 +52,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.2.0';
+        $this->version = '2.3.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -153,16 +153,30 @@ class EiCaptcha extends Module
      */
     public function hookHeader($params)
     {
+        $captchaVersion = Configuration::get('CAPTCHA_VERSION');
         //Add Content box to contact form page in order to display captcha
         if ($this->context->controller instanceof ContactController
             && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
         ) {
             $this->context->controller->registerJavascript(
                 'modules-eicaptcha-contact-form',
-                'modules/' . $this->name . '/views/js/eicaptcha-contact-form.js'
+                'modules/' . $this->name . '/views/js/eicaptcha-contact-form-v' . $captchaVersion . '.js'
             );
         }
 
+        if ($captchaVersion == 2) {
+            return $this->renderHeaderV2();
+        } else {
+            return $this->renderHeaderV3();
+        }
+    }
+
+    /**
+     * Return content for (re)captcha v2
+     * @return string
+     */
+    protected function renderHeaderV2()
+    {
         if (($this->context->controller instanceof AuthController && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) ||
             ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)
         ) {
@@ -198,6 +212,31 @@ class EiCaptcha extends Module
     }
 
     /**
+     * Return content for recaptcha v3
+     * @return string
+     */
+    public function renderHeaderV3()
+    {
+        if (
+            $this->context->controller instanceof ContactController
+            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+        ) {
+            $publicKey = Configuration::get('CAPTCHA_PUBLIC_KEY');
+            $js = '
+            <script src="https://www.google.com/recaptcha/api.js?render=' . $publicKey . '"></script>
+            <script>
+                grecaptcha.ready(function () {
+                    grecaptcha.execute("' . $publicKey . '", {action: "contact"}).then(function (token) {
+                        var recaptchaResponse = document.getElementById("captcha-box");
+                        recaptchaResponse.value = token;
+                        });
+                    });
+            </script>';
+            return $js;
+        }
+    }
+
+    /**
      * Add Captcha on the Customer Registration Form
      * @param array $params
      * @return string|void
@@ -206,6 +245,7 @@ class EiCaptcha extends Module
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             $this->context->smarty->assign([
+                'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
                 'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
                 'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]

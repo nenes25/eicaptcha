@@ -24,13 +24,28 @@
 *}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label">{l s='Captcha' mod='eicaptcha'}</label>
-    {**
-     * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
-     * Captcha content is automaticaly added into the selector #captcha-box
-     *}
-     <div class="col-md-9">
-        <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box" data-theme="{$captchatheme}"></div>
-     </div>
-    <script src="https://www.google.com/recaptcha/api.js{if isset($captchaforcelang)}?hl={$captchaforcelang}{/if}" async defer></script>
+    {if $captchaVersion == 2}
+        <label class="col-md-3 form-control-label">{l s='Captcha' mod='eicaptcha'}</label>
+        <div class="col-md-9">
+            {**
+             * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
+             * Captcha content is automaticaly added into the selector #captcha-box
+             *}
+            <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box"
+                 data-theme="{$captchatheme}"></div>
+            <script src="https://www.google.com/recaptcha/api.js{if isset($captchaforcelang)}?hl={$captchaforcelang}{/if}"
+                    async defer></script>
+        </div>
+    {else}
+        <input type="hidden" id="captcha-box" name="g-recaptcha-response"/>
+        <script src="https://www.google.com/recaptcha/api.js?render={$publicKey|escape:'html'}"></script>
+        <script>
+            grecaptcha.ready(function () {ldelim}
+                grecaptcha.execute('{$publicKey|escape:'html'}', {ldelim}action: 'contact'{rdelim}).then(function (token) {ldelim}
+                    var recaptchaResponse = document.getElementById('captcha-box');
+                    recaptchaResponse.value = token;
+                    {rdelim});
+                {rdelim});
+        </script>
+    {/if}
 </div>

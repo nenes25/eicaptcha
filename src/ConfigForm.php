@@ -72,6 +72,26 @@ class ConfigForm
                     . '<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
                 'input' => [
                     [
+                        'type' => 'radio',
+                        'label' => $this->module->l('Recaptcha Version'),
+                        'name' => 'CAPTCHA_VERSION',
+                        'required' => true,
+                        'class' => 't',
+                        'values' => [
+                            [
+                                'id' => 'v2',
+                                'value' => 2,
+                                'label' => $this->module->l('V2'),
+                            ],
+                            [
+                                'id' => 'v3',
+                                'value' => 3,
+                                'label' => $this->module->l('V3'),
+                            ],
+                        ],
+                        'tab' => 'general',
+                    ],
+                    [
                         'type' => 'text',
                         'label' => $this->module->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
@@ -259,6 +279,7 @@ class ConfigForm
     public function postProcess()
     {
         if (Tools::isSubmit('SubmitCaptchaConfiguration')) {
+            Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
             Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int)Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
@@ -279,6 +300,7 @@ class ConfigForm
     public function getConfigFieldsValues()
     {
         return [
+            'CAPTCHA_VERSION' => Tools::getValue('CAPTCHA_VERSION', Configuration::get('CAPTCHA_VERSION')),
             'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
             'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
             'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),

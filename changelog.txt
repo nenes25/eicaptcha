@@ -6,6 +6,8 @@
  * https://www.h-hennes.fr/blog/
  */
 
+ - V 2.3.0 - 2021-      : #94 Recaptcha v3
+                          #188 Compatible with reCaptcha V3 (V2 is not available anymore on Google reCaptcha Entreprise)
  - V 2.2.0 - 2021-08-10 : Code refactoring
  - V 2.1.1 - 2021-04-16 : #186 Wrong ps_emailsubscription version comparison
  - V 2.1.0 - 2021-03-15 : Add support for newsletter registration ( in certain conditions )
