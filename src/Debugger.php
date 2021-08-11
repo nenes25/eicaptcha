@@ -48,12 +48,12 @@ class Debugger
      */
     public function checkComposer()
     {
-        if (!is_dir(_PS_MODULE_DIR_.$this->module->name . '/vendor')) {
+        if (!is_dir(_PS_MODULE_DIR_ . $this->module->name . '/vendor')) {
             $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
             return $this->displayError(
                 sprintf(
                     $errorMessage,
-                    _PS_MODULE_DIR_.$this->module->name,
+                    _PS_MODULE_DIR_ . $this->module->name,
                     'https://github.com/nenes25/eicaptcha/releases'
                 )
             );
@@ -80,14 +80,74 @@ class Debugger
         $errors = [];
         $success = [];
 
+        $modulesChecks = $this->checkModules();
+        $hookChecks = $this->checkModuleHooks();
+        $overridesChecks = $this->checkOverrides();
+        $newsletterChecks = $this->checkNewsletter();
+
+        $errors = array_merge(
+            $errors,
+            $modulesChecks['errors'],
+            $hookChecks['errors'],
+            $overridesChecks['errors'],
+            $newsletterChecks['errors']
+        );
+
+        $success = array_merge(
+            $success,
+            $modulesChecks['success'],
+            $hookChecks['success'],
+            $overridesChecks['success'],
+            $newsletterChecks['success']
+        );
+
+        $this->module->getContext()->smarty->assign([
+            'errors' => $errors,
+            'success' => $success,
+            'recaptchaVersion' => Configuration::get('CAPTCHA_VERSION'),
+            'prestashopVersion' => _PS_VERSION_,
+            'themeName' => _THEME_NAME_,
+            'phpVersion' => phpversion()
+        ]);
+
+        return $this->module->fetch('module:eicaptcha/views/templates/admin/debug.tpl');
+    }
+
+
+    /**
+     * Check modules necessary for the module to work
+     * @return array
+     */
+    protected function checkModules()
+    {
+        $errors = $success = [];
         //Check if module version is compatible with current PS version
         if (!$this->module->checkCompliancy()) {
-            $errors[] = 'the module is not compatible with your version';
+            $errors[] = $this->module->l('the module is not compatible with your version');
         } else {
-            $success[] = 'the module is compatible with your version';
+            $success[] = $this->module->l('the module is compatible with your version');
         }
 
-        //Check if module is well hooked on all necessary hooks
+        //Check if module contactform is installed
+        if (!Module::isInstalled('contactform')) {
+            $errors[] = $this->module->l('the module contatcform is not installed');
+        } else {
+            $success[] = $this->module->l('the module contactform is installed');
+        }
+
+        return [
+            'errors' => $errors,
+            'success' => $success
+        ];
+    }
+
+    /**
+     * Check if module is well hooked on all necessary hooks
+     * @return array
+     */
+    protected function checkModuleHooks()
+    {
+        $errors = $success = [];
         $modulesHooks = [
             'header',
             'displayCustomerAccountForm',
@@ -96,111 +156,111 @@ class Debugger
         ];
         foreach ($modulesHooks as $hook) {
             if (!$this->module->isRegisteredInHook($hook)) {
-                $errors[] = 'the module is not registered in hook ' . $hook;
+                $errors[] = $this->module->l(
+                    sprintf(
+                        'the module is not registered in hook %s',
+                        '<strong>' . $hook . '</strong>'
+                    )
+                );
             } else {
-                $success[] = 'the module is well registered in hook ' . $hook;
+                $success[] = $this->module->l(
+                    sprintf(
+                        'the module well registered in hook %s',
+                        '<strong>' . $hook . '</strong>'
+                    )
+                );
             }
         }
 
-        //Check if module contactform is installed
-        if (!Module::isInstalled('contactform')) {
-            $errors[] = 'the module contatcform is not installed';
-        } else {
-            $success[] = 'the module contactform is installed';
-        }
+        return [
+            'errors' => $errors,
+            'success' => $success
+        ];
+    }
+
+    /**
+     * Check that all overrides behaviors are good
+     * @return array
+     */
+    protected function checkOverrides()
+    {
+        $errors = $success = [];
 
         //Check if override are disabled in configuration
         if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
-            $errors[] = 'Overrides are disabled on your website';
+            $errors[] = $this->module->l('Overrides are disabled on your website');
         } else {
-            $success[] = 'Overrides are enabled on your website';
+            $success[] = $this->module->l('Overrides are enabled on your website');
         }
 
         //Check if file overrides exists
         if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/AuthController.php')) {
-            $errors[] = 'AuthController.php override does not exists';
+            $errors[] = $this->module->l('AuthController.php override does not exists');
         } else {
-            $success[] = 'AuthController.php override exists';
+            $success[] = $this->module->l('AuthController.php override exists');
         }
 
         if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
-            $errors[] = 'contactform.php override does not exists';
+            $errors[] = $this->module->l('contactform.php override does not exists');
         } else {
-            $success[] = 'contactform.php override exists';
+            $success[] = $this->module->l('contactform.php override exists');
         }
 
         //Check if file override is written in class_index.php files
         if (file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
             $classesArray = (include _PS_CACHE_DIR_ . '/class_index.php');
             if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
-                $errors[] = 'Authcontroller override is not present in class_index.php';
+                $errors[] = $this->module->l('Authcontroller override is not present in class_index.php');
             } else {
-                $success[] = 'Authcontroller override is present in class_index.php';
+                $success[] = $this->module->l('Authcontroller override is present in class_index.php');
             }
         } else {
-            $errors[] = 'no class_index.php found';
+            $errors[] = $this->module->l('no class_index.php found');
         }
+        return [
+            'errors' => $errors,
+            'success' => $success
+        ];
+    }
+
+    /**
+     * Check the newsletter configuration
+     * @return array
+     */
+    protected function checkNewsletter()
+    {
+        $errors = $success = [];
 
         //Check if we can display the captcha in the newsletter
         if (!Module::isInstalled('ps_emailsubscription')) {
-            $errors[] = 'the module ps_emailsubscription is not installed you will not be able to use captcha on newslettter';
+            $errors[] = $this->module->l('the module ps_emailsubscription is not installed you will not be able to use captcha on newslettter');
         } else {
             if ($this->module->canUseCaptchaOnNewsletter()) {
-                $success[] = 'Module ps_emailsubscription version allow to use captcha on newsletter';
+                $success[] = $this->module->l('Module ps_emailsubscription version allow to use captcha on newsletter');
                 $newsletterTemplateFile = _PS_THEME_DIR_ . '/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
                 if (is_file($newsletterTemplateFile)) {
                     $newsletterTemplateContent = file_get_contents($newsletterTemplateFile);
                     if (!preg_match('#displayNewsletterRegistration#', $newsletterTemplateContent)) {
                         $moduleDefaultFile = _PS_MODULE_DIR_ . 'ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
-                        $errors[] = 'Missing hook <strong>displayNewsletterRegistration</strong> in template <i>' . $newsletterTemplateFile . '</i>'
-                            . '<br />Please check in original module file to adapt : <i>' . $moduleDefaultFile . '</i>';
+                        $errors[] = $this->module->l(
+                            sprintf(
+                                'Missing hook %s in template %s , Please check in original module file to adapt : %s',
+                                '<strong>displayNewsletterRegistration</strong>',
+                                '<i>' . $newsletterTemplateFile . '</i>',
+                                '<i>' . $moduleDefaultFile . '</i>'
+                            )
+                        );
                     }
-                    //First iteration will not deal with multi-shop stores
+                    //@Todo manage multi-shop configuration
                 } else {
-                    $errors[] = 'Module ps_emailsubscription version do not allow to use captcha on newsletter';
+                    $errors[] = $this->module->l('Module ps_emailsubscription version do not allow to use captcha on newsletter');
                 }
             }
         }
-
-        //Display errors
-        $errorsHtml = '';
-        if (sizeof($errors)) {
-            $errorsHtml .= '<div class="alert alert-warning"> Errors <br />'
-                . '<ul>';
-            foreach ($errors as $error) {
-                $errorsHtml .= '<li>' . $error . '</li>';
-            }
-            $errorsHtml .= '</ul></div>';
-        }
-
-        //Display success
-        $successHtml = '';
-        if (sizeof($success)) {
-            $successHtml .= '<div class="alert alert-success"> Success <br />'
-                . '<ul>';
-            foreach ($success as $msg) {
-                $successHtml .= '<li>' . $msg . '</li>';
-            }
-            $successHtml .= '</ul></div>';
-        }
-
-        //Additionnal informations
-        $informations = '<div class="alert alert-info">Aditionnal informations <br />'
-            . '<ul>';
-        //PS version
-        $informations .= '<li>Prestashop version <strong>' . _PS_VERSION_ . '</strong></li>';
-        //Theme
-        $informations .= '<li>Theme name <strong>' . _THEME_NAME_ . '</strong></li>';
-        //Check php version
-        $informations .= '<li>Php version <strong>' . phpversion() . '</strong></li>';
-        $informations .= sprintf(
-            '<p>&nbsp;</p>
-                    <p>If case of problem please open an issue on <a href="%s">github</a> with the asked information</p>',
-            'https://github.com/nenes25/eicaptcha/issues'
-        );
-        $informations .= '</div>';
-
-        return $errorsHtml . ' ' . $successHtml . ' ' . $informations;
+        return [
+            'errors' => $errors,
+            'success' => $success
+        ];
     }
 
     /**
