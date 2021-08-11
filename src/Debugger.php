@@ -89,7 +89,9 @@ class Debugger
 
         //Check if module is well hooked on all necessary hooks
         $modulesHooks = [
-            'header', 'displayCustomerAccountForm', 'actionContactFormSubmitCaptcha',
+            'header',
+            'displayCustomerAccountForm',
+            'actionContactFormSubmitCaptcha',
             'actionContactFormSubmitBefore'
         ];
         foreach ($modulesHooks as $hook) {
@@ -145,10 +147,18 @@ class Debugger
         } else {
             if ($this->module->canUseCaptchaOnNewsletter()) {
                 $success[] = 'Module ps_emailsubscription version allow to use captcha on newsletter';
-            //@todo Check if the hook displayNewsletterRegistration is present in current theme
-                //First iteration will not deal with multi-shop stores
-            } else {
-                $errors[] = 'Module ps_emailsubscription version do not allow to use captcha on newsletter';
+                $newsletterTemplateFile = _PS_THEME_DIR_ . '/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
+                if (is_file($newsletterTemplateFile)) {
+                    $newsletterTemplateContent = file_get_contents($newsletterTemplateFile);
+                    if (!preg_match('#displayNewsletterRegistration#', $newsletterTemplateContent)) {
+                        $moduleDefaultFile = _PS_MODULE_DIR_ . 'ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
+                        $errors[] = 'Missing hook <strong>displayNewsletterRegistration</strong> in template <i>' . $newsletterTemplateFile . '</i>'
+                            . '<br />Please check in original module file to adapt : <i>' . $moduleDefaultFile . '</i>';
+                    }
+                    //First iteration will not deal with multi-shop stores
+                } else {
+                    $errors[] = 'Module ps_emailsubscription version do not allow to use captcha on newsletter';
+                }
             }
         }
 
