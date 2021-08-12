@@ -308,9 +308,13 @@ class EiCaptcha extends Module
     public function hookDisplayNewsletterRegistration($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->canUseCaptchaOnNewsletter()) {
-            $this->context->smarty->assign('publicKey', Configuration::get('CAPTCHA_PUBLIC_KEY'));
-            $this->context->smarty->assign('captchaforcelang', Configuration::get('CAPTCHA_FORCE_LANG'));
-            $this->context->smarty->assign('captchatheme', $this->themes[Configuration::get('CAPTCHA_THEME')]);
+
+            $this->context->smarty->assign([
+                'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
+                'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
+                'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
+                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+            ]);
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayNewsletterRegistration.tpl');
         }
     }
