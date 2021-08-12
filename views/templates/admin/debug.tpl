@@ -3,7 +3,7 @@
         <h4>{l s='Errors' mod='eicaptcha'}</h4>
         <ul>
             {foreach from=$errors item=error}
-                <li>{$error}</li>
+                <li>{$error|html_entity_decode}</li>
             {/foreach}
         </ul>
     </div>
@@ -29,5 +29,5 @@
         <li>{l s='Php version' mod='eicaptcha'} : {$phpVersion}</li>
     </ul>
     <p>&nbsp;</p>
-    <p>{l s='In case of problem please open an issue on <a href="https://github.com/nenes25/eicaptcha/issues">github</a> with the asked information' mod='eicaptcha'}</p>
+    <p>{l s='In case of problem please open an issue with the asked information on' mod='eicaptcha'} : <a href="https://github.com/nenes25/eicaptcha/issues" target="_blank">github</a></p>
 </div>

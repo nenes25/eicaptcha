@@ -237,7 +237,7 @@ class Debugger
         } else {
             if ($this->module->canUseCaptchaOnNewsletter()) {
                 $success[] = $this->module->l('Module ps_emailsubscription version allow to use captcha on newsletter');
-                $newsletterTemplateFile = _PS_THEME_DIR_ . '/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
+                $newsletterTemplateFile = _PS_THEME_DIR_ . 'modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
                 if (is_file($newsletterTemplateFile)) {
                     $newsletterTemplateContent = file_get_contents($newsletterTemplateFile);
                     if (!preg_match('#displayNewsletterRegistration#', $newsletterTemplateContent)) {
