@@ -20,8 +20,8 @@
 
 namespace Eicaptcha\Module;
 
-use Context;
 use Configuration;
+use Context;
 use EiCaptcha;
 use HelperForm;
 use Language;
