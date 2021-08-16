@@ -3,13 +3,12 @@ includes:
     
 parameters:
   paths:
-    - ./home/herve/www/prestashop/modules/eicaptcha/17/eicaptcha/
-    - eicaptcha.php
+    - ../../eicaptcha
   excludes_analyse:
-    - /home/herve/www/prestashop/modules/eicaptcha/17/eicaptcha/vendor/
+    - ../../eicaptcha/vendor/
   # We consider that the extension file will be stored the folder test/phpstan
   # From Phpstan 0.12, paths are relative to the .neon file.
   # - ../../classes
   # - ../../controllers
   reportUnmatchedIgnoredErrors: false
-  level: max
+  level: 4
