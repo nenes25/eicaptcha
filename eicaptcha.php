@@ -177,7 +177,7 @@ class EiCaptcha extends Module
     /**
      * Return content for (re)captcha v2
      *
-     * @return string
+     * @return string|void
      */
     protected function renderHeaderV2()
     {
@@ -219,7 +219,7 @@ class EiCaptcha extends Module
     /**
      * Return content for recaptcha v3
      *
-     * @return string
+     * @return string|void
      */
     public function renderHeaderV3()
     {

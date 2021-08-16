@@ -49,9 +49,9 @@ class Debugger
     public function checkComposer()
     {
         if (!is_dir(_PS_MODULE_DIR_ . $this->module->name . '/vendor')) {
-            $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
+            $errorMessage = $this->module->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
 
-            return $this->displayError(
+            return $this->module->displayError(
                 sprintf(
                     $errorMessage,
                     _PS_MODULE_DIR_ . $this->module->name,

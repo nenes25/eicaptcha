@@ -20,6 +20,7 @@
 
 namespace Eicaptcha\Module;
 
+use Context;
 use Configuration;
 use EiCaptcha;
 use HelperForm;
@@ -54,8 +55,8 @@ class ConfigForm
      *
      * @return string
      *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     public function renderForm()
     {
