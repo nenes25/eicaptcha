@@ -1,4 +1,5 @@
 vendor
+.php_cs.cache
 .github/config.php
 .github/eicaptcha.zip
 .github/build.sh

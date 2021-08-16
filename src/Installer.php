@@ -12,7 +12,6 @@
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- *
  * @author    Hennes Hervé <contact@h-hennes.fr>
  * @copyright 2013-2021 Hennes Hervé
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
@@ -26,7 +25,6 @@ use EiCaptcha;
 
 class Installer
 {
-
     /**
      * @var EiCaptcha
      */
@@ -41,11 +39,12 @@ class Installer
         'actionContactFormSubmitCaptcha',
         'actionContactFormSubmitBefore',
         'actionNewsletterRegistrationBefore',
-        'actionAdminControllerSetMedia'
+        'actionAdminControllerSetMedia',
     ];
 
     /**
      * Installer constructor.
+     *
      * @param EiCaptcha $module
      */
     public function __construct(EiCaptcha $module)
@@ -55,6 +54,7 @@ class Installer
 
     /**
      * Eicaptcha Installer
+     *
      * @return bool
      */
     public function install()
@@ -64,6 +64,7 @@ class Installer
 
     /**
      * Eicaptcha Uninstaller
+     *
      * @return bool
      */
     public function uninstall()
@@ -73,15 +74,17 @@ class Installer
 
     /**
      * Install Hooks
+     *
      * @return bool
      */
     protected function installHooks()
     {
-        return  $this->module->registerHook($this->_hooks);
+        return $this->module->registerHook($this->_hooks);
     }
 
     /**
      * Install Configurations
+     *
      * @return bool
      */
     protected function installConfigurations()

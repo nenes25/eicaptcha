@@ -12,7 +12,6 @@
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- *
  * @author    Hennes Hervé <contact@h-hennes.fr>
  * @copyright 2013-2021 Hennes Hervé
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
@@ -21,13 +20,12 @@
 
 namespace Eicaptcha\Module;
 
+use Configuration;
 use EiCaptcha;
 use Module;
-use Configuration;
 
 class Debugger
 {
-
     /**
      * @var EiCaptcha
      */
@@ -35,6 +33,7 @@ class Debugger
 
     /**
      * Installer constructor.
+     *
      * @param EiCaptcha $module
      */
     public function __construct(EiCaptcha $module)
@@ -44,12 +43,14 @@ class Debugger
 
     /**
      * Check if needed composer directory is present
+     *
      * @return string
      */
     public function checkComposer()
     {
         if (!is_dir(_PS_MODULE_DIR_ . $this->module->name . '/vendor')) {
             $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
+
             return $this->displayError(
                 sprintf(
                     $errorMessage,
@@ -58,21 +59,23 @@ class Debugger
                 )
             );
         }
+
         return '';
     }
 
     /**
      * Check if debug mode is enabled
-     * @return boolean
+     *
+     * @return bool
      */
     public function isDebugEnabled()
     {
-        return (bool)Configuration::get('CAPTCHA_DEBUG');
+        return (bool) Configuration::get('CAPTCHA_DEBUG');
     }
-
 
     /**
      * Debug module installation
+     *
      * @return string
      */
     public function debugModuleInstall()
@@ -107,15 +110,15 @@ class Debugger
             'recaptchaVersion' => Configuration::get('CAPTCHA_VERSION'),
             'prestashopVersion' => _PS_VERSION_,
             'themeName' => _THEME_NAME_,
-            'phpVersion' => phpversion()
+            'phpVersion' => phpversion(),
         ]);
 
         return $this->module->fetch('module:eicaptcha/views/templates/admin/debug.tpl');
     }
 
-
     /**
      * Check modules necessary for the module to work
+     *
      * @return array
      */
     protected function checkModules()
@@ -137,12 +140,13 @@ class Debugger
 
         return [
             'errors' => $errors,
-            'success' => $success
+            'success' => $success,
         ];
     }
 
     /**
      * Check if module is well hooked on all necessary hooks
+     *
      * @return array
      */
     protected function checkModuleHooks()
@@ -152,7 +156,7 @@ class Debugger
             'header',
             'displayCustomerAccountForm',
             'actionContactFormSubmitCaptcha',
-            'actionContactFormSubmitBefore'
+            'actionContactFormSubmitBefore',
         ];
         foreach ($modulesHooks as $hook) {
             if (!$this->module->isRegisteredInHook($hook)) {
@@ -174,12 +178,13 @@ class Debugger
 
         return [
             'errors' => $errors,
-            'success' => $success
+            'success' => $success,
         ];
     }
 
     /**
      * Check that all overrides behaviors are good
+     *
      * @return array
      */
     protected function checkOverrides()
@@ -217,14 +222,16 @@ class Debugger
         } else {
             $errors[] = $this->module->l('no class_index.php found');
         }
+
         return [
             'errors' => $errors,
-            'success' => $success
+            'success' => $success,
         ];
     }
 
     /**
      * Check the newsletter configuration
+     *
      * @return array
      */
     protected function checkNewsletter()
@@ -257,15 +264,18 @@ class Debugger
                 }
             }
         }
+
         return [
             'errors' => $errors,
-            'success' => $success
+            'success' => $success,
         ];
     }
 
     /**
      * Log debug messages
+     *
      * @param string $message
+     *
      * @return void
      */
     public function log($message)

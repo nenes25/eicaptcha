@@ -12,7 +12,6 @@
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- *
  * @author    Hennes Hervé <contact@h-hennes.fr>
  * @copyright 2013-2021 Hennes Hervé
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
@@ -21,15 +20,14 @@
 
 namespace Eicaptcha\Module;
 
-use EiCaptcha;
 use Configuration;
-use Tools;
+use EiCaptcha;
 use HelperForm;
 use Language;
+use Tools;
 
 class ConfigForm
 {
-
     /**
      * @var EiCaptcha
      */
@@ -42,6 +40,7 @@ class ConfigForm
 
     /**
      * Installer constructor.
+     *
      * @param EiCaptcha $module
      */
     public function __construct(EiCaptcha $module)
@@ -52,7 +51,9 @@ class ConfigForm
 
     /**
      * Admin Form for module Configuration
+     *
      * @return string
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -62,7 +63,7 @@ class ConfigForm
             'form' => [
                 'legend' => [
                     'title' => $this->module->l('Eicaptcha Configuration'),
-                    'icon' => 'icon-cogs'
+                    'icon' => 'icon-cogs',
                 ],
                 'tabs' => [
                     'general' => $this->module->l('General configuration'),
@@ -232,13 +233,13 @@ class ConfigForm
                         'name' => 'enable_debug_html',
                         'html_content' => '<a href="' . $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->module->name . '&tab_module=' . $this->module->tab . '&module_name=' . $this->module->name . '&display_debug=1&token=' . Tools::getAdminTokenLite('AdminModules') . '">' . $this->module->l('Check if module is well installed') . '</a>',
                         'desc' => $this->module->l('click on this link will reload the page, please go again in tab "advanced parameters" to see the results'),
-                        'tab' => 'advanced'
-                    ]
+                        'tab' => 'advanced',
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->module->l('Save'),
                     'class' => 'button btn btn-default pull-right',
-                ]
+                ],
             ],
         ];
 
@@ -248,13 +249,13 @@ class ConfigForm
                 'type' => 'html',
                 'name' => 'debug_html',
                 'html_content' => $this->module->getDebugger()->debugModuleInstall(),
-                'tab' => 'advanced'
+                'tab' => 'advanced',
             ];
         }
 
         $helper = new HelperForm();
         $helper->show_toolbar = false;
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?
             Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -266,7 +267,7 @@ class ConfigForm
         $helper->tpl_vars = [
             'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
-            'id_language' => $this->context->language->id
+            'id_language' => $this->context->language->id,
         ];
 
         return $helper->generateForm([$fields_form]);
@@ -274,6 +275,7 @@ class ConfigForm
 
     /**
      * Post Process in back office
+     *
      * @return string|void
      */
     public function postProcess()
@@ -282,12 +284,12 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
-            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int)Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int)Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int)Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
+            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int) Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
-            Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
-            Configuration::updateValue('CAPTCHA_DEBUG', (int)Tools::getValue('CAPTCHA_DEBUG'));
+            Configuration::updateValue('CAPTCHA_THEME', (int) Tools::getValue('CAPTCHA_THEME'));
+            Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
 
             return $this->module->displayConfirmation($this->module->l('Settings updated'));
         }
@@ -295,6 +297,7 @@ class ConfigForm
 
     /**
      * Get config values to hydrate the helperForm
+     *
      * @return array
      */
     public function getConfigFieldsValues()
@@ -311,5 +314,4 @@ class ConfigForm
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
         ];
     }
-
 }

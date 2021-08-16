@@ -12,22 +12,20 @@
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- *
  * @author    Hennes Hervé <contact@h-hennes.fr>
  * @copyright 2013-2021 Hennes Hervé
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-require_once(dirname(__FILE__) . '/vendor/autoload.php');
+require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 use Eicaptcha\Module\ConfigForm;
-use Eicaptcha\Module\Installer;
 use Eicaptcha\Module\Debugger;
+use Eicaptcha\Module\Installer;
 use ReCaptcha\ReCaptcha;
 
 class EiCaptcha extends Module
@@ -76,6 +74,7 @@ class EiCaptcha extends Module
 
     /**
      * Install Module
+     *
      * @return bool
      */
     public function install()
@@ -91,6 +90,7 @@ class EiCaptcha extends Module
 
     /**
      * Uninstall Module
+     *
      * @return bool
      */
     public function uninstall()
@@ -112,6 +112,7 @@ class EiCaptcha extends Module
         if (null === $this->installer) {
             $this->installer = new Installer($this);
         }
+
         return $this->installer;
     }
 
@@ -131,9 +132,9 @@ class EiCaptcha extends Module
         return $this->context;
     }
 
-
     /**
      * Module Configuration in Back Office
+     *
      * @return string
      */
     public function getContent()
@@ -148,7 +149,9 @@ class EiCaptcha extends Module
 
     /**
      * Hook Header
+     *
      * @param array $params
+     *
      * @return string|void
      */
     public function hookHeader($params)
@@ -173,6 +176,7 @@ class EiCaptcha extends Module
 
     /**
      * Return content for (re)captcha v2
+     *
      * @return string
      */
     protected function renderHeaderV2()
@@ -207,12 +211,14 @@ class EiCaptcha extends Module
             if (($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)) {
                 $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . Configuration::get('CAPTCHA_FORCE_LANG') . '" async defer></script>';
             }
+
             return $js;
         }
     }
 
     /**
      * Return content for recaptcha v3
+     *
      * @return string
      */
     public function renderHeaderV3()
@@ -232,13 +238,16 @@ class EiCaptcha extends Module
                         });
                     });
             </script>';
+
             return $js;
         }
     }
 
     /**
      * Add Captcha on the Customer Registration Form
+     *
      * @param array $params
+     *
      * @return string|void
      */
     public function hookDisplayCustomerAccountForm($params)
@@ -248,8 +257,9 @@ class EiCaptcha extends Module
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
                 'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
-                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
             ]);
+
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayCustomerAccountForm.tpl');
         }
     }
@@ -257,8 +267,10 @@ class EiCaptcha extends Module
     /**
      * Check captcha before submit account
      * Custom hook
+     *
      * @param array $params
-     * @return boolean|void
+     *
+     * @return bool|void
      */
     public function hookActionContactFormSubmitCaptcha($params)
     {
@@ -270,6 +282,7 @@ class EiCaptcha extends Module
     /**
      * Check captcha before submit contact form
      * new custom hook
+     *
      * @return bool|void
      */
     public function hookActionContactFormSubmitBefore()
@@ -281,8 +294,11 @@ class EiCaptcha extends Module
 
     /**
      * Register media in back office
+     *
      * @param array $params
+     *
      * @return void
+     *
      * @since 2.1.0
      */
     public function hookActionAdminControllerSetMedia($params)
@@ -301,28 +317,34 @@ class EiCaptcha extends Module
     /**
      * New hook to display content for newsletter registration
      * ( Need to override theme template for themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl )
+     *
      * @param array $params
+     *
      * @return string|void
+     *
      * @since 2.1.0
      */
     public function hookDisplayNewsletterRegistration($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->canUseCaptchaOnNewsletter()) {
-
             $this->context->smarty->assign([
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
                 'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
-                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
             ]);
+
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayNewsletterRegistration.tpl');
         }
     }
 
     /**
      * New Hook to validate newsletter registration
+     *
      * @param array $params
+     *
      * @return void
+     *
      * @since 2.1.0
      */
     public function hookActionNewsletterRegistrationBefore($params)
@@ -336,6 +358,7 @@ class EiCaptcha extends Module
 
     /**
      * Validate Captcha
+     *
      * @return bool
      */
     protected function _validateCaptcha()
@@ -352,6 +375,7 @@ class EiCaptcha extends Module
             $this->debugger->log($errorMessage);
             $this->debugger->log(sprintf($this->l('Recaptcha response %s'), print_r($result->getErrorCodes(), true)));
             $context->controller->errors[] = $errorMessage;
+
             return false;
         }
 
@@ -360,10 +384,10 @@ class EiCaptcha extends Module
         return true;
     }
 
-
     /**
      * Define if captcha can be use on newsletter form
      * Needs a recent version of ps_emailsubscription which implements new required hooks
+     *
      * @return bool
      */
     public function canUseCaptchaOnNewsletter()
@@ -374,6 +398,7 @@ class EiCaptcha extends Module
                 return true;
             }
         }
+
         return false;
     }
 }

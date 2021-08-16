@@ -27,5 +27,15 @@
     "preferred-install": "dist",
     "prepend-autoloader": false
   },
-  "type": "prestashop-module"
+  "type": "prestashop-module",
+  "require-dev": {
+    "prestashop/php-dev-tools": "^4.1"
+  },
+  "scripts": {
+    "phpstan" : [
+      "_PS_ROOT_DIR_=./../ php ~/.config/composer/vendor/bin/phpstan analyze -c ./tests/phpstan/phpstan.neon ./ --debug"
+    ]
+  }
+
+
 }

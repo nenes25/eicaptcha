@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_3e87eed4786fe702ae961b55bbf02c6a'] = 'Ei Captcha';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_76870a3a596aa5fe3b836a20e53c7698'] = 'Aggiungi un captcha al tuo web form';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_793b58515cefe26f6a3c5ab782460a69'] = 'Il modulo Captcha deve essere configurato';
