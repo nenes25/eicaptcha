@@ -32,6 +32,11 @@ jobs:
       matrix:
         presta-versions: [ '1.7.5.0', 'latest' ]
     steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
       - name: Checkout
         uses: actions/checkout@v2.0.0
 
@@ -52,10 +57,5 @@ jobs:
       - run: composer install
 
       # Docker images prestashop/prestashop may be used, even if the shop remains uninstalled
-      - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
-        run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
-
-      # Run a container for PHPStan, having access to the module content and PrestaShop sources.
-      # This tool is outside the composer.json because of the compatibility with PHP 5.6
-      - name: Run PHPStan
-        run: docker run --rm --volumes-from temp-ps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module ghcr.io/phpstan/phpstan:0.12 analyse --configuration=/web/module/tests/phpstan/phpstan.neon
+      - name: Execute PHPStan on PrestaShop (Tag ${{ matrix.presta-versions }})
+        run: ./tests/phpstan.sh ${{ matrix.presta-versions }}
