@@ -23,3 +23,39 @@ jobs:
         uses: actions/checkout@v2.0.0
       - name: Run PHP-CS-Fixer
         uses: prestashopcorp/github-action-php-cs-fixer@master
+
+    # Run PHPStan against the module and a PrestaShop release
+    phpstan:
+      name: PHPStan
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          presta-versions: [ '1.7.5.0', 'latest' ]
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2.0.0
+
+        # Add vendor folder in cache to make next builds faster
+        - name: Cache vendor folder
+          uses: actions/cache@v1
+          with:
+            path: vendor
+            key: php-${{ hashFiles('composer.lock') }}
+
+        # Add composer local folder in cache to make next builds faster
+        - name: Cache composer folder
+          uses: actions/cache@v1
+          with:
+            path: ~/.composer/cache
+            key: php-composer-cache
+
+        - run: composer install
+
+        # Docker images prestashop/prestashop may be used, even if the shop remains uninstalled
+        - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
+          run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
+
+        # Run a container for PHPStan, having access to the module content and PrestaShop sources.
+        # This tool is outside the composer.json because of the compatibility with PHP 5.6
+        - name: Run PHPStan
+          run: docker run --rm --volumes-from temp-ps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.12 analyse --configuration=/web/module/tests/phpstan/phpstan.neon
