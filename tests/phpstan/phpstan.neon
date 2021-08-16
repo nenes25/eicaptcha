@@ -3,7 +3,8 @@ includes:
     
 parameters:
   paths:
-    - ../../eicaptcha
+    - ../../eicaptcha/eicaptcha.php
+    - ../../eicaptcha/src/
   excludes_analyse:
     - ../../eicaptcha/vendor/
   # We consider that the extension file will be stored the folder test/phpstan
