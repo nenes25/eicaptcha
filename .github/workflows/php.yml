@@ -13,3 +13,13 @@ jobs:
         uses: prestashop/github-action-php-lint/7.3@master
       - name: PHP syntax checker 7.4
         uses: prestashop/github-action-php-lint/7.4@master
+
+    # Check the PHP code follow the coding standards
+    php-cs-fixer:
+      name: PHP-CS-Fixer
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2.0.0
+        - name: Run PHP-CS-Fixer
+          uses: prestashopcorp/github-action-php-cs-fixer@master
