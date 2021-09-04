@@ -105,6 +105,7 @@ class Installer
         && Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
         && Configuration::deleteByName('CAPTCHA_ENABLE_NEWSLETTER')
         && Configuration::deleteByName('CAPTCHA_THEME')
-        && Configuration::deleteByName('CAPTCHA_DEBUG');
+        && Configuration::deleteByName('CAPTCHA_DEBUG')
+        && Configuration::deleteByName('CAPTCHA_VERSION');
     }
 }
