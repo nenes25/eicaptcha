@@ -70,7 +70,7 @@ class Debugger
      */
     public function isDebugEnabled()
     {
-        return (bool)Configuration::get('CAPTCHA_DEBUG');
+        return (bool) Configuration::get('CAPTCHA_DEBUG');
     }
 
     /**
@@ -287,7 +287,9 @@ class Debugger
 
     /**
      * Alias of l function with specific context
+     *
      * @param $trans
+     *
      * @return mixed
      */
     public function l($trans)

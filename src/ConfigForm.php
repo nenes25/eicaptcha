@@ -256,7 +256,7 @@ class ConfigForm
 
         $helper = new HelperForm();
         $helper->show_toolbar = false;
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?
             Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -285,12 +285,12 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
-            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int)Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int)Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int)Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
+            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int) Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
-            Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
-            Configuration::updateValue('CAPTCHA_DEBUG', (int)Tools::getValue('CAPTCHA_DEBUG'));
+            Configuration::updateValue('CAPTCHA_THEME', (int) Tools::getValue('CAPTCHA_THEME'));
+            Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
 
             return $this->module->displayConfirmation($this->l('Settings updated'));
         }
@@ -318,7 +318,9 @@ class ConfigForm
 
     /**
      * Alias of l function with specific context
+     *
      * @param $trans
+     *
      * @return mixed
      */
     public function l($trans)
