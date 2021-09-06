@@ -288,9 +288,9 @@ class Debugger
     /**
      * Alias of l function with specific context
      *
-     * @param $trans
+     * @param string $trans
      *
-     * @return mixed
+     * @return string
      */
     public function l($trans)
     {
