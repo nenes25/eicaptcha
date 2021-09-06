@@ -6,7 +6,7 @@
  * https://www.h-hennes.fr/blog/
  */
 
- - V 2.3.0 - 2021-      : #94 Recaptcha v3
+ - V 2.3.0 - 2021-09-06  : #94 Recaptcha v3
                           #188 Compatible with reCaptcha V3 (V2 is not available anymore on Google reCaptcha Entreprise)
                           #113 not compatible with recaptcha V3
                           #195 Improve debug information
