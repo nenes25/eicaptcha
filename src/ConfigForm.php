@@ -63,19 +63,19 @@ class ConfigForm
         $fields_form = [
             'form' => [
                 'legend' => [
-                    'title' => $this->module->l('Eicaptcha Configuration'),
+                    'title' => $this->l('Eicaptcha Configuration'),
                     'icon' => 'icon-cogs',
                 ],
                 'tabs' => [
-                    'general' => $this->module->l('General configuration'),
-                    'advanced' => $this->module->l('Advanded parameters'),
+                    'general' => $this->l('General configuration'),
+                    'advanced' => $this->l('Advanded parameters'),
                 ],
-                'description' => $this->module->l('To get your own public and private keys please click on the folowing link')
+                'description' => $this->l('To get your own public and private keys please click on the folowing link')
                     . '<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
                 'input' => [
                     [
                         'type' => 'radio',
-                        'label' => $this->module->l('Recaptcha Version'),
+                        'label' => $this->l('Recaptcha Version'),
                         'name' => 'CAPTCHA_VERSION',
                         'required' => true,
                         'class' => 't',
@@ -83,35 +83,35 @@ class ConfigForm
                             [
                                 'id' => 'v2',
                                 'value' => 2,
-                                'label' => $this->module->l('V2'),
+                                'label' => $this->l('V2'),
                             ],
                             [
                                 'id' => 'v3',
                                 'value' => 3,
-                                'label' => $this->module->l('V3'),
+                                'label' => $this->l('V3'),
                             ],
                         ],
                         'tab' => 'general',
                     ],
                     [
                         'type' => 'text',
-                        'label' => $this->module->l('Captcha public key (Site key)'),
+                        'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
                         'required' => true,
-                        'empty_message' => $this->module->l('Please fill the captcha public key'),
+                        'empty_message' => $this->l('Please fill the captcha public key'),
                         'tab' => 'general',
                     ],
                     [
                         'type' => 'text',
-                        'label' => $this->module->l('Captcha private key (Secret key)'),
+                        'label' => $this->l('Captcha private key (Secret key)'),
                         'name' => 'CAPTCHA_PRIVATE_KEY',
                         'required' => true,
-                        'empty_message' => $this->module->l('Please fill the captcha private key'),
+                        'empty_message' => $this->l('Please fill the captcha private key'),
                         'tab' => 'general',
                     ],
                     [
                         'type' => 'switch',
-                        'label' => $this->module->l('Enable Captcha for contact form'),
+                        'label' => $this->l('Enable Captcha for contact form'),
                         'name' => 'CAPTCHA_ENABLE_CONTACT',
                         'required' => true,
                         'class' => 't',
@@ -120,19 +120,19 @@ class ConfigForm
                             [
                                 'id' => 'active_on',
                                 'value' => 1,
-                                'label' => $this->module->l('Enabled'),
+                                'label' => $this->l('Enabled'),
                             ],
                             [
                                 'id' => 'active_off',
                                 'value' => 0,
-                                'label' => $this->module->l('Disabled'),
+                                'label' => $this->l('Disabled'),
                             ],
                         ],
                         'tab' => 'general',
                     ],
                     [
                         'type' => 'switch',
-                        'label' => $this->module->l('Enable Captcha for account creation'),
+                        'label' => $this->l('Enable Captcha for account creation'),
                         'name' => 'CAPTCHA_ENABLE_ACCOUNT',
                         'required' => true,
                         'class' => 't',
@@ -141,20 +141,20 @@ class ConfigForm
                             [
                                 'id' => 'active_on',
                                 'value' => 1,
-                                'label' => $this->module->l('Enabled'),
+                                'label' => $this->l('Enabled'),
                             ],
                             [
                                 'id' => 'active_off',
                                 'value' => 0,
-                                'label' => $this->module->l('Disabled'),
+                                'label' => $this->l('Disabled'),
                             ],
                         ],
                         'tab' => 'general',
                     ],
                     [
                         'type' => 'switch',
-                        'label' => $this->module->l('Enable Captcha for newsletter registration'),
-                        'hint' => $this->module->l('Only availaibles in certain conditions*'),
+                        'label' => $this->l('Enable Captcha for newsletter registration'),
+                        'hint' => $this->l('Only availaibles in certain conditions*'),
                         'name' => 'CAPTCHA_ENABLE_NEWSLETTER',
                         'required' => true,
                         'class' => 't',
@@ -163,28 +163,28 @@ class ConfigForm
                             [
                                 'id' => 'active_on',
                                 'value' => 1,
-                                'label' => $this->module->l('Enabled'),
+                                'label' => $this->l('Enabled'),
                             ],
                             [
                                 'id' => 'active_off',
                                 'value' => 0,
-                                'label' => $this->module->l('Disabled'),
+                                'label' => $this->l('Disabled'),
                             ],
                         ],
                         'tab' => 'general',
                     ],
                     [
                         'type' => 'text',
-                        'label' => $this->module->l('Force Captcha language'),
-                        'hint' => $this->module->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for autodetect'),
-                        'desc' => $this->module->l('For available language codes see: https://developers.google.com/recaptcha/docs/language'),
+                        'label' => $this->l('Force Captcha language'),
+                        'hint' => $this->l('Language code ( en-GB | fr | de | de-AT | ... ) - Leave empty for autodetect'),
+                        'desc' => $this->l('For available language codes see: https://developers.google.com/recaptcha/docs/language'),
                         'name' => 'CAPTCHA_FORCE_LANG',
                         'required' => false,
                         'tab' => 'general',
                     ],
                     [
                         'type' => 'radio',
-                        'label' => $this->module->l('Theme'),
+                        'label' => $this->l('Theme'),
                         'name' => 'CAPTCHA_THEME',
                         'required' => true,
                         'is_bool' => true,
@@ -192,12 +192,12 @@ class ConfigForm
                             [
                                 'id' => 'clight',
                                 'value' => 0,
-                                'label' => $this->module->l('Light'),
+                                'label' => $this->l('Light'),
                             ],
                             [
                                 'id' => 'cdark',
                                 'value' => 1,
-                                'label' => $this->module->l('Dark'),
+                                'label' => $this->l('Dark'),
                             ],
                         ],
                         'tab' => 'general',
@@ -205,10 +205,10 @@ class ConfigForm
                     [
                         'type' => 'switch',
                         'name' => 'CAPTCHA_DEBUG',
-                        'label' => $this->module->l('Enable Debug'),
-                        'hint' => $this->module->l('Use only for debug'),
+                        'label' => $this->l('Enable Debug'),
+                        'hint' => $this->l('Use only for debug'),
                         'desc' => sprintf(
-                            $this->module->l('Enable loging for debuging module, see file %s'),
+                            $this->l('Enable loging for debuging module, see file %s'),
                             dirname(__FILE__) . '/logs/debug.log'
                         ),
                         'required' => false,
@@ -218,27 +218,27 @@ class ConfigForm
                             [
                                 'id' => 'active_on',
                                 'value' => 1,
-                                'label' => $this->module->l('Enabled'),
+                                'label' => $this->l('Enabled'),
                             ],
                             [
                                 'id' => 'active_off',
                                 'value' => 0,
-                                'label' => $this->module->l('Disabled'),
+                                'label' => $this->l('Disabled'),
                             ],
                         ],
                         'tab' => 'advanced',
                     ],
                     [
                         'type' => 'html',
-                        'label' => $this->module->l('Check module installation'),
+                        'label' => $this->l('Check module installation'),
                         'name' => 'enable_debug_html',
-                        'html_content' => '<a href="' . $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->module->name . '&tab_module=' . $this->module->tab . '&module_name=' . $this->module->name . '&display_debug=1&token=' . Tools::getAdminTokenLite('AdminModules') . '">' . $this->module->l('Check if module is well installed') . '</a>',
-                        'desc' => $this->module->l('click on this link will reload the page, please go again in tab "advanced parameters" to see the results'),
+                        'html_content' => '<a href="' . $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->module->name . '&tab_module=' . $this->module->tab . '&module_name=' . $this->module->name . '&display_debug=1&token=' . Tools::getAdminTokenLite('AdminModules') . '">' . $this->l('Check if module is well installed') . '</a>',
+                        'desc' => $this->l('click on this link will reload the page, please go again in tab "advanced parameters" to see the results'),
                         'tab' => 'advanced',
                     ],
                 ],
                 'submit' => [
-                    'title' => $this->module->l('Save'),
+                    'title' => $this->l('Save'),
                     'class' => 'button btn btn-default pull-right',
                 ],
             ],
@@ -256,7 +256,7 @@ class ConfigForm
 
         $helper = new HelperForm();
         $helper->show_toolbar = false;
-        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?
             Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -285,14 +285,14 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
-            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int) Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
+            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int)Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int)Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int)Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
-            Configuration::updateValue('CAPTCHA_THEME', (int) Tools::getValue('CAPTCHA_THEME'));
-            Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
+            Configuration::updateValue('CAPTCHA_THEME', (int)Tools::getValue('CAPTCHA_THEME'));
+            Configuration::updateValue('CAPTCHA_DEBUG', (int)Tools::getValue('CAPTCHA_DEBUG'));
 
-            return $this->module->displayConfirmation($this->module->l('Settings updated'));
+            return $this->module->displayConfirmation($this->l('Settings updated'));
         }
     }
 
@@ -314,5 +314,15 @@ class ConfigForm
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
         ];
+    }
+
+    /**
+     * Alias of l function with specific context
+     * @param $trans
+     * @return mixed
+     */
+    public function l($trans)
+    {
+        return $this->module->l($trans, 'configform');
     }
 }

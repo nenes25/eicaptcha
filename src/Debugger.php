@@ -49,7 +49,7 @@ class Debugger
     public function checkComposer()
     {
         if (!is_dir(_PS_MODULE_DIR_ . $this->module->name . '/vendor')) {
-            $errorMessage = $this->module->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
+            $errorMessage = $this->l('This module need composer to work, please go into module directory %s and run composer install or dowload and install latest release from %s');
 
             return $this->module->displayError(
                 sprintf(
@@ -70,7 +70,7 @@ class Debugger
      */
     public function isDebugEnabled()
     {
-        return (bool) Configuration::get('CAPTCHA_DEBUG');
+        return (bool)Configuration::get('CAPTCHA_DEBUG');
     }
 
     /**
@@ -126,16 +126,16 @@ class Debugger
         $errors = $success = [];
         //Check if module version is compatible with current PS version
         if (!$this->module->checkCompliancy()) {
-            $errors[] = $this->module->l('the module is not compatible with your version');
+            $errors[] = $this->l('the module is not compatible with your version');
         } else {
-            $success[] = $this->module->l('the module is compatible with your version');
+            $success[] = $this->l('the module is compatible with your version');
         }
 
         //Check if module contactform is installed
         if (!Module::isInstalled('contactform')) {
-            $errors[] = $this->module->l('the module contatcform is not installed');
+            $errors[] = $this->l('the module contatcform is not installed');
         } else {
-            $success[] = $this->module->l('the module contactform is installed');
+            $success[] = $this->l('the module contactform is installed');
         }
 
         return [
@@ -160,18 +160,14 @@ class Debugger
         ];
         foreach ($modulesHooks as $hook) {
             if (!$this->module->isRegisteredInHook($hook)) {
-                $errors[] = $this->module->l(
-                    sprintf(
-                        'the module is not registered in hook %s',
-                        '<strong>' . $hook . '</strong>'
-                    )
+                $errors[] = sprintf(
+                    $this->l('the module is not registered in hook %s'),
+                    '<strong>' . $hook . '</strong>'
                 );
             } else {
-                $success[] = $this->module->l(
-                    sprintf(
-                        'the module well registered in hook %s',
-                        '<strong>' . $hook . '</strong>'
-                    )
+                $success[] = sprintf(
+                    $this->l('the module well registered in hook %s'),
+                    '<strong>' . $hook . '</strong>'
                 );
             }
         }
@@ -193,34 +189,34 @@ class Debugger
 
         //Check if override are disabled in configuration
         if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
-            $errors[] = $this->module->l('Overrides are disabled on your website');
+            $errors[] = $this->l('Overrides are disabled on your website');
         } else {
-            $success[] = $this->module->l('Overrides are enabled on your website');
+            $success[] = $this->l('Overrides are enabled on your website');
         }
 
         //Check if file overrides exists
         if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/AuthController.php')) {
-            $errors[] = $this->module->l('AuthController.php override does not exists');
+            $errors[] = $this->l('AuthController.php override does not exists');
         } else {
-            $success[] = $this->module->l('AuthController.php override exists');
+            $success[] = $this->l('AuthController.php override exists');
         }
 
         if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
-            $errors[] = $this->module->l('contactform.php override does not exists');
+            $errors[] = $this->l('contactform.php override does not exists');
         } else {
-            $success[] = $this->module->l('contactform.php override exists');
+            $success[] = $this->l('contactform.php override exists');
         }
 
         //Check if file override is written in class_index.php files
         if (file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
             $classesArray = (include _PS_CACHE_DIR_ . '/class_index.php');
             if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
-                $errors[] = $this->module->l('Authcontroller override is not present in class_index.php');
+                $errors[] = $this->l('Authcontroller override is not present in class_index.php');
             } else {
-                $success[] = $this->module->l('Authcontroller override is present in class_index.php');
+                $success[] = $this->l('Authcontroller override is present in class_index.php');
             }
         } else {
-            $errors[] = $this->module->l('no class_index.php found');
+            $errors[] = $this->l('no class_index.php found');
         }
 
         return [
@@ -240,27 +236,27 @@ class Debugger
 
         //Check if we can display the captcha in the newsletter
         if (!Module::isInstalled('ps_emailsubscription')) {
-            $errors[] = $this->module->l('the module ps_emailsubscription is not installed you will not be able to use captcha on newslettter');
+            $errors[] = $this->l('the module ps_emailsubscription is not installed you will not be able to use captcha on newslettter');
         } else {
             if ($this->module->canUseCaptchaOnNewsletter()) {
-                $success[] = $this->module->l('Module ps_emailsubscription version allow to use captcha on newsletter');
+                $success[] = $this->l('Module ps_emailsubscription version allow to use captcha on newsletter');
                 $newsletterTemplateFile = _PS_THEME_DIR_ . 'modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
                 if (is_file($newsletterTemplateFile)) {
                     $newsletterTemplateContent = file_get_contents($newsletterTemplateFile);
                     if (!preg_match('#displayNewsletterRegistration#', $newsletterTemplateContent)) {
                         $moduleDefaultFile = _PS_MODULE_DIR_ . 'ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
-                        $errors[] = $this->module->l(
-                            sprintf(
-                                'Missing hook %s in template %s , Please check in original module file to adapt : %s',
-                                '<strong>displayNewsletterRegistration</strong>',
-                                '<i>' . $newsletterTemplateFile . '</i>',
-                                '<i>' . $moduleDefaultFile . '</i>'
-                            )
+                        $errors[] = sprintf(
+                            $this->l(
+                                'Missing hook %s in template %s , Please check in original module file to adapt : %s'
+                            ),
+                            '<strong>displayNewsletterRegistration</strong>',
+                            '<i>' . $newsletterTemplateFile . '</i>',
+                            '<i>' . $moduleDefaultFile . '</i>'
                         );
                     }
                     //@Todo manage multi-shop configuration
                 } else {
-                    $errors[] = $this->module->l('Module ps_emailsubscription version do not allow to use captcha on newsletter');
+                    $errors[] = $this->l('Module ps_emailsubscription version do not allow to use captcha on newsletter');
                 }
             }
         }
@@ -287,5 +283,15 @@ class Debugger
                 FILE_APPEND
             );
         }
+    }
+
+    /**
+     * Alias of l function with specific context
+     * @param $trans
+     * @return mixed
+     */
+    public function l($trans)
+    {
+        return $this->module->l($trans, 'debugger');
     }
 }
