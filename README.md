@@ -15,7 +15,9 @@ This module display Google recaptcha on the following forms :
  - account creation form
  - newsletter subscription ( since 2.1.0)
 
- This module relies upon the override of the folowing files :
+The module is compatible with both V2 and V3 recaptcha keys ( since v 2.3.0 )  
+
+ This module relies upon the override of the following files :
  - AuthController
  - ContactForm Module
 
@@ -58,11 +60,4 @@ https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
 | Prestashop Version | Compatible |
 | ------------------ | -----------|
 | 1.6.1.x and under| :x:use version 0.4.x or 0.5.x instead |
-| 1.7.0.x | :heavy_check_mark: |
-| 1.7.1.x | :heavy_check_mark: |
-| 1.7.2.x | :heavy_check_mark: |
-| 1.7.3.x | :heavy_check_mark: |
-| 1.7.4.x | :heavy_check_mark: |
-| 1.7.5.x | :heavy_check_mark: |
-| 1.7.6.x | :heavy_check_mark: |
-| 1.7.7.x | :heavy_check_mark: |
+| 1.7.0.x to 1.7.7.x | :heavy_check_mark: |
