@@ -6,6 +6,7 @@ $config
     ->setUsingCache(true)
     ->getFinder()
     ->in(__DIR__)
-    ->exclude('vendor');
+    ->exclude('vendor')
+    ->exclude('translations');
 
 return $config;
