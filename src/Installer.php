@@ -36,6 +36,7 @@ class Installer
     protected $_hooks = [
         'displayHeader',
         'displayCustomerAccountForm',
+        'displayNewsletterRegistration',
         'actionContactFormSubmitCaptcha',
         'actionContactFormSubmitBefore',
         'actionNewsletterRegistrationBefore',
