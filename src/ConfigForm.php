@@ -190,14 +190,14 @@ class ConfigForm
                         'is_bool' => true,
                         'values' => [
                             [
-                                'id' => 'clight',
+                                'id' => 'cdark',
                                 'value' => 0,
-                                'label' => $this->l('Light'),
+                                'label' => $this->l('Dark'),
                             ],
                             [
-                                'id' => 'cdark',
+                                'id' => 'clight',
                                 'value' => 1,
-                                'label' => $this->l('Dark'),
+                                'label' => $this->l('Light'),
                             ],
                         ],
                         'tab' => 'general',

@@ -6,6 +6,7 @@
  * https://www.h-hennes.fr/blog/
  */
 
+ - V 2.3.1 - 2021-       : #202 V2.3.1: les modes sombre et clair sont inversés
  - V 2.3.1 - 2021-09-29  : #201 Added displayNewsletterRegsitration hook to installation method ( thanks to gdebrion )
  - V 2.3.0 - 2021-09-06  : #94 Recaptcha v3
                           #188 Compatible with reCaptcha V3 (V2 is not available anymore on Google reCaptcha Entreprise)
