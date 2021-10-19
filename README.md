@@ -30,7 +30,7 @@ For newsletter subscription implementation it needs module **ps_emailsubscriptio
  
 `Please do not use the github function "download as zip" which will not works`
 
- Screenshots
+ Screenshots with V2 keys
 ---
 
 <p align="center">
@@ -48,6 +48,16 @@ For newsletter subscription implementation it needs module **ps_emailsubscriptio
 	<img src="https://www.h-hennes.fr/blog/wp-content/uploads/2021/03/captcha-newsletter.png" alt="Captcha on newsletter subscription form" />
 </p>
 
+Screenshots with V3 keys (invisible recaptcha)
+---
+
+With v3 keys you just need to check if the recaptcha box is present in the bottom right corner
+
+<p align="center">
+	V3 captcha <br />
+	<img src="https://www.h-hennes.fr/blog/wp-content/uploads/2021/10/eicaptcha-v3.png" alt="Captcha V3" />
+</p>
+
  Additionnal informations (French)
 ---
 
@@ -59,5 +69,5 @@ https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
 
 | Prestashop Version | Compatible |
 | ------------------ | -----------|
-| 1.6.1.x and under| :x:use version 0.4.x or 0.5.x instead |
-| 1.7.0.x to 1.7.7.x | :heavy_check_mark: |
+| 1.6.1.x and under | :x: use version 0.4.x or 0.5.x instead |
+| 1.7.0.x to 1.7.8.x | :heavy_check_mark: |
