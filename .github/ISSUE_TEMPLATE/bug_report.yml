@@ -1,0 +1,62 @@
+name: Bug report
+description: You've got a problem with this module, open a new issue
+assignees: nenes25
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        #Thank you for using the module and reporting an issue  
+        In order to allow us to help you, please fill the following fields
+  - type: checkboxes
+    id: check_existing_bugs
+    attributes:
+      label: Check if your issue exists
+      options:
+        - label: I confirm that i've search that my issue does not already exists
+          required: true
+  - type: dropdown
+    id: prestashop_version
+    attributes:
+      label: Your prestashop version
+      description: Wich version of prestashop are you using ?
+      multiple: false
+      options:
+        - < 1.7
+        - 1.7.2.x
+        - 1.7.3.x
+        - 1.7.4.x
+        - 1.7.5.x
+        - 1.7.6.x
+        - 1.7.7.x
+        - 1.7.8.x
+    validations:
+      required: true
+  - type: dropdown
+    id: eicaptcha_version
+    attributes:
+      label: Eicaptcha version
+      description: Wich version of eicaptcha are you using ? If your version is not in the list please update the module first
+      multiple: false
+      options:
+        - 2.3.x
+  - type: textarea
+    id: specific_theme
+    attributes:
+      label: Do you use a specific theme ?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      placeholder: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Screenshots
+      placeholder: If applicable, add screenshots to help explain your problem.
+  - type: textarea
+    attributes:
+      label: Additional context
+      placeholder: Add any other context about the problem here.
