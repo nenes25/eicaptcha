@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        #Thank you for using the module and reporting an issue  
+        Thank you for using the module and reporting an issue  
         In order to allow us to help you, please fill the following fields
   - type: checkboxes
     id: check_existing_bugs
@@ -44,6 +44,7 @@ body:
     id: specific_theme
     attributes:
       label: Do you use a specific theme ?
+      placeholder: Issue may be related with your theme, please give your theme name and editor(if possible).
     validations:
       required: true
   - type: textarea
@@ -55,7 +56,7 @@ body:
   - type: textarea
     attributes:
       label: Screenshots
-      placeholder: If applicable, add screenshots to help explain your problem.
+      placeholder: If possible paste the screenshof of the result of the debug fonction of the module, and/or specific errors screenshots.
   - type: textarea
     attributes:
       label: Additional context
