@@ -1,37 +1,63 @@
-name: Bug report
-description: You've got a problem with this module, open a new issue
-assignees: nenes25
-labels: ['enhancement']
+name: Feature request
+description:  You want a new feature for this project
+title: "[enhancement]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - nenes25
 body:
   - type: markdown
     attributes:
       value: |
-        # Please provide the maximum informations you can to help us reproduce the bug. 
-        
+        Please provide the maximum informations you can to help us reproduce the bug.
         Thank you for using the module and reporting an issue In order to allow us to help you, please fill the following fields
-  - type: checkboxes
+  - type: input
+    id: contact
     attributes:
-      label: Check if your feature request exists
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
       options:
-        - label: I confirm that i've search that my feature request does not already exists
+        - 1.0.2 (Default)
+        - 1.0.3 (Edge)
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
           required: true
-  - type: textarea
-    attributes:
-      label: Is your feature request related to a problem?
-      placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: Describe the solution you'd like
-      placeholder: A clear and concise description of what you want to happen.
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: Describe alternatives you've considered
-      placeholder: A clear and concise description of any alternative solutions or features you've considered.
-  - type: textarea
-      attributes:
-        label: Additional context
-        placeholder: Add any other context or screenshots about the feature request here.
