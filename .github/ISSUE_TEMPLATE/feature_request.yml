@@ -4,14 +4,17 @@ assignees: nenes25
 labels: ['enhancement']
 body:
   - type: markdown
-    value: "## Thank you for using the module and reporting an issue  
-            In order to allow us to help you, please fill the following fields"
+    attributes:
+      value: |
+        # Please provide the maximum informations you can to help us reproduce the bug. 
+        
+        Thank you for using the module and reporting an issue In order to allow us to help you, please fill the following fields
   - type: checkboxes
-    id: check_existing_bugs
-    label: Check if your feature request exists
-    options:
-      - label: I confirm that i've search that my feature request does not already exists
-        required: true
+    attributes:
+      label: Check if your feature request exists
+      options:
+        - label: I confirm that i've search that my feature request does not already exists
+          required: true
   - type: textarea
     attributes:
       label: Is your feature request related to a problem?
