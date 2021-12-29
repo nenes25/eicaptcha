@@ -34,7 +34,7 @@ body:
     validations:
       required: true
   - type: textarea
-      id: additionnal
-      attributes:
-        label: Additional context
-        description: Add any other context or screenshots about the feature request here.
+    id: additionnal
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
