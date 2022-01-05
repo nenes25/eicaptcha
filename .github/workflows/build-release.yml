@@ -1,0 +1,62 @@
+name: Build
+on: [push, pull_request]
+
+jobs:
+  deploy:
+    name: build dependencies & create artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+      - name: Install composer dependencies
+        run: composer install --no-dev -o
+      - name: Clean-up project
+        uses: PrestaShopCorp/github-action-clean-before-deploy@v1.0
+      - name: Prepare auto-index tool
+        run: |
+          composer global require prestashop/autoindex
+      - name: Generate index.php
+        run: |
+          ~/.composer/vendor/bin/autoindex
+      - name: Create & upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ github.event.repository.name }}
+          path: ../
+  update_release_draft:
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: github.event_name == 'push' && github.event.ref == 'refs/heads/master'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: ${{ github.event.repository.name }}
+      - id: release_info
+        uses: toolmantim/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare for Release
+        run: |
+          cd ${{ github.event.repository.name }}
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+      - name: Clean existing assets
+        shell: bash
+        run: |
+          curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
+          assets=`bin/hub api -t repos/${{ github.repository }}/releases/${{ steps.release_info.outputs.id }}/assets | awk '/\].url/ { print $2 }'`
+          for asset in $assets
+          do
+              bin/hub api -X DELETE $asset
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to GitHub Release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release_info.outputs.upload_url }}
+          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.zip
+          asset_name: ${{ github.event.repository.name }}.zip
+          asset_content_type: application/zip
