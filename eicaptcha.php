@@ -397,6 +397,51 @@ class EiCaptcha extends Module
     }
 
     /**
+     * Custom hook where you can get all the eicaptcha configuration to use the captcha in another module
+     * And display with your own template
+     * Or in a custom controller
+     * @param array $params
+     * @return array The eicaptcha configuration
+     */
+    public function hookActionGetEicaptchaParams($params)
+    {
+        return [
+            'displayCaptcha' => $this->shouldDisplayToCustomer(),
+            'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
+            'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
+            'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
+            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
+        ];
+    }
+
+    /**
+     * Custom hook used to render the captcha form with the default template
+     * @param array $params
+     * @return string the rendered template for displaying the captcha ( if needed)
+     */
+    public function hookDisplayEicaptchaVerification($params)
+    {
+        $this->context->smarty->assign([
+            'displayCaptcha' => $this->shouldDisplayToCustomer(),
+            'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
+            'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
+            'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
+            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
+        ]);
+        return $this->display(__FILE__, 'views/templates/hook/hookDisplayEicaptchaVerification.tpl');
+    }
+
+    /**
+     * Custom hook used to validate captcha response
+     * @param array $params
+     * @return bool
+     */
+    public function hookActionValidateCaptcha($params = [])
+    {
+        return $this->_validateCaptcha();
+    }
+
+    /**
      * Define if captcha can be use on newsletter form
      * Needs a recent version of ps_emailsubscription which implements new required hooks
      *
