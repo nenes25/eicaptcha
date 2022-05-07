@@ -1,14 +1,16 @@
 /**
  * Module Captcha
  * Add (re)captcha on contact and account creation forms
- * © Hervé Hennes 2013-2021
+ * © Hervé Hennes 2013-2022
  * https://github.com/nenes25/eicaptcha
  * https://www.h-hennes.fr/blog/
  */
 
- - V 2.3.2 - 2021-       : #202 V2.3.1: les modes sombre et clair sont inversés
+ - V 2.4.0 - 2022-       : #202 V2.3.1: les modes sombre et clair sont inversés
                          : #205 Captcha box is not visible (Clarify behavior of V3 keys )
- - V 2.3.1 - 2021-09-29  : #201 Added displayNewsletterRegsitration hook to installation method ( thanks to gdebrion )
+                         : #184 Don't require recaptcha for logged in clients
+                         : #217 Allow to validate custom forms
+ - V 2.3.1 - 2021-09-29  : #201 Added displayNewsletterRegistration hook to installation method ( thanks to gdebrion )
  - V 2.3.0 - 2021-09-06  : #94 Recaptcha v3
                           #188 Compatible with reCaptcha V3 (V2 is not available anymore on Google reCaptcha Entreprise)
                           #113 not compatible with recaptcha V3

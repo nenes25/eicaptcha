@@ -50,7 +50,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.3.1';
+        $this->version = '2.4.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -156,6 +156,10 @@ class EiCaptcha extends Module
      */
     public function hookHeader($params)
     {
+        if ( ! $this->shouldDisplayToCustomer()){
+            return;
+        }
+
         $captchaVersion = Configuration::get('CAPTCHA_VERSION');
         //Add Content box to contact form page in order to display captcha
         if ($this->context->controller instanceof ContactController
@@ -326,7 +330,11 @@ class EiCaptcha extends Module
      */
     public function hookDisplayNewsletterRegistration($params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->canUseCaptchaOnNewsletter()) {
+        if (
+            Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
+            && $this->canUseCaptchaOnNewsletter()
+            && $this->shouldDisplayToCustomer()
+        ) {
             $this->context->smarty->assign([
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
@@ -363,6 +371,10 @@ class EiCaptcha extends Module
      */
     protected function _validateCaptcha()
     {
+        if ( !$this->shouldDisplayToCustomer()){
+            return true;
+        }
+
         $context = Context::getContext();
         $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
         $result = $captcha->verify(
@@ -400,5 +412,22 @@ class EiCaptcha extends Module
         }
 
         return false;
+    }
+
+    /**
+     * Define if the captcha should be displayed to the customer
+     * @return bool
+     */
+    protected function shouldDisplayToCustomer()
+    {
+        if (
+            Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS') == 0
+            && $this->context->customer->id > 0
+            && $this->context->customer->email != null
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

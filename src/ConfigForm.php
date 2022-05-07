@@ -111,6 +111,28 @@ class ConfigForm
                     ],
                     [
                         'type' => 'switch',
+                        'label' => $this->l('Enable Captcha for logged customers'),
+                        'name' => 'CAPTCHA_ENABLE_LOGGED_CUSTOMERS',
+                        'required' => true,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'hint' => $this->l('Define if logged customers need to use captcha or not'),
+                        'values' => [
+                            [
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                        'tab' => 'general',
+                    ],
+                    [
+                        'type' => 'switch',
                         'label' => $this->l('Enable Captcha for contact form'),
                         'name' => 'CAPTCHA_ENABLE_CONTACT',
                         'required' => true,
@@ -282,9 +304,11 @@ class ConfigForm
     public function postProcess()
     {
         if (Tools::isSubmit('SubmitCaptchaConfiguration')) {
+
             Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
+            Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS'));
             Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
             Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
             Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int) Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
@@ -307,6 +331,7 @@ class ConfigForm
             'CAPTCHA_VERSION' => Tools::getValue('CAPTCHA_VERSION', Configuration::get('CAPTCHA_VERSION')),
             'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
             'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
+            'CAPTCHA_ENABLE_LOGGED_CUSTOMERS' => Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS')),
             'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
             'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
             'CAPTCHA_ENABLE_NEWSLETTER' => Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER', Configuration::get('CAPTCHA_ENABLE_NEWSLETTER')),
