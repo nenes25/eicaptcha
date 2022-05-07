@@ -304,7 +304,6 @@ class ConfigForm
     public function postProcess()
     {
         if (Tools::isSubmit('SubmitCaptchaConfiguration')) {
-
             Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));

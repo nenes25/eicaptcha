@@ -1,5 +1,6 @@
 vendor
 .php_cs.cache
+.php-cs-fixer.cache
 .github/config.php
 .github/eicaptcha.zip
 .github/build.sh

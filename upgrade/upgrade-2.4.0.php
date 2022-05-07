@@ -18,15 +18,15 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  http://www.h-hennes.fr/blog/
  */
- 
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 /**
  * Upgrade module 2_4_0 Add new options to manage new forms and to disallow captcha for logged users
+ *
  * @param Module $module
+ *
  * @return bool
  */
 function upgrade_module_2_4_0($module)

@@ -156,7 +156,7 @@ class EiCaptcha extends Module
      */
     public function hookHeader($params)
     {
-        if ( ! $this->shouldDisplayToCustomer()){
+        if (!$this->shouldDisplayToCustomer()) {
             return;
         }
 
@@ -371,7 +371,7 @@ class EiCaptcha extends Module
      */
     protected function _validateCaptcha()
     {
-        if ( !$this->shouldDisplayToCustomer()){
+        if (!$this->shouldDisplayToCustomer()) {
             return true;
         }
 
@@ -400,7 +400,9 @@ class EiCaptcha extends Module
      * Custom hook where you can get all the eicaptcha configuration to use the captcha in another module
      * And display with your own template
      * Or in a custom controller
+     *
      * @param array $params
+     *
      * @return array The eicaptcha configuration
      */
     public function hookActionGetEicaptchaParams($params)
@@ -416,7 +418,9 @@ class EiCaptcha extends Module
 
     /**
      * Custom hook used to render the captcha form with the default template
+     *
      * @param array $params
+     *
      * @return string the rendered template for displaying the captcha ( if needed)
      */
     public function hookDisplayEicaptchaVerification($params)
@@ -428,12 +432,15 @@ class EiCaptcha extends Module
             'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
             'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
         ]);
+
         return $this->display(__FILE__, 'views/templates/hook/hookDisplayEicaptchaVerification.tpl');
     }
 
     /**
      * Custom hook used to validate captcha response
+     *
      * @param array $params
+     *
      * @return bool
      */
     public function hookActionValidateCaptcha($params = [])
@@ -461,6 +468,7 @@ class EiCaptcha extends Module
 
     /**
      * Define if the captcha should be displayed to the customer
+     *
      * @return bool
      */
     protected function shouldDisplayToCustomer()
