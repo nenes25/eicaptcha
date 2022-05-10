@@ -8,7 +8,7 @@ class OrderController extends OrderControllerCore
             Tools::isSubmit('submitCreate')
             && Module::isInstalled('eicaptcha')
             && Module::isEnabled('eicaptcha')
-            && false === Module::getInstanceByName('eicaptcha')->hookActionContactFormSubmitCaptcha([])
+            && false === Module::getInstanceByName('eicaptcha')->hookActionCustomerRegisterSubmitCaptcha([])
             && !empty($this->errors)
         ) {
             unset($_POST['submitCreate']);

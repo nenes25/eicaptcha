@@ -31,5 +31,7 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_2_4_0($module)
 {
-    return Configuration::updateGlobalValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1);
+    return
+        Configuration::updateGlobalValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1)
+        && $module->registerHook('actionCustomerRegisterSubmitCaptcha');
 }

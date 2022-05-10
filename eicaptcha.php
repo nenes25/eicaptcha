@@ -275,8 +275,25 @@ class EiCaptcha extends Module
      * @param array $params
      *
      * @return bool|void
+     * @deprecated since 2.4.0
      */
     public function hookActionContactFormSubmitCaptcha($params)
+    {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+            return $this->_validateCaptcha();
+        }
+    }
+
+    /**
+     * Check captcha before submit account
+     * Custom hook
+     *
+     * @param array $params
+     *
+     * @return bool|void
+     * @since 2.4.0
+     */
+    public function hookActionCustomerRegisterSubmitCaptcha($params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             return $this->_validateCaptcha();

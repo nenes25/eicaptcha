@@ -6,10 +6,11 @@
  * https://www.h-hennes.fr/blog/
  */
 
- - V 2.4.0 - 2022-       : #202 V2.3.1: les modes sombre et clair sont inversés
-                         : #205 Captcha box is not visible (Clarify behavior of V3 keys )
-                         : #184 Don't require recaptcha for logged in clients
-                         : #217 Allow to validate custom forms
+ - V 2.4.0 - 2022-       #202 V2.3.1: les modes sombre et clair sont inversés
+                         #205 Captcha box is not visible (Clarify behavior of V3 keys )
+                         #184 Don't require recaptcha for logged in clients
+                         #217 Allow to validate custom forms
+                         #165 Rename Hook hookActionContactFormSubmitCaptcha
  - V 2.3.1 - 2021-09-29  : #201 Added displayNewsletterRegistration hook to installation method ( thanks to gdebrion )
  - V 2.3.0 - 2021-09-06  : #94 Recaptcha v3
                           #188 Compatible with reCaptcha V3 (V2 is not available anymore on Google reCaptcha Entreprise)
