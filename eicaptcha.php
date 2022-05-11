@@ -393,7 +393,13 @@ class EiCaptcha extends Module
         }
 
         $context = Context::getContext();
-        $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'));
+        //Fix issue if allow_url_open is set to 0
+        if ( function_exists('ini_get') && !ini_get('allow_url_fopen')){
+            $recaptchaMethod = new \ReCaptcha\RequestMethod\CurlPost();
+        } else {
+            $recaptchaMethod = null;
+        }
+        $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'),$recaptchaMethod);
         $result = $captcha->verify(
             Tools::getValue('g-recaptcha-response'),
             Tools::getRemoteAddr()

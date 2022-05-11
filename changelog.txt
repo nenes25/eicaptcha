@@ -10,6 +10,7 @@
                          #205 Captcha box is not visible (Clarify behavior of V3 keys )
                          #184 Don't require recaptcha for logged in clients
                          #217 Allow to validate custom forms
+                         #169 Problème lors de la validation de mon formulaire
                          #165 Rename Hook hookActionContactFormSubmitCaptcha
  - V 2.3.1 - 2021-09-29  : #201 Added displayNewsletterRegistration hook to installation method ( thanks to gdebrion )
  - V 2.3.0 - 2021-09-06  : #94 Recaptcha v3
