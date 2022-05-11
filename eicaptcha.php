@@ -275,6 +275,7 @@ class EiCaptcha extends Module
      * @param array $params
      *
      * @return bool|void
+     *
      * @deprecated since 2.4.0
      */
     public function hookActionContactFormSubmitCaptcha($params)
@@ -291,6 +292,7 @@ class EiCaptcha extends Module
      * @param array $params
      *
      * @return bool|void
+     *
      * @since 2.4.0
      */
     public function hookActionCustomerRegisterSubmitCaptcha($params)
@@ -394,12 +396,12 @@ class EiCaptcha extends Module
 
         $context = Context::getContext();
         //Fix issue if allow_url_open is set to 0
-        if ( function_exists('ini_get') && !ini_get('allow_url_fopen')){
+        if (function_exists('ini_get') && !ini_get('allow_url_fopen')) {
             $recaptchaMethod = new \ReCaptcha\RequestMethod\CurlPost();
         } else {
             $recaptchaMethod = null;
         }
-        $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'),$recaptchaMethod);
+        $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'), $recaptchaMethod);
         $result = $captcha->verify(
             Tools::getValue('g-recaptcha-response'),
             Tools::getRemoteAddr()
