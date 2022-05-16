@@ -376,7 +376,10 @@ class EiCaptcha extends Module
      */
     public function hookActionNewsletterRegistrationBefore($params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1 && $this->canUseCaptchaOnNewsletter()) {
+        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
+            && $this->canUseCaptchaOnNewsletter()
+            && $this->shouldDisplayToCustomer()
+        ) {
             if (!$this->_validateCaptcha()) {
                 $params['hookError'] = $this->l('Please validate the captcha field before submitting your request');
             }
