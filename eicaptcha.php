@@ -47,7 +47,7 @@ class EiCaptcha extends Module
     protected $installer;
 
     /**
-     * @var string (2 digits Language ISO code) Captcha language (default: en)
+     * @var string (2 or 3 digits Language ISO code) Captcha language (default: en)
      */
     protected $captchaLang = 'en';
 
