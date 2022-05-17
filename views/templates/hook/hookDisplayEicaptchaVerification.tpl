@@ -28,7 +28,7 @@
         {if $captchaVersion == 2}
             <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box-custom"
                  data-theme="{$captchatheme}"></div>
-            <script src="https://www.google.com/recaptcha/api.js{if isset($captchaforcelang)}?hl={$captchaforcelang}{/if}"
+            <script src="https://www.google.com/recaptcha/api.js?hl={$captchalang}"
                     async defer></script>
         {else}
             <input type="hidden" id="captcha-box-custom" name="g-recaptcha-response"/>
