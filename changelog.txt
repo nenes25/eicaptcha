@@ -7,12 +7,13 @@
  */
 
  - V 2.4.0 - 2022-       #202 V2.3.1: les modes sombre et clair sont inversés
-                         #205 Captcha box is not visible (Clarify behavior of V3 keys )
+                         #205 Captcha box is not visible (Clarify behavior of V3 keys)
                          #184 Don't require recaptcha for logged in clients
                          #217 Allow to validate custom forms
                          #169 Problème lors de la validation de mon formulaire
                          #165 Rename Hook hookActionContactFormSubmitCaptcha
- - V 2.3.1 - 2021-09-29  : #201 Added displayNewsletterRegistration hook to installation method ( thanks to gdebrion )
+                         #162 V2.0.4 not detect PS language switching (thanks to metacreo)
+ - V 2.3.1 - 2021-09-29  : #201 Added displayNewsletterRegistration hook to installation method (thanks to gdebrion)
  - V 2.3.0 - 2021-09-06  : #94 Recaptcha v3
                           #188 Compatible with reCaptcha V3 (V2 is not available anymore on Google reCaptcha Entreprise)
                           #113 not compatible with recaptcha V3
@@ -20,7 +21,7 @@
                           #196 Improve Code quality : introduce phpcsfixer and phpstan
  - V 2.2.0 - 2021-08-10 : Code refactoring
  - V 2.1.1 - 2021-04-16 : #186 Wrong ps_emailsubscription version comparison
- - V 2.1.0 - 2021-03-15 : Add support for newsletter registration ( in certain conditions )
+ - V 2.1.0 - 2021-03-15 : Add support for newsletter registration (in certain conditions)
                           #164 eicaptcha newsletter filtering
                           #179 Better display debug mode in back office
                           #180 Display link to github issues in debug module

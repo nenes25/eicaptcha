@@ -273,7 +273,7 @@ class EiCaptcha extends Module
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
                 'captchalang' => $this->captchaLang,
-                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
             ]);
 
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayCustomerAccountForm.tpl');
@@ -370,7 +370,7 @@ class EiCaptcha extends Module
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
                 'captchalang' => $this->captchaLang,
-                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
             ]);
 
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayNewsletterRegistration.tpl');
@@ -449,7 +449,7 @@ class EiCaptcha extends Module
             'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
             'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
             'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
-            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
         ];
     }
 
@@ -467,7 +467,7 @@ class EiCaptcha extends Module
             'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
             'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
             'captchalang' => $this->captchaLang,
-            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')]
+            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
         ]);
 
         return $this->display(__FILE__, 'views/templates/hook/hookDisplayEicaptchaVerification.tpl');
