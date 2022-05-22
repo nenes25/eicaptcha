@@ -26,7 +26,7 @@
 <div class="col-xs-12 pull-right">
     {if $captchaVersion == 2}
     <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box-newsletter" data-theme="{$captchatheme}"></div>
-    <script src="https://www.google.com/recaptcha/api.js{if isset($captchaforcelang)}?hl={$captchaforcelang}{/if}" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?hl={$captchalang}" async defer></script>
     {else}
         <input type="hidden" id="captcha-box-newsletter" name="g-recaptcha-response"/>
         <script src="https://www.google.com/recaptcha/api.js?render={$publicKey|escape:'html'}"></script>
