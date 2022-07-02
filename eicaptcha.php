@@ -35,6 +35,7 @@ class EiCaptcha extends Module
 
     /** @var array */
     protected $themes = [];
+
     /**
      * @var Debugger
      */
@@ -44,6 +45,11 @@ class EiCaptcha extends Module
      * @var Installer
      */
     protected $installer;
+
+    /**
+     * @var string (2 or 3 digits Language ISO code) Captcha language (default: en)
+     */
+    protected $captchaLang = 'en';
 
     public function __construct()
     {
@@ -70,6 +76,12 @@ class EiCaptcha extends Module
         $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
 
         $this->debugger = new Debugger($this);
+
+        $this->captchaLang = $this->context->language->iso_code;
+        $forceLang = Configuration::get('CAPTCHA_FORCE_LANG');
+        if (!empty($forceLang) && Validate::isLanguageIsoCode($forceLang)) {
+            $this->captchaLang = $forceLang;
+        }
     }
 
     /**
@@ -213,7 +225,7 @@ class EiCaptcha extends Module
             </script>';
 
             if (($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)) {
-                $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . Configuration::get('CAPTCHA_FORCE_LANG') . '" async defer></script>';
+                $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . $this->captchaLang . '" async defer></script>';
             }
 
             return $js;
@@ -260,7 +272,7 @@ class EiCaptcha extends Module
             $this->context->smarty->assign([
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
-                'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
+                'captchalang' => $this->captchaLang,
                 'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
             ]);
 
@@ -357,7 +369,7 @@ class EiCaptcha extends Module
             $this->context->smarty->assign([
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
-                'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
+                'captchalang' => $this->captchaLang,
                 'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
             ]);
 
@@ -457,7 +469,7 @@ class EiCaptcha extends Module
             'displayCaptcha' => $this->shouldDisplayToCustomer(),
             'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
             'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
-            'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
+            'captchalang' => $this->captchaLang,
             'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
         ]);
 
