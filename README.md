@@ -14,6 +14,7 @@ This module display Google recaptcha on the following forms :
  - contact form
  - account creation form
  - newsletter subscription ( since 2.1.0)
+ - custom module forms ( since 2.4.0 see : METTRE LIEN BLOG )
 
 The module is compatible with both V2 and V3 recaptcha keys ( since v 2.3.0 )  
 
@@ -26,7 +27,7 @@ For newsletter subscription implementation it needs module **ps_emailsubscriptio
  This module use composer to get recaptcha lib.  
  Don't forget to use `composer install` in order to download the necessary recaptcha composer package.   
  
- Otherwise you can go on the github release page https://github.com/nenes25/eicaptcha/releases and download the last 2.0.x version release to get the full package    
+ Otherwise you can go on the github release page https://github.com/nenes25/eicaptcha/releases and download the last 2.x version release to get the full package    
  
 `Please do not use the github function "download as zip" which will not works`
 
@@ -71,3 +72,4 @@ https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
 | ------------------ | -----------|
 | 1.6.1.x and under | :x: use version 0.4.x or 0.5.x instead |
 | 1.7.0.x to 1.7.8.x | :heavy_check_mark: |
+| 8.x | :interrobang: Not yet tested |
