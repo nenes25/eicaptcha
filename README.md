@@ -14,7 +14,7 @@ This module display Google recaptcha on the following forms :
  - contact form
  - account creation form
  - newsletter subscription ( since 2.1.0)
- - custom module forms ( since 2.4.0 see : METTRE LIEN BLOG )
+ - custom module forms ( since 2.4.0 see : https://www.h-hennes.fr/blog/2022/08/22/prestashop-ajouter-un-captcha-sur-les-formulaires-de-vos-modules/ )
 
 The module is compatible with both V2 and V3 recaptcha keys ( since v 2.3.0 )  
 
