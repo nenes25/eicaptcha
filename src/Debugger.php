@@ -26,6 +26,12 @@ use Module;
 
 class Debugger
 {
+    /** @var string Url of the module relases on github */
+    public const URL_MODULE_RELEASES = 'https://github.com/nenes25/eicaptcha/releases';
+
+    /** @var string Url of the wiki for the hook issue */
+    public const URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM = 'https://github.com/nenes25/eicaptcha/wiki/Issue-:-Unable-to-find-the-hook-displayCustomerAccountForm-in-the-default-template';
+
     /**
      * @var EiCaptcha
      */
@@ -55,7 +61,7 @@ class Debugger
                 sprintf(
                     $errorMessage,
                     _PS_MODULE_DIR_ . $this->module->name,
-                    'https://github.com/nenes25/eicaptcha/releases'
+                    self::URL_MODULE_RELEASES
                 )
             );
         }
@@ -87,12 +93,14 @@ class Debugger
         $hookChecks = $this->checkModuleHooks();
         $overridesChecks = $this->checkOverrides();
         $newsletterChecks = $this->checkNewsletter();
+        $hookHookDisplayCustomerAccountForm = $this->checkHookDisplayCustomerAccountForm();
 
         $errors = array_merge(
             $errors,
             $modulesChecks['errors'],
             $hookChecks['errors'],
             $overridesChecks['errors'],
+            $hookHookDisplayCustomerAccountForm['errors'],
             $newsletterChecks['errors']
         );
 
@@ -101,6 +109,7 @@ class Debugger
             $modulesChecks['success'],
             $hookChecks['success'],
             $overridesChecks['success'],
+            $hookHookDisplayCustomerAccountForm['success'],
             $newsletterChecks['success']
         );
 
@@ -153,10 +162,13 @@ class Debugger
     {
         $errors = $success = [];
         $modulesHooks = [
-            'header',
+            'displayHeader',
             'displayCustomerAccountForm',
-            'actionContactFormSubmitCaptcha',
+            'displayNewsletterRegistration',
+            'actionCustomerRegisterSubmitCaptcha',
             'actionContactFormSubmitBefore',
+            'actionNewsletterRegistrationBefore',
+            'actionAdminControllerSetMedia',
         ];
         foreach ($modulesHooks as $hook) {
             if (!$this->module->isRegisteredInHook($hook)) {
@@ -259,6 +271,37 @@ class Debugger
                     $errors[] = $this->l('Module ps_emailsubscription version do not allow to use captcha on newsletter');
                 }
             }
+        }
+
+        return [
+            'errors' => $errors,
+            'success' => $success,
+        ];
+    }
+
+    /**
+     * In some theme the hooks displayCustomerAccountForm is missing
+     * We try to detect if by searching the string {$hook_create_account_form nofilter}
+     * in template themes/THEMENAME/templates/customer/_partials/customer-form.tpl
+     *
+     * @return array
+     */
+    protected function checkHookDisplayCustomerAccountForm()
+    {
+        $errors = $success = [];
+        $templateFile = _PS_THEME_DIR_ . 'templates/customer/_partials/customer-form.tpl';
+        if (is_file($templateFile)) {
+            $templateContent = file_get_contents($templateFile);
+            if (preg_match('#\{\$hook_create_account_form nofilter\}#', $templateContent)) {
+                $success[] = $this->l('The hook displayCustomerAccountForm is present in the default template');
+            } else {
+                $errors[] = sprintf(
+                    $this->l('Unable to find the hook displayCustomerAccountForm in the default template, you can read more about it %s'),
+                    '<a href="' . self::URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM . '" target="_blank">' . $this->l('here') . '</a>'
+                );
+            }
+        } else {
+            $errors[] = sprintf($this->l('Unable to find the default customer account file : %s'), $templateFile);
         }
 
         return [

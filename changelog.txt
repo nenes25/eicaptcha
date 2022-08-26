@@ -6,6 +6,7 @@
  * https://www.h-hennes.fr/blog/
  */
 
+ - V 2.4.1 - 2022        #225 Recaptcha bug create account
  - V 2.4.0 - 2022-08-22  #202 V2.3.1: les modes sombre et clair sont inversés
                          #205 Captcha box is not visible (Clarify behavior of V3 keys)
                          #184 Don't require recaptcha for logged in clients
