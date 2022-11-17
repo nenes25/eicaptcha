@@ -5,7 +5,7 @@
 [![Github issues](https://img.shields.io/github/issues-raw/nenes25/eicaptcha)]()
 
 # eicaptcha
-Module EiCaptcha for prestashop 1.7
+Module EiCaptcha for prestashop 1.7 +
 
 The module is also available for prestashop version 1.6.x see here : https://github.com/nenes25/eicaptcha/tree/master  
 or download 0.4.x releases ( This version remains available but support and evolutions are stopped )   
@@ -69,7 +69,7 @@ https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
 ---
 
 | Prestashop Version | Compatible |
-| ------------------ | -----------|
-| 1.6.1.x and under | :x: use version 0.4.x or 0.5.x instead |
+|--------------------| -----------|
+| 1.6.1.x and under  | :x: use version 0.4.x or 0.5.x instead |
 | 1.7.0.x to 1.7.8.x | :heavy_check_mark: |
-| 8.x | :interrobang: Not yet tested |
+| 8.0.x              | ::heavy_check_mark:|
