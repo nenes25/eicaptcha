@@ -252,24 +252,36 @@ class Debugger
         } else {
             if ($this->module->canUseCaptchaOnNewsletter()) {
                 $success[] = $this->l('Module ps_emailsubscription version allow to use captcha on newsletter');
-                $newsletterTemplateFile = _PS_THEME_DIR_ . 'modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
-                if (is_file($newsletterTemplateFile)) {
-                    $newsletterTemplateContent = file_get_contents($newsletterTemplateFile);
-                    if (!preg_match('#displayNewsletterRegistration#', $newsletterTemplateContent)) {
-                        $moduleDefaultFile = _PS_MODULE_DIR_ . 'ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
-                        $errors[] = sprintf(
-                            $this->l(
-                                'Missing hook %s in template %s , Please check in original module file to adapt : %s'
-                            ),
-                            '<strong>displayNewsletterRegistration</strong>',
-                            '<i>' . $newsletterTemplateFile . '</i>',
-                            '<i>' . $moduleDefaultFile . '</i>'
-                        );
+
+                $newsletterTemplatesFiles = [
+                    _PS_THEME_DIR_ . 'modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl',
+                    _PS_PARENT_THEME_DIR_ . 'modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl',
+                ];
+                $hookFound = $hasThemeFile = false;
+                foreach ($newsletterTemplatesFiles as $newsletterTemplateFile) {
+                    if (is_file($newsletterTemplateFile)) {
+                        $hasThemeFile = true;
+                        $newsletterTemplateContent = file_get_contents($newsletterTemplateFile);
+                        if (preg_match('#displayNewsletterRegistration#', $newsletterTemplateContent)) {
+                            $hookFound = true;
+                        }
+                        break;
                     }
-                    //@Todo manage multi-shop configuration
-                } else {
-                    $errors[] = $this->l('Module ps_emailsubscription version do not allow to use captcha on newsletter');
                 }
+                if (false === $hookFound && true === $hasThemeFile) {
+                    $moduleDefaultFile = _PS_MODULE_DIR_ . 'ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl';
+                    $errors[] = sprintf(
+                        $this->l(
+                            'Missing hook %s in template %s , Please check in original module file to adapt : %s'
+                        ),
+                        '<strong>displayNewsletterRegistration</strong>',
+                        '<i>' . $newsletterTemplateFile . '</i>',
+                        '<i>' . $moduleDefaultFile . '</i>'
+                    );
+                }
+                //@Todo manage multi-shop configuration
+            } else {
+                $errors[] = $this->l('Module ps_emailsubscription version do not allow to use captcha on newsletter');
             }
         }
 
@@ -289,19 +301,23 @@ class Debugger
     protected function checkHookDisplayCustomerAccountForm()
     {
         $errors = $success = [];
-        $templateFile = _PS_THEME_DIR_ . 'templates/customer/_partials/customer-form.tpl';
-        if (is_file($templateFile)) {
-            $templateContent = file_get_contents($templateFile);
-            if (preg_match('#\{\$hook_create_account_form nofilter\}#', $templateContent)) {
-                $success[] = $this->l('The hook displayCustomerAccountForm is present in the default template');
-            } else {
-                $errors[] = sprintf(
-                    $this->l('Unable to find the hook displayCustomerAccountForm in the default template, you can read more about it %s'),
-                    '<a href="' . self::URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM . '" target="_blank">' . $this->l('here') . '</a>'
-                );
+        $templateFiles = [
+            _PS_THEME_DIR_ . 'templates/customer/_partials/customer-form.tpl',
+            _PS_PARENT_THEME_DIR_ . 'templates/customer/_partials/customer-form.tpl',
+        ];
+        foreach ($templateFiles as $templateFile) {
+            if (is_file($templateFile)) {
+                $templateContent = file_get_contents($templateFile);
+                if (preg_match('#\{\$hook_create_account_form nofilter\}#', $templateContent)) {
+                    $success[] = $this->l('The hook displayCustomerAccountForm is present in the default template');
+                } else {
+                    $errors[] = sprintf(
+                        $this->l('Unable to find the hook displayCustomerAccountForm in the default template, you can read more about it %s'),
+                        '<a href="' . self::URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM . '" target="_blank">' . $this->l('here') . '</a>'
+                    );
+                }
+                break;
             }
-        } else {
-            $errors[] = sprintf($this->l('Unable to find the default customer account file : %s'), $templateFile);
         }
 
         return [
@@ -317,7 +333,7 @@ class Debugger
      *
      * @return void
      */
-    public function log($message)
+    public function log($message): void
     {
         if ($this->isDebugEnabled()) {
             file_put_contents(

@@ -41,7 +41,6 @@ class Installer
         'actionContactFormSubmitBefore',
         'actionNewsletterRegistrationBefore',
         'actionAdminControllerSetMedia',
-        'actionContactFormSubmitCaptcha',
         'displayEicaptchaVerification',
     ];
 

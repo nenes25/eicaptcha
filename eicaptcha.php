@@ -56,7 +56,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.4.0';
+        $this->version = '2.4.1';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -166,7 +166,7 @@ class EiCaptcha extends Module
      *
      * @return string|void
      */
-    public function hookHeader($params)
+    public function hookHeader(array $params)
     {
         if (!$this->shouldDisplayToCustomer()) {
             return;
@@ -266,7 +266,7 @@ class EiCaptcha extends Module
      *
      * @return string|void
      */
-    public function hookDisplayCustomerAccountForm($params)
+    public function hookDisplayCustomerAccountForm(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             $this->context->smarty->assign([
@@ -290,7 +290,7 @@ class EiCaptcha extends Module
      *
      * @deprecated since 2.4.0
      */
-    public function hookActionContactFormSubmitCaptcha($params)
+    public function hookActionContactFormSubmitCaptcha(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             return $this->_validateCaptcha();
@@ -307,7 +307,7 @@ class EiCaptcha extends Module
      *
      * @since 2.4.0
      */
-    public function hookActionCustomerRegisterSubmitCaptcha($params)
+    public function hookActionCustomerRegisterSubmitCaptcha(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             return $this->_validateCaptcha();
@@ -336,7 +336,7 @@ class EiCaptcha extends Module
      *
      * @since 2.1.0
      */
-    public function hookActionAdminControllerSetMedia($params)
+    public function hookActionAdminControllerSetMedia(array $params)
     {
         if (
             $this->context->controller instanceof AdminModulesController
@@ -359,7 +359,7 @@ class EiCaptcha extends Module
      *
      * @since 2.1.0
      */
-    public function hookDisplayNewsletterRegistration($params)
+    public function hookDisplayNewsletterRegistration(array $params)
     {
         if (
             Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
@@ -386,7 +386,7 @@ class EiCaptcha extends Module
      *
      * @since 2.1.0
      */
-    public function hookActionNewsletterRegistrationBefore($params)
+    public function hookActionNewsletterRegistrationBefore(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
             && $this->canUseCaptchaOnNewsletter()
@@ -445,7 +445,7 @@ class EiCaptcha extends Module
      *
      * @return array The eicaptcha configuration
      */
-    public function hookActionGetEicaptchaParams($params)
+    public function hookActionGetEicaptchaParams(array $params)
     {
         return [
             'displayCaptcha' => $this->shouldDisplayToCustomer(),
@@ -463,7 +463,7 @@ class EiCaptcha extends Module
      *
      * @return string the rendered template for displaying the captcha ( if needed)
      */
-    public function hookDisplayEicaptchaVerification($params)
+    public function hookDisplayEicaptchaVerification(array $params)
     {
         $this->context->smarty->assign([
             'displayCaptcha' => $this->shouldDisplayToCustomer(),
@@ -483,7 +483,7 @@ class EiCaptcha extends Module
      *
      * @return bool
      */
-    public function hookActionValidateCaptcha($params = [])
+    public function hookActionValidateCaptcha(array $params = [])
     {
         return $this->_validateCaptcha();
     }

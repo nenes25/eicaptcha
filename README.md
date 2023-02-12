@@ -72,4 +72,4 @@ https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
 |--------------------| -----------|
 | 1.6.1.x and under  | :x: use version 0.4.x or 0.5.x instead |
 | 1.7.0.x to 1.7.8.x | :heavy_check_mark: |
-| 8.0.x              | ::heavy_check_mark:|
+| 8.0.x              | :heavy_check_mark:|
