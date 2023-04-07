@@ -56,7 +56,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.4.1';
+        $this->version = '2.4.2';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -268,7 +268,9 @@ class EiCaptcha extends Module
      */
     public function hookDisplayCustomerAccountForm(array $params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+        if ($this->context->controller->php_self != 'identity'
+            && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+        ) {
             $this->context->smarty->assign([
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
                 'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
