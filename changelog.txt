@@ -5,7 +5,8 @@
  * https://github.com/nenes25/eicaptcha
  * https://www.h-hennes.fr/blog/
  */
-
+ - V 2.4.2 - 2023-04-08  #248 Hide captcha in identity controller
+                         #197 Update Translations others than FR ( IT thanks to @HartLarsson / NL thanks to Geert-JanB )
  - V 2.4.1 - 2023-02-12  #225 Recaptcha bug create account
                          #241 Add 2 missing hooks on installation (thanks to prestasafe)
                          #242 customer-form.tpl verified only in '_PS_THEME_DIR_' and not in '_PS_PARENT_THEME_DIR_' too
