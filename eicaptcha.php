@@ -268,7 +268,7 @@ class EiCaptcha extends Module
      */
     public function hookDisplayCustomerAccountForm(array $params)
     {
-        if ( $this->context->controller->php_self != 'identity'
+        if ($this->context->controller->php_self != 'identity'
             && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
         ) {
             $this->context->smarty->assign([
