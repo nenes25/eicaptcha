@@ -292,6 +292,28 @@ class EiCaptcha extends Module
     public function hookActionContactFormSubmitCaptcha(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+            $this->debugger->log('check customer registration by method ' . __METHOD__);
+
+            return $this->_validateCaptcha();
+        }
+    }
+
+    /**
+     * Check captcha before submit account
+     * Prestashop native hook
+     *
+     * @param array $params
+     *
+     * @return bool|void
+     *
+     * @since 2.5.0
+     */
+    public function hookActionSubmitAccountBefore(array $params)
+    {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+            && Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE') == 0) {
+            $this->debugger->log('check customer registration by method ' . __METHOD__);
+
             return $this->_validateCaptcha();
         }
     }
@@ -309,6 +331,8 @@ class EiCaptcha extends Module
     public function hookActionCustomerRegisterSubmitCaptcha(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+            $this->debugger->log('check customer registration by method ' . __METHOD__);
+
             return $this->_validateCaptcha();
         }
     }

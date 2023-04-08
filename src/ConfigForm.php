@@ -228,7 +228,7 @@ class ConfigForm
                         'hint' => $this->l('Use only for debug'),
                         'desc' => sprintf(
                             $this->l('Enable loging for debuging module, see file %s'),
-                            dirname(__FILE__) . '/logs/debug.log'
+                            _PS_MODULE_DIR_ . 'eicaptcha/logs/debug.log'
                         ),
                         'required' => false,
                         'class' => 't',
@@ -273,6 +273,33 @@ class ConfigForm
             ];
         }
 
+        //For version under PS 8.x we let the choice to the customer to use the override or the hook
+        if (version_compare(_PS_VERSION_, '8.0') < 0) {
+            $fields_form['form']['input'][] = [
+                'type' => 'switch',
+                'name' => 'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE',
+                'label' => $this->l('Use the controller override'),
+                'hint' => $this->l('Choose if you want to use the override or the hook to validate customers registration'),
+                'desc' => $this->l('If you don\'t know what to do with this value let it on the default one'),
+                'required' => false,
+                'class' => 't',
+                'is_bool' => true,
+                'values' => [
+                    [
+                        'id' => 'active_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ],
+                    [
+                        'id' => 'active_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    ],
+                ],
+                'tab' => 'advanced',
+            ];
+        }
+
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -311,6 +338,7 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int) Tools::getValue('CAPTCHA_THEME'));
             Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
+            Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', (int) Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE'));
 
             return $this->module->displayConfirmation($this->l('Settings updated'));
         }
@@ -334,6 +362,7 @@ class ConfigForm
             'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
+            'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE')),
         ];
     }
 

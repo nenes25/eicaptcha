@@ -163,6 +163,7 @@ class Debugger
             'displayCustomerAccountForm',
             'displayNewsletterRegistration',
             'actionCustomerRegisterSubmitCaptcha',
+            'actionSubmitAccountBefore',
             'actionContactFormSubmitBefore',
             'actionNewsletterRegistrationBefore',
             'actionAdminControllerSetMedia',
@@ -334,7 +335,7 @@ class Debugger
     {
         if ($this->isDebugEnabled()) {
             file_put_contents(
-                dirname(__FILE__) . '/logs/debug.log',
+                _PS_MODULE_DIR_ . 'eicaptcha/logs/debug.log',
                 date('Y-m-d H:i:s') . ': ' . $message . "\n",
                 FILE_APPEND
             );

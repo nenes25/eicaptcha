@@ -35,6 +35,7 @@ class Installer
         'displayCustomerAccountForm',
         'displayNewsletterRegistration',
         'actionCustomerRegisterSubmitCaptcha',
+        'actionSubmitAccountBefore',
         'actionContactFormSubmitBefore',
         'actionNewsletterRegistrationBefore',
         'actionAdminControllerSetMedia',
@@ -93,10 +94,15 @@ class Installer
         && Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
         && Configuration::updateValue('CAPTCHA_THEME', 0)
         && Configuration::updateValue('CAPTCHA_DEBUG', 0)
-        && Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1);
+        && Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1)
+        && Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE',
+                version_compare(_PS_VERSION_, '8.0') < 0 ? '1' : '0'
+            );
     }
 
     /**
+     * Remove configurations
+     *
      * @return bool
      */
     protected function uninstallConfigurations()
@@ -107,6 +113,7 @@ class Installer
         && Configuration::deleteByName('CAPTCHA_THEME')
         && Configuration::deleteByName('CAPTCHA_DEBUG')
         && Configuration::deleteByName('CAPTCHA_VERSION')
-        && Configuration::deleteByName('CAPTCHA_ENABLE_LOGGED_CUSTOMERS');
+        && Configuration::deleteByName('CAPTCHA_ENABLE_LOGGED_CUSTOMERS')
+        && Configuration::deleteByName('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE');
     }
 }
