@@ -27,10 +27,15 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_2_5_0($module)
 {
+    //Add a new configuration for websites with elementor to allow to load the recaptcha library on all pages
+    //But as it is unnecessary for most of the website it will be disabled by default
+    Configuration::updateValue('CAPTCHA_LOAD_EVERYWHERE', '0');
+
     //For the version 8.0+ we need to use to hook as the controller has changed.
     //For the version under it we let the choice to the customer, but by default we keep the legacy behavior
     $enableOverride = version_compare(_PS_VERSION_, '8.0') < 0 ? '1' : '0';
     Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', $enableOverride);
+
     $module->uninstallOverrides();
     $module->installOverrides();
 

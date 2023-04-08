@@ -248,6 +248,29 @@ class ConfigForm
                         'tab' => 'advanced',
                     ],
                     [
+                        'type' => 'switch',
+                        'name' => 'CAPTCHA_LOAD_EVERYWHERE',
+                        'label' => $this->l('Load Recaptcha library everywhere'),
+                        'hint' => $this->l('Let this option disabled by default if you don\'t use a specific contact form'),
+                        'desc' => $this->l('Only If you use a theme with elementor or warehouse and your contact form is not on the default page, enable this option.'),
+                        'required' => false,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'values' => [
+                            [
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                        'tab' => 'advanced',
+                    ],
+                    [
                         'type' => 'html',
                         'label' => $this->l('Check module installation'),
                         'name' => 'enable_debug_html',
@@ -339,6 +362,7 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_THEME', (int) Tools::getValue('CAPTCHA_THEME'));
             Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
             Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', (int) Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE'));
+            Configuration::updateValue('CAPTCHA_LOAD_EVERYWHERE', (int) Tools::getValue('CAPTCHA_LOAD_EVERYWHERE'));
 
             return $this->module->displayConfirmation($this->l('Settings updated'));
         }
@@ -363,6 +387,7 @@ class ConfigForm
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
             'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE')),
+            'CAPTCHA_LOAD_EVERYWHERE' => Tools::getValue('CAPTCHA_LOAD_EVERYWHERE', Configuration::get('CAPTCHA_LOAD_EVERYWHERE')),
         ];
     }
 
