@@ -315,7 +315,7 @@ class EiCaptcha extends Module
      *
      * @param array $params
      *
-     * @return bool|void
+     * @return bool
      *
      * @since 2.5.0
      */
@@ -327,6 +327,8 @@ class EiCaptcha extends Module
 
             return $this->_validateCaptcha();
         }
+
+        return true;
     }
 
     /**
