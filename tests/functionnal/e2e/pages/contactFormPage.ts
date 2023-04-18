@@ -29,6 +29,7 @@ export class ContactFormPage extends DefaultPage {
         //Add an email and a message in the contact form
         await this.page.locator(this.emailSelector).fill(this.email);
         await this.page.locator(this.messageSelector).fill(this.message);
+        await this.page.waitForTimeout(200);//Add a Timeout for V3 version to display the content
         //Submit the contact form button
         await this.page.click(this.submitButtonSelector);
     }

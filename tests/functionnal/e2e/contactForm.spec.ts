@@ -43,3 +43,21 @@ test.describe('Contact Form Recaptcha V2', () => {
         await contactFormPage.checkDarkModeApplied();
     });
 });
+
+test.describe('Contact Form Recaptcha V3', () => {
+    test('Case C_6', async ({page}) => {
+        const contactFormPage = new ContactFormPage(page);
+        await contactFormPage.applyConfiguration('C_6');
+        await contactFormPage.goto();
+        await contactFormPage.fillAndSubmitForm();
+        await contactFormPage.assertSuccessMessage();
+    });
+    test('Case C_7', async ({page}) => {
+        const contactFormPage = new ContactFormPage(page);
+        await contactFormPage.applyConfiguration('C_7');
+        await contactFormPage.loginAsCustomer();
+        await contactFormPage.goto();
+        await contactFormPage.fillAndSubmitForm();
+        await contactFormPage.assertSuccessMessage();
+    });
+});

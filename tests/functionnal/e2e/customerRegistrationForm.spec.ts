@@ -41,3 +41,20 @@ test.describe('Registration Form Recaptcha V2', () => {
         await customerRegistrationPage.hasCaptchaErrorMessage();
     });
 });
+
+test.describe('Registration Form Recaptcha V3', () => {
+    test('Case CU_6', async ({page}) => {
+        const customerRegistrationPage = new CustomerRegistrationPage(page);
+        await customerRegistrationPage.applyConfiguration('CU_6');
+        await customerRegistrationPage.goto();
+        await customerRegistrationPage.fillAndSubmitForm();
+        await customerRegistrationPage.checkUserIsLogged();
+    });
+    test('Case CU_7', async ({page}) => {
+        const customerRegistrationPage = new CustomerRegistrationPage(page);
+        await customerRegistrationPage.applyConfiguration('CU_7');
+        await customerRegistrationPage.goto();
+        await customerRegistrationPage.fillAndSubmitForm();
+        await customerRegistrationPage.checkUserIsLogged();
+    });
+});

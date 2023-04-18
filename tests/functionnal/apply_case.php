@@ -127,6 +127,24 @@ $testCasesConfiguration = [
         'CAPTCHA_FORCE_LANG' => '',
         'CAPTCHA_THEME' => 1,
     ],
+    'CU_6' => [
+        'CAPTCHA_VERSION' => 3,
+        'CAPTCHA_PRIVATE_KEY' => $captchaV3SecretKey,
+        'CAPTCHA_PUBLIC_KEY' => $captchaV3SiteKey,
+        'CAPTCHA_ENABLE_ACCOUNT' => 1,
+        'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => 1,
+        'CAPTCHA_FORCE_LANG' => '',
+        'CAPTCHA_THEME' => 0,
+    ],
+    'CU_7' => [
+        'CAPTCHA_VERSION' => 3,
+        'CAPTCHA_PRIVATE_KEY' => $captchaV3SecretKey,
+        'CAPTCHA_PUBLIC_KEY' => $captchaV3SiteKey,
+        'CAPTCHA_ENABLE_ACCOUNT' => 1,
+        'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => 0,
+        'CAPTCHA_FORCE_LANG' => '',
+        'CAPTCHA_THEME' => 0,
+    ],
     //Newsletter
     'NL_1' => [
         'CAPTCHA_VERSION' => 2,
