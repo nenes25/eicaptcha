@@ -13,6 +13,8 @@ jobs:
         uses: prestashop/github-action-php-lint/7.3@master
       - name: PHP syntax checker 7.4
         uses: prestashop/github-action-php-lint/7.4@master
+      - name: PHP syntax checker 8.1
+        uses: prestashop/github-action-php-lint/8.1@master
 
   # Check the PHP code follow the coding standards
   php-cs-fixer:
