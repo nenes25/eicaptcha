@@ -7,7 +7,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     defaults:
-      working-directory: ./tests/functionnal
+      run:
+        working-directory: ./tests/functionnal
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
