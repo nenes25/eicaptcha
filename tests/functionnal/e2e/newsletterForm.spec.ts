@@ -39,3 +39,19 @@ test.describe('Newsletter Form Recaptcha V2', () => {
         await newsletterPage.checkDarkModeApplied();
     });
 });
+test.describe('Newsletter Form Recaptcha V3', () => {
+    test('Case NL_6', async ({page}) => {
+        const newsletterPage = new NewsletterPage(page);
+        await newsletterPage.applyConfiguration('NL_6');
+        await newsletterPage.goto();
+        await newsletterPage.fillAndSubmitForm();
+        await newsletterPage.assertSuccessMessage();
+    });
+    test('Case NL_7', async ({page}) => {
+        const newsletterPage = new NewsletterPage(page);
+        await newsletterPage.applyConfiguration('NL_7');
+        await newsletterPage.goto();
+        await newsletterPage.fillAndSubmitForm();
+        await newsletterPage.assertSuccessMessage();
+    });
+});

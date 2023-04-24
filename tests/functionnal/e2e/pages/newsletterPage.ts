@@ -29,6 +29,7 @@ export class NewsletterPage extends DefaultPage {
     {
         //Add an email and a message in the newsletter form
         await this.page.locator(this.emailSelector).fill('test-playwright' + Math.random() + '@yopmail.com');
+        await this.page.waitForTimeout(200);//Add a Timeout for V3 version to display the content
         //Submit the contact form button
         await this.page.click(this.submitButtonSelector);
     }
