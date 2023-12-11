@@ -24,10 +24,10 @@ use Module;
 class Debugger
 {
     /** @var string Url of the module relases on github */
-    public const URL_MODULE_RELEASES = 'https://github.com/nenes25/eicaptcha/releases';
+    const URL_MODULE_RELEASES = 'https://github.com/nenes25/eicaptcha/releases';
 
     /** @var string Url of the wiki for the hook issue */
-    public const URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM = 'https://github.com/nenes25/eicaptcha/wiki/Issue-:-Unable-to-find-the-hook-displayCustomerAccountForm-in-the-default-template';
+    const URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM = 'https://github.com/nenes25/eicaptcha/wiki/Issue-:-Unable-to-find-the-hook-displayCustomerAccountForm-in-the-default-template';
 
     /**
      * @var EiCaptcha
