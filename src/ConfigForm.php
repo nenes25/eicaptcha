@@ -1,21 +1,18 @@
 <?php
 /**
- * 2007-2021 PrestaShop
- *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file docs/licenses/LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * https://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ * to contact@h-hennes.fr so we can send you a copy immediately.
  *
- * @author    Hennes Hervé <contact@h-hennes.fr>
- * @copyright 2013-2021 Hennes Hervé
- * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  http://www.h-hennes.fr/blog/
+ * @author    Hervé HENNES <contact@h-hhennes.fr> and contributors / https://github.com/nenes25/eicaptcha
+ * @copyright since 2013 Hervé HENNES
+ * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License ("AFL") v. 3.0
  */
 
 namespace Eicaptcha\Module;
@@ -231,8 +228,31 @@ class ConfigForm
                         'hint' => $this->l('Use only for debug'),
                         'desc' => sprintf(
                             $this->l('Enable loging for debuging module, see file %s'),
-                            dirname(__FILE__) . '/logs/debug.log'
+                            _PS_MODULE_DIR_ . 'eicaptcha/logs/debug.log'
                         ),
+                        'required' => false,
+                        'class' => 't',
+                        'is_bool' => true,
+                        'values' => [
+                            [
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ],
+                            [
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ],
+                        ],
+                        'tab' => 'advanced',
+                    ],
+                    [
+                        'type' => 'switch',
+                        'name' => 'CAPTCHA_LOAD_EVERYWHERE',
+                        'label' => $this->l('Load Recaptcha library everywhere'),
+                        'hint' => $this->l('Let this option disabled by default if you don\'t use a specific contact form'),
+                        'desc' => $this->l('Only If you use a theme with elementor or warehouse and your contact form is not on the default page, enable this option.'),
                         'required' => false,
                         'class' => 't',
                         'is_bool' => true,
@@ -276,6 +296,33 @@ class ConfigForm
             ];
         }
 
+        //For version under PS 8.x we let the choice to the customer to use the override or the hook
+        if (version_compare(_PS_VERSION_, '8.0') < 0) {
+            $fields_form['form']['input'][] = [
+                'type' => 'switch',
+                'name' => 'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE',
+                'label' => $this->l('Use the controller override'),
+                'hint' => $this->l('Choose if you want to use the override or the hook to validate customers registration'),
+                'desc' => $this->l('If you don\'t know what to do with this value let it on the default one'),
+                'required' => false,
+                'class' => 't',
+                'is_bool' => true,
+                'values' => [
+                    [
+                        'id' => 'active_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ],
+                    [
+                        'id' => 'active_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    ],
+                ],
+                'tab' => 'advanced',
+            ];
+        }
+
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -314,6 +361,8 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
             Configuration::updateValue('CAPTCHA_THEME', (int) Tools::getValue('CAPTCHA_THEME'));
             Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
+            Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', (int) Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE'));
+            Configuration::updateValue('CAPTCHA_LOAD_EVERYWHERE', (int) Tools::getValue('CAPTCHA_LOAD_EVERYWHERE'));
 
             return $this->module->displayConfirmation($this->l('Settings updated'));
         }
@@ -337,6 +386,8 @@ class ConfigForm
             'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
             'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
+            'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE')),
+            'CAPTCHA_LOAD_EVERYWHERE' => Tools::getValue('CAPTCHA_LOAD_EVERYWHERE', Configuration::get('CAPTCHA_LOAD_EVERYWHERE')),
         ];
     }
 

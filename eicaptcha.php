@@ -1,21 +1,18 @@
 <?php
 /**
- * 2007-2021 PrestaShop
- *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file docs/licenses/LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * https://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ * to contact@h-hennes.fr so we can send you a copy immediately.
  *
- * @author    Hennes Hervé <contact@h-hennes.fr>
- * @copyright 2013-2021 Hennes Hervé
- * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  http://www.h-hennes.fr/blog/
+ * @author    Hervé HENNES <contact@h-hhennes.fr> and contributors / https://github.com/nenes25/eicaptcha
+ * @copyright since 2013 Hervé HENNES
+ * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License ("AFL") v. 3.0
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -56,7 +53,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.4.2';
+        $this->version = '2.5.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -197,8 +194,18 @@ class EiCaptcha extends Module
      */
     protected function renderHeaderV2()
     {
-        if (($this->context->controller instanceof AuthController && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) ||
-            ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)
+        if ((
+                (
+                    $this->context->controller instanceof AuthController
+                    || $this->context->controller instanceof RegistrationController
+                )
+                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+            )
+            ||
+            ($this->context->controller instanceof ContactController
+                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+            )
+            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
         ) {
             $this->context->controller->registerStylesheet(
                 'module-eicaptcha',
@@ -240,8 +247,10 @@ class EiCaptcha extends Module
     public function renderHeaderV3()
     {
         if (
-            $this->context->controller instanceof ContactController
-            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+            ($this->context->controller instanceof ContactController
+                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+            )
+            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
         ) {
             $publicKey = Configuration::get('CAPTCHA_PUBLIC_KEY');
             $js = '
@@ -295,8 +304,32 @@ class EiCaptcha extends Module
     public function hookActionContactFormSubmitCaptcha(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+            $this->debugger->log('check customer registration by method ' . __METHOD__);
+
             return $this->_validateCaptcha();
         }
+    }
+
+    /**
+     * Check captcha before submit account
+     * Prestashop native hook
+     *
+     * @param array $params
+     *
+     * @return bool
+     *
+     * @since 2.5.0
+     */
+    public function hookActionSubmitAccountBefore(array $params)
+    {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+            && Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE') == 0) {
+            $this->debugger->log('check customer registration by method ' . __METHOD__);
+
+            return $this->_validateCaptcha();
+        }
+
+        return true;
     }
 
     /**
@@ -312,6 +345,8 @@ class EiCaptcha extends Module
     public function hookActionCustomerRegisterSubmitCaptcha(array $params)
     {
         if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+            $this->debugger->log('check customer registration by method ' . __METHOD__);
+
             return $this->_validateCaptcha();
         }
     }

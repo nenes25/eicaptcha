@@ -1,21 +1,18 @@
 <?php
 /**
- * 2007-2021 PrestaShop
- *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file docs/licenses/LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * https://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ * to contact@h-hennes.fr so we can send you a copy immediately.
  *
- * @author    Hennes Hervé <contact@h-hennes.fr>
- * @copyright 2013-2021 Hennes Hervé
- * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  http://www.h-hennes.fr/blog/
+ * @author    Hervé HENNES <contact@h-hhennes.fr> and contributors / https://github.com/nenes25/eicaptcha
+ * @copyright since 2013 Hervé HENNES
+ * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License ("AFL") v. 3.0
  */
 
 namespace Eicaptcha\Module;
@@ -27,10 +24,10 @@ use Module;
 class Debugger
 {
     /** @var string Url of the module relases on github */
-    public const URL_MODULE_RELEASES = 'https://github.com/nenes25/eicaptcha/releases';
+    const URL_MODULE_RELEASES = 'https://github.com/nenes25/eicaptcha/releases';
 
     /** @var string Url of the wiki for the hook issue */
-    public const URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM = 'https://github.com/nenes25/eicaptcha/wiki/Issue-:-Unable-to-find-the-hook-displayCustomerAccountForm-in-the-default-template';
+    const URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM = 'https://github.com/nenes25/eicaptcha/wiki/Issue-:-Unable-to-find-the-hook-displayCustomerAccountForm-in-the-default-template';
 
     /**
      * @var EiCaptcha
@@ -166,6 +163,7 @@ class Debugger
             'displayCustomerAccountForm',
             'displayNewsletterRegistration',
             'actionCustomerRegisterSubmitCaptcha',
+            'actionSubmitAccountBefore',
             'actionContactFormSubmitBefore',
             'actionNewsletterRegistrationBefore',
             'actionAdminControllerSetMedia',
@@ -337,7 +335,7 @@ class Debugger
     {
         if ($this->isDebugEnabled()) {
             file_put_contents(
-                dirname(__FILE__) . '/logs/debug.log',
+                _PS_MODULE_DIR_ . 'eicaptcha/logs/debug.log',
                 date('Y-m-d H:i:s') . ': ' . $message . "\n",
                 FILE_APPEND
             );

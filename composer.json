@@ -34,6 +34,9 @@
   "scripts": {
     "phpstan" : [
       "_PS_ROOT_DIR_=./../ php ~/.config/composer/vendor/bin/phpstan analyze -c ./tests/phpstan/phpstan.neon ./ --debug"
+    ],
+    "cs-fixer": [
+      "php7.2 vendor/bin/php-cs-fixer fix --config tests/php/.php-cs-fixer.dist.php"
     ]
   }
 

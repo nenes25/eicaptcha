@@ -1,10 +1,14 @@
 /**
  * Module Captcha
  * Add (re)captcha on contact and account creation forms
- * © Hervé Hennes 2013-2023
+ * © Hervé Hennes 2013-2024
  * https://github.com/nenes25/eicaptcha
  * https://www.h-hennes.fr/blog/
  */
+ - V 2.4.5 - 2024-02-15  #229 Replace override of Authcontroller
+                         #247 Registration check on prestashop 8.x
+                         #221 recaptcha v3 doesn't validate in form added with elementor form builder of warehouse theme
+                         #218 Harmonize and fix licence headers
  - V 2.4.2 - 2023-04-08  #248 Hide captcha in identity controller
                          #197 Update Translations others than FR ( IT thanks to @HartLarsson / NL thanks to Geert-JanB )
  - V 2.4.1 - 2023-02-12  #225 Recaptcha bug create account

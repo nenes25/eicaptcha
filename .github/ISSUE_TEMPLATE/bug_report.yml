@@ -31,6 +31,7 @@ body:
         - 1.7.7.x
         - 1.7.8.x
         - 8.0.x
+        - 8.1.x
     validations:
       required: true
   - type: dropdown
@@ -40,8 +41,8 @@ body:
       description: Wich version of eicaptcha are you using ? If your version is not in the list please update the module first
       multiple: false
       options:
-        - 2.3.x
         - 2.4.x
+        - 2.5.x
   - type: textarea
     id: specific_theme
     attributes:

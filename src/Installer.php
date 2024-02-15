@@ -1,21 +1,18 @@
 <?php
 /**
- * 2007-2021 PrestaShop
- *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file docs/licenses/LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * https://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ * to contact@h-hennes.fr so we can send you a copy immediately.
  *
- * @author    Hennes Hervé <contact@h-hennes.fr>
- * @copyright 2013-2021 Hennes Hervé
- * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  http://www.h-hennes.fr/blog/
+ * @author    Hervé HENNES <contact@h-hhennes.fr> and contributors / https://github.com/nenes25/eicaptcha
+ * @copyright since 2013 Hervé HENNES
+ * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License ("AFL") v. 3.0
  */
 
 namespace Eicaptcha\Module;
@@ -38,6 +35,7 @@ class Installer
         'displayCustomerAccountForm',
         'displayNewsletterRegistration',
         'actionCustomerRegisterSubmitCaptcha',
+        'actionSubmitAccountBefore',
         'actionContactFormSubmitBefore',
         'actionNewsletterRegistrationBefore',
         'actionAdminControllerSetMedia',
@@ -96,10 +94,15 @@ class Installer
         && Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
         && Configuration::updateValue('CAPTCHA_THEME', 0)
         && Configuration::updateValue('CAPTCHA_DEBUG', 0)
-        && Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1);
+        && Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1)
+        && Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE',
+                version_compare(_PS_VERSION_, '8.0') < 0 ? '1' : '0'
+            );
     }
 
     /**
+     * Remove configurations
+     *
      * @return bool
      */
     protected function uninstallConfigurations()
@@ -110,6 +113,7 @@ class Installer
         && Configuration::deleteByName('CAPTCHA_THEME')
         && Configuration::deleteByName('CAPTCHA_DEBUG')
         && Configuration::deleteByName('CAPTCHA_VERSION')
-        && Configuration::deleteByName('CAPTCHA_ENABLE_LOGGED_CUSTOMERS');
+        && Configuration::deleteByName('CAPTCHA_ENABLE_LOGGED_CUSTOMERS')
+        && Configuration::deleteByName('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE');
     }
 }
