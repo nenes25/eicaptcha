@@ -5,7 +5,7 @@
  * https://github.com/nenes25/eicaptcha
  * https://www.h-hennes.fr/blog/
  */
- - V 2.4.5 - 2024-02-15  #229 Replace override of Authcontroller
+ - V 2.5.0 - 2024-02-15  #229 Replace override of Authcontroller
                          #247 Registration check on prestashop 8.x
                          #221 recaptcha v3 doesn't validate in form added with elementor form builder of warehouse theme
                          #218 Harmonize and fix licence headers
