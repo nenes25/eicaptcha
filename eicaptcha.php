@@ -195,16 +195,17 @@ class EiCaptcha extends Module
     protected function renderHeaderV2()
     {
         if ((
-            $this->context->controller instanceof AuthController
-            && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+                (
+                    $this->context->controller instanceof AuthController
+                    || $this->context->controller instanceof RegistrationController
+                )
+                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
             )
             ||
-            (
             ($this->context->controller instanceof ContactController
-                || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
-            )
                 && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
             )
+            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
         ) {
             $this->context->controller->registerStylesheet(
                 'module-eicaptcha',
@@ -247,9 +248,9 @@ class EiCaptcha extends Module
     {
         if (
             ($this->context->controller instanceof ContactController
-                || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
+                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
             )
-            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
         ) {
             $publicKey = Configuration::get('CAPTCHA_PUBLIC_KEY');
             $js = '
