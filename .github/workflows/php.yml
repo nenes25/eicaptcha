@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        presta-versions: [ '1.7.8.10','8.0.5','latest']
+        presta-versions: [ '1.7.8.11','8.0.5','latest']
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
