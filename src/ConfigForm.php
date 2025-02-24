@@ -92,6 +92,20 @@ class ConfigForm
                     ],
                     [
                         'type' => 'text',
+                        'label' => $this->l('Captcha V3 mininum score'),
+                        'hint' => sprintf(
+                            $this->l('The minimum score required to validate the captcha is a number between 0 and 1. Default is 0.5 (recommended: 0.5 for normal security, 0.3 for less strict, 0.7 for more strict). %s'),
+                            '<a href="https://developers.google.com/recaptcha/docs/v3?#interpreting_the_score" target="_blank">Learn more</a>'
+                        ),
+                        'name' => 'CAPTCHA_V3_MINIMAL_SCORE',
+                        'required' => true,
+                        'class' => 'fixed-width-sm',
+                        'suffix' => '(0.0 - 1.0)',
+                        'empty_message' => $this->l('Please fill the captcha v3 minimal score.'),
+                        'tab' => 'general',
+                    ],
+                    [
+                        'type' => 'text',
                         'label' => $this->l('Captcha public key (Site key)'),
                         'name' => 'CAPTCHA_PUBLIC_KEY',
                         'required' => true,
@@ -351,7 +365,14 @@ class ConfigForm
     public function postProcess()
     {
         if (Tools::isSubmit('SubmitCaptchaConfiguration')) {
+            $minScore = Tools::getValue('CAPTCHA_V3_MINIMAL_SCORE');
+
+            if (!is_numeric($minScore) || $minScore < 0 || $minScore > 1) {
+                return $this->module->displayError($this->l('The V3 minimal score must be a number between 0 and 1'));
+            }
+
             Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
+            Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', (float) $minScore);
             Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
             Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
             Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS'));
@@ -377,6 +398,7 @@ class ConfigForm
     {
         return [
             'CAPTCHA_VERSION' => Tools::getValue('CAPTCHA_VERSION', Configuration::get('CAPTCHA_VERSION')),
+            'CAPTCHA_V3_MINIMAL_SCORE' => Tools::getValue('CAPTCHA_V3_MINIMAL_SCORE', Configuration::get('CAPTCHA_V3_MINIMAL_SCORE')),
             'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
             'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
             'CAPTCHA_ENABLE_LOGGED_CUSTOMERS' => Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS')),

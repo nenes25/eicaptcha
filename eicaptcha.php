@@ -53,7 +53,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.5.1';
+        $this->version = '2.6.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -447,6 +447,8 @@ class EiCaptcha extends Module
         }
 
         $context = Context::getContext();
+        $captchaVersion = Configuration::get('CAPTCHA_VERSION');
+        $captchaV3MinScore = (float) Configuration::get('CAPTCHA_V3_MINIMAL_SCORE');
         //Fix issue if allow_url_open is set to 0
         if (function_exists('ini_get') && !ini_get('allow_url_fopen')) {
             $recaptchaMethod = new \ReCaptcha\RequestMethod\CurlPost();
@@ -454,6 +456,9 @@ class EiCaptcha extends Module
             $recaptchaMethod = null;
         }
         $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'), $recaptchaMethod);
+        if ($captchaVersion == 3) {
+            $captcha->setScoreThreshold($captchaV3MinScore);
+        }
         $result = $captcha->verify(
             Tools::getValue('g-recaptcha-response'),
             Tools::getRemoteAddr()
@@ -463,6 +468,17 @@ class EiCaptcha extends Module
             $errorMessage = $this->l('Please validate the captcha field before submitting your request');
             $this->debugger->log($errorMessage);
             $this->debugger->log(sprintf($this->l('Recaptcha response %s'), print_r($result->getErrorCodes(), true)));
+            if ($captchaVersion == 3) {
+                if ($result->getScore() < $captchaV3MinScore) {
+                    $errorMessageV3 =
+                        sprintf(
+                           'Your request has been blocked by the captcha system, due to a low score of %s, required score is %s',
+                            $result->getScore(),
+                            $captchaV3MinScore
+                        );
+                    $this->debugger->log($errorMessageV3);
+                }
+            }
             $context->controller->errors[] = $errorMessage;
 
             return false;
