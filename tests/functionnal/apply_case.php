@@ -73,6 +73,7 @@ $testCasesConfiguration = [
         'CAPTCHA_PUBLIC_KEY' => $captchaV3SiteKey,
         'CAPTCHA_ENABLE_CONTACT' => 1,
         'CAPTCHA_ENABLE_LOGGED_CUSTOMERS' => 1,
+        'CAPTCHA_V3_MINIMAL_SCORE' => '0.5'
     ],
     'C_7' => [
         'CAPTCHA_VERSION' => 2,
@@ -132,6 +133,7 @@ $testCasesConfiguration = [
         'CAPTCHA_PRIVATE_KEY' => $captchaV3SecretKey,
         'CAPTCHA_PUBLIC_KEY' => $captchaV3SiteKey,
         'CAPTCHA_ENABLE_ACCOUNT' => 1,
+        'CAPTCHA_V3_MINIMAL_SCORE' => '0.5',
         'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => 1,
         'CAPTCHA_FORCE_LANG' => '',
         'CAPTCHA_THEME' => 0,
@@ -141,6 +143,7 @@ $testCasesConfiguration = [
         'CAPTCHA_PRIVATE_KEY' => $captchaV3SecretKey,
         'CAPTCHA_PUBLIC_KEY' => $captchaV3SiteKey,
         'CAPTCHA_ENABLE_ACCOUNT' => 1,
+        'CAPTCHA_V3_MINIMAL_SCORE' => '0.5',
         'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => 0,
         'CAPTCHA_FORCE_LANG' => '',
         'CAPTCHA_THEME' => 0,
@@ -197,6 +200,7 @@ $testCasesConfiguration = [
         'CAPTCHA_PUBLIC_KEY' => $captchaV3SiteKey,
         'CAPTCHA_ENABLE_NEWSLETTER' => 1,
         'CAPTCHA_ENABLE_LOGGED_CUSTOMERS' => 1,
+        'CAPTCHA_V3_MINIMAL_SCORE' => '0.5'
     ],
     'NL_7' => [
         'CAPTCHA_VERSION' => 3,
@@ -204,6 +208,7 @@ $testCasesConfiguration = [
         'CAPTCHA_PUBLIC_KEY' => $captchaV3SiteKey,
         'CAPTCHA_ENABLE_NEWSLETTER' => 1,
         'CAPTCHA_ENABLE_LOGGED_CUSTOMERS' => 0,
+        'CAPTCHA_V3_MINIMAL_SCORE' => '0.5'
     ],
 ];
 

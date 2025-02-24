@@ -26,3 +26,7 @@ $_MODULE['<{eicaptcha}prestashop>eicaptcha_c9cc8cce247e49bae79f15173ce97354'] = 
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_632ee8e447c5c09ca7577f9281cbb999'] = 'Inainte de a trimite formularul trebuie sa confirmati campul de Validare Captcha';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_2422cb22995f528cda5e7d40750c2a55'] = 'Te rugam sa astepti validarea';
 $_MODULE['<{eicaptcha}prestashop>hookdisplaycustomeraccountform_45d048c35e3cfd449dc0a1b503cd103a'] = 'Validare Captcha';
+$_MODULE['<{eicaptcha}prestashop>configform_0575fd3dd9df1c1eb623d805420c4ae1'] = 'Scor minim pentru Captcha V3';
+$_MODULE['<{eicaptcha}prestashop>configform_4a1d3ba3e92285200b6bc03420d667ad'] = 'Scorul minim necesar pentru a valida captcha este un număr între 0 și 1. Valoarea implicită este 0,5 (recomandat: 0,5 pentru securitate normală, 0,3 pentru mai puțin strict, 0,7 pentru mai strict). %s';
+$_MODULE['<{eicaptcha}prestashop>configform_9901fa09c200314688f085cc5e358fdd'] = 'Vă rugăm să completați scorul minim pentru captcha v3';
+$_MODULE['<{eicaptcha}prestashop>configform_2056fa192e60f5322c1f9fad5f76ba1b'] = 'Scorul minim V3 trebuie să fie un număr între 0 și 1';

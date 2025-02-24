@@ -26,3 +26,7 @@ $_MODULE['<{eicaptcha}prestashop>eicaptcha_c9cc8cce247e49bae79f15173ce97354'] = 
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_632ee8e447c5c09ca7577f9281cbb999'] = 'Bitte bestätigen Sie die Sicherheits-Abfrage';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_2422cb22995f528cda5e7d40750c2a55'] = 'Ihre Eingabe wird geprüft ....';
 $_MODULE['<{eicaptcha}prestashop>hookdisplaycustomeraccountform_45d048c35e3cfd449dc0a1b503cd103a'] = 'Sicherheits-Abfrage';
+$_MODULE['<{eicaptcha}prestashop>configform_0575fd3dd9df1c1eb623d805420c4ae1'] = 'Minimale Punktzahl für Captcha V3';
+$_MODULE['<{eicaptcha}prestashop>configform_4a1d3ba3e92285200b6bc03420d667ad'] = 'Die Mindestpunktzahl zur Validierung des Captcha ist eine Zahl zwischen 0 und 1. Standard ist 0,5 (empfohlen: 0,5 für normale Sicherheit, 0,3 für weniger streng, 0,7 für strenger). %s';
+$_MODULE['<{eicaptcha}prestashop>configform_9901fa09c200314688f085cc5e358fdd'] = 'Bitte geben Sie die minimale Punktzahl für Captcha V3 ein';
+$_MODULE['<{eicaptcha}prestashop>configform_2056fa192e60f5322c1f9fad5f76ba1b'] = 'Die minimale V3-Punktzahl muss eine Zahl zwischen 0 und 1 sein';

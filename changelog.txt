@@ -1,10 +1,13 @@
 /**
  * Module Captcha
  * Add (re)captcha on contact and account creation forms
- * © Hervé Hennes 2013-2024
+ * © Hervé Hennes 2013-2025
  * https://github.com/nenes25/eicaptcha
  * https://www.h-hennes.fr/blog/
  */
+  - V 2.6.0 - 2025-11-15  #288 Fix php7.0 error
+                          #275 / #308  Configure reCaptcha V3 min score
+                          #289 Fix light/dark theme selection thanks to @marsaldev
  - V 2.5.1 - 2025-03-03  #288 Fix php7.0 error
                          #309 prestashop 8.2.1 support
  - V 2.5.0 - 2024-02-15  #229 Replace override of Authcontroller

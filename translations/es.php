@@ -42,3 +42,7 @@ $_MODULE['<{eicaptcha}prestashop>eicaptcha_505a83f220c02df2f85c3810cd9ceb38'] = 
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_9b2eeb745a9b009017a8bb78e4801988'] = 'Información adicional';
 $_MODULE['<{eicaptcha}prestashop>eicaptcha_5cbde05e64ba2a302aab794031c5b33c'] = 'Abrir un ticket';
 $_MODULE['<{eicaptcha}prestashop>hookdisplaycustomeraccountform_45d048c35e3cfd449dc0a1b503cd103a'] = 'Captcha';
+$_MODULE['<{eicaptcha}prestashop>configform_0575fd3dd9df1c1eb623d805420c4ae1'] = 'Puntuación mínima para Captcha V3';
+$_MODULE['<{eicaptcha}prestashop>configform_4a1d3ba3e92285200b6bc03420d667ad'] = 'La puntuación mínima requerida para validar el captcha es un número entre 0 y 1. El valor predeterminado es 0.5 (recomendado: 0.5 para seguridad normal, 0.3 para menos estricto, 0.7 para más estricto). %s';
+$_MODULE['<{eicaptcha}prestashop>configform_9901fa09c200314688f085cc5e358fdd'] = 'Por favor, introduzca la puntuación mínima para el captcha v3';
+$_MODULE['<{eicaptcha}prestashop>configform_2056fa192e60f5322c1f9fad5f76ba1b'] = 'La puntuación mínima de V3 debe ser un número entre 0 y 1';
