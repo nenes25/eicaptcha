@@ -5,7 +5,8 @@
  * https://github.com/nenes25/eicaptcha
  * https://www.h-hennes.fr/blog/
  */
- - V 2.5.1 - 2024-       #288 Fix php7.0 error
+ - V 2.5.1 - 2025-03-03  #288 Fix php7.0 error
+                         #309 prestashop 8.2.1 support
  - V 2.5.0 - 2024-02-15  #229 Replace override of Authcontroller
                          #247 Registration check on prestashop 8.x
                          #221 recaptcha v3 doesn't validate in form added with elementor form builder of warehouse theme
