@@ -1,5 +1,19 @@
-/node_modules/
-/test-results/
-/playwright-report/
-/playwright/.cache/
-/.env
+# Local environment overrides
+.env
+.env.local
+.nvmrc
+
+# Database snapshots (can be large, regenerate as needed)
+snapshots/*.sql
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db

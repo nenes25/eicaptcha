@@ -1,7 +1,37 @@
 <?php
 
-//TMP load en dur
-require_once '/home/herve/www/prestashop/tests/1786/config/config.inc.php';
+/**
+ * Dynamic config loading for Docker and local environments
+ * Supports PrestaShop 1.7.8, 8.x, and 9.x
+ */
+
+// Try multiple possible paths for config.inc.php
+$possiblePaths = [
+    // Docker container path (PrestaShop official image)
+    '/var/www/html/config/config.inc.php',
+    // Local development path (current setup)
+    '/home/herve/www/prestashop/tests/810/config/config.inc.php',
+    // Relative path from module
+    __DIR__ . '/../../../../../config/config.inc.php',
+    // Alternative relative path
+    dirname(__DIR__, 6) . '/config/config.inc.php',
+];
+
+$configLoaded = false;
+foreach ($possiblePaths as $path) {
+    if (file_exists($path)) {
+        require_once $path;
+        $configLoaded = true;
+        break;
+    }
+}
+
+if (!$configLoaded) {
+    die('<div style="border:1px solid red;color:red;font-weight:bold;padding:10px;margin-bottom: 20px">' .
+        'Error: Could not find config.inc.php in any expected location.<br>' .
+        'Searched paths:<br>' . implode('<br>', $possiblePaths) .
+        '</div>');
+}
 
 //Check Eicaptcha version
 $eicaptcha = Module::getInstanceByName('eicaptcha');
