@@ -1,0 +1,7 @@
+includes:
+  - %currentWorkingDirectory%/tests/phpstan/phpstan.neon
+
+parameters:
+  ignoreErrors:
+    # RegistrationController only exists in PrestaShop 8+
+    - '#Class RegistrationController not found\.#'
