@@ -24,6 +24,7 @@ use Eicaptcha\Module\Provider\GoogleRecaptchaProvider;
 use Eicaptcha\Module\Provider\GoogleEnterpriseProvider;
 use Eicaptcha\Module\Provider\HCaptchaProvider;
 use Eicaptcha\Module\Provider\MathCaptchaProvider;
+use Eicaptcha\Module\Provider\TurnstileProvider;
 
 /**
  * Class CaptchaFactory
@@ -42,6 +43,7 @@ class CaptchaFactory
         'google_enterprise' => GoogleEnterpriseProvider::class,
         'hcaptcha' => HCaptchaProvider::class,
         'math' => MathCaptchaProvider::class,
+        'turnstile' => TurnstileProvider::class,
     ];
 
     /**

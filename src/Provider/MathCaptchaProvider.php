@@ -277,4 +277,12 @@ class MathCaptchaProvider extends AbstractCaptchaProvider
     {
         return 'module:eicaptcha/views/templates/hook/providers/math.tpl';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getResponseFieldName()
+    {
+        return 'math-captcha-response';
+    }
 }

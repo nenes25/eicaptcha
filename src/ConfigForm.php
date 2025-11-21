@@ -410,6 +410,12 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT', Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT'));
             Configuration::updateValue('CAPTCHA_GOOGLE_ENTERPRISE_KEY', Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_KEY'));
 
+            // Cloudflare Turnstile
+            Configuration::updateValue('CAPTCHA_TURNSTILE_SITE_KEY', Tools::getValue('CAPTCHA_TURNSTILE_SITE_KEY'));
+            Configuration::updateValue('CAPTCHA_TURNSTILE_SECRET_KEY', Tools::getValue('CAPTCHA_TURNSTILE_SECRET_KEY'));
+            Configuration::updateValue('CAPTCHA_TURNSTILE_THEME', Tools::getValue('CAPTCHA_TURNSTILE_THEME'));
+            Configuration::updateValue('CAPTCHA_TURNSTILE_SIZE', Tools::getValue('CAPTCHA_TURNSTILE_SIZE'));
+
             return $this->module->displayConfirmation($this->l('Settings updated'));
         }
     }
@@ -444,6 +450,11 @@ class ConfigForm
             // Google Enterprise
             'CAPTCHA_GOOGLE_ENTERPRISE_PROJECT' => Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT', Configuration::get('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT')),
             'CAPTCHA_GOOGLE_ENTERPRISE_KEY' => Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_KEY', Configuration::get('CAPTCHA_GOOGLE_ENTERPRISE_KEY')),
+            // Cloudflare Turnstile
+            'CAPTCHA_TURNSTILE_SITE_KEY' => Tools::getValue('CAPTCHA_TURNSTILE_SITE_KEY', Configuration::get('CAPTCHA_TURNSTILE_SITE_KEY')),
+            'CAPTCHA_TURNSTILE_SECRET_KEY' => Tools::getValue('CAPTCHA_TURNSTILE_SECRET_KEY', Configuration::get('CAPTCHA_TURNSTILE_SECRET_KEY')),
+            'CAPTCHA_TURNSTILE_THEME' => Tools::getValue('CAPTCHA_TURNSTILE_THEME', Configuration::get('CAPTCHA_TURNSTILE_THEME') ?: 'auto'),
+            'CAPTCHA_TURNSTILE_SIZE' => Tools::getValue('CAPTCHA_TURNSTILE_SIZE', Configuration::get('CAPTCHA_TURNSTILE_SIZE') ?: 'normal'),
         ];
     }
 

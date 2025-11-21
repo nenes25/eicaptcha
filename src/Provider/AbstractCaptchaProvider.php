@@ -159,6 +159,15 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getResponseFieldName()
+    {
+        // Default to Google reCAPTCHA field name for backward compatibility
+        return 'g-recaptcha-response';
+    }
+
+    /**
      * Translate a string in the module context
      *
      * @param string $string
