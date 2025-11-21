@@ -108,4 +108,11 @@ interface CaptchaProviderInterface
      * @return array Array of JS file paths
      */
     public function getJsFiles();
+
+    /**
+     * Get the name of the form field containing the captcha response
+     *
+     * @return string Field name (e.g., 'g-recaptcha-response', 'cf-turnstile-response')
+     */
+    public function getResponseFieldName();
 }

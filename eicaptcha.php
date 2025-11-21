@@ -378,7 +378,7 @@ class EiCaptcha extends Module
             return true;
         }
 
-        $response = Tools::getValue('g-recaptcha-response');
+        $response = Tools::getValue($provider->getResponseFieldName());
         $remoteIp = Tools::getRemoteAddr();
 
         $isValid = $provider->validate($response, $remoteIp);
