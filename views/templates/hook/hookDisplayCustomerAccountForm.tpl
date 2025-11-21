@@ -23,29 +23,10 @@
 *  http://www.h-hennes.fr/blog/
 *}
 
-<div class="form-group row">
-    {if $captchaVersion == 2}
-        <label class="col-md-3 form-control-label">{l s='Captcha' mod='eicaptcha'}</label>
-        <div class="col-md-9">
-            {**
-             * Le contenu du captcha est automatiquement ajouté dans le selecteur #captcha-box
-             * Captcha content is automaticaly added into the selector #captcha-box
-             *}
-            <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box"
-                 data-theme="{$captchatheme}"></div>
-            <script src="https://www.google.com/recaptcha/api.js?hl={$captchalang}"
-                    async defer></script>
-        </div>
-    {else}
-        <input type="hidden" id="captcha-box" name="g-recaptcha-response"/>
-        <script src="https://www.google.com/recaptcha/api.js?render={$publicKey|escape:'html'}"></script>
-        <script>
-            grecaptcha.ready(function () {ldelim}
-                grecaptcha.execute('{$publicKey|escape:'html'}', {ldelim}action: 'contact'{rdelim}).then(function (token) {ldelim}
-                    var recaptchaResponse = document.getElementById('captcha-box');
-                    recaptchaResponse.value = token;
-                    {rdelim});
-                {rdelim});
-        </script>
-    {/if}
-</div>
+{* Load the provider-specific template *}
+{if isset($provider) && $provider}
+    {include file="module:eicaptcha/views/templates/hook/providers/{$provider}.tpl"}
+{else}
+    {* Fallback to google_recaptcha for backward compatibility *}
+    {include file="module:eicaptcha/views/templates/hook/providers/google_recaptcha.tpl"}
+{/if}
