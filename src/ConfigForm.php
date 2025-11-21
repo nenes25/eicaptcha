@@ -20,6 +20,7 @@ namespace Eicaptcha\Module;
 use Configuration;
 use Context;
 use EiCaptcha;
+use Eicaptcha\Module\Factory\CaptchaFactory;
 use HelperForm;
 use Language;
 use Tools;
@@ -67,9 +68,21 @@ class ConfigForm
                     'general' => $this->l('General configuration'),
                     'advanced' => $this->l('Advanded parameters'),
                 ],
-                'description' => $this->l('To get your own public and private keys please click on the folowing link')
-                    . '<br /><a href="https://www.google.com/recaptcha/intro/index.html" target="_blank">https://www.google.com/recaptcha/intro/index.html</a>',
+                'description' => $this->l('Configure your captcha provider and protect your website from spam and bots'),
                 'input' => [
+                    [
+                        'type' => 'select',
+                        'label' => $this->l('Captcha Provider'),
+                        'name' => 'CAPTCHA_PROVIDER',
+                        'required' => true,
+                        'desc' => $this->l('Select the captcha system you want to use'),
+                        'options' => [
+                            'query' => $this->getAvailableProviders(),
+                            'id' => 'id',
+                            'name' => 'name',
+                        ],
+                        'tab' => 'general',
+                    ],
                     [
                         'type' => 'radio',
                         'label' => $this->l('Recaptcha Version'),
@@ -384,6 +397,18 @@ class ConfigForm
             Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
             Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', (int) Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE'));
             Configuration::updateValue('CAPTCHA_LOAD_EVERYWHERE', (int) Tools::getValue('CAPTCHA_LOAD_EVERYWHERE'));
+            Configuration::updateValue('CAPTCHA_PROVIDER', Tools::getValue('CAPTCHA_PROVIDER'));
+
+            // hCaptcha
+            Configuration::updateValue('CAPTCHA_HCAPTCHA_SITE_KEY', Tools::getValue('CAPTCHA_HCAPTCHA_SITE_KEY'));
+            Configuration::updateValue('CAPTCHA_HCAPTCHA_SECRET_KEY', Tools::getValue('CAPTCHA_HCAPTCHA_SECRET_KEY'));
+
+            // Math Captcha
+            Configuration::updateValue('CAPTCHA_MATH_DIFFICULTY', Tools::getValue('CAPTCHA_MATH_DIFFICULTY'));
+
+            // Google Enterprise
+            Configuration::updateValue('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT', Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT'));
+            Configuration::updateValue('CAPTCHA_GOOGLE_ENTERPRISE_KEY', Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_KEY'));
 
             return $this->module->displayConfirmation($this->l('Settings updated'));
         }
@@ -397,6 +422,7 @@ class ConfigForm
     public function getConfigFieldsValues()
     {
         return [
+            'CAPTCHA_PROVIDER' => Tools::getValue('CAPTCHA_PROVIDER', Configuration::get('CAPTCHA_PROVIDER') ?: 'google_recaptcha'),
             'CAPTCHA_VERSION' => Tools::getValue('CAPTCHA_VERSION', Configuration::get('CAPTCHA_VERSION')),
             'CAPTCHA_V3_MINIMAL_SCORE' => Tools::getValue('CAPTCHA_V3_MINIMAL_SCORE', Configuration::get('CAPTCHA_V3_MINIMAL_SCORE')),
             'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
@@ -410,7 +436,46 @@ class ConfigForm
             'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
             'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE' => Tools::getValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE')),
             'CAPTCHA_LOAD_EVERYWHERE' => Tools::getValue('CAPTCHA_LOAD_EVERYWHERE', Configuration::get('CAPTCHA_LOAD_EVERYWHERE')),
+            // hCaptcha
+            'CAPTCHA_HCAPTCHA_SITE_KEY' => Tools::getValue('CAPTCHA_HCAPTCHA_SITE_KEY', Configuration::get('CAPTCHA_HCAPTCHA_SITE_KEY')),
+            'CAPTCHA_HCAPTCHA_SECRET_KEY' => Tools::getValue('CAPTCHA_HCAPTCHA_SECRET_KEY', Configuration::get('CAPTCHA_HCAPTCHA_SECRET_KEY')),
+            // Math Captcha
+            'CAPTCHA_MATH_DIFFICULTY' => Tools::getValue('CAPTCHA_MATH_DIFFICULTY', Configuration::get('CAPTCHA_MATH_DIFFICULTY') ?: 'easy'),
+            // Google Enterprise
+            'CAPTCHA_GOOGLE_ENTERPRISE_PROJECT' => Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT', Configuration::get('CAPTCHA_GOOGLE_ENTERPRISE_PROJECT')),
+            'CAPTCHA_GOOGLE_ENTERPRISE_KEY' => Tools::getValue('CAPTCHA_GOOGLE_ENTERPRISE_KEY', Configuration::get('CAPTCHA_GOOGLE_ENTERPRISE_KEY')),
         ];
+    }
+
+    /**
+     * Get available captcha providers
+     *
+     * @return array
+     *
+     * @since 3.0.0
+     */
+    protected function getAvailableProviders()
+    {
+        $providers = [];
+
+        try {
+            $allProviders = CaptchaFactory::getAllProviders($this->module);
+
+            foreach ($allProviders as $provider) {
+                $providers[] = [
+                    'id' => $provider->getName(),
+                    'name' => $provider->getDisplayName(),
+                ];
+            }
+        } catch (\Exception $e) {
+            // Fallback to default provider
+            $providers[] = [
+                'id' => 'google_recaptcha',
+                'name' => 'Google reCAPTCHA',
+            ];
+        }
+
+        return $providers;
     }
 
     /**

@@ -1,6 +1,4 @@
 {*
-* 2007-2021 PrestaShop
-*
 * NOTICE OF LICENSE
 *
 * This source file is subject to the Academic Free License (AFL 3.0)
@@ -11,22 +9,17 @@
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
 *
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
 *  @author    Hennes Hervé <contact@h-hennes.fr>
 *  @copyright Hennes Hervé
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  http://www.h-hennes.fr/blog/
 *}
 
-{* Load the provider-specific template *}
-{if isset($provider) && $provider}
-    {include file="module:eicaptcha/views/templates/hook/providers/{$provider}.tpl"}
-{else}
-    {* Fallback to google_recaptcha for backward compatibility *}
-    {include file="module:eicaptcha/views/templates/hook/providers/google_recaptcha.tpl"}
+{if $displayCaptcha}
+    <div class="form-group row eicaptcha-field">
+        <label class="col-md-3 form-control-label">{l s='Captcha' mod='eicaptcha'}</label>
+        <div class="col-md-9">
+            <div class="h-captcha" data-sitekey="{$siteKey|escape:'html'}" data-theme="{$captchatheme}"></div>
+        </div>
+    </div>
 {/if}

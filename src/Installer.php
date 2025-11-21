@@ -97,7 +97,11 @@ class Installer
         && Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1)
         && Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE',
                 version_compare(_PS_VERSION_, '8.0') < 0 ? '1' : '0'
-            );
+            )
+        && Configuration::updateValue('CAPTCHA_PROVIDER', 'google_recaptcha')
+        && Configuration::updateValue('CAPTCHA_VERSION', 2)
+        && Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', 0.5)
+        && Configuration::updateValue('CAPTCHA_MATH_DIFFICULTY', 'easy');
     }
 
     /**
