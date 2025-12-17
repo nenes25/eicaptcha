@@ -568,8 +568,7 @@ class EiCaptcha extends Module
     {
         if (
             Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS') == 0
-            && $this->context->customer->id > 0
-            && $this->context->customer->email != null
+            && $this->context->customer->isLogged()
         ) {
             return false;
         }
