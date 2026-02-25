@@ -6,6 +6,14 @@
  * The captcha is render inside this div by Recaptcha V3
  * If needed you can change the selector by overriding this file in your theme
  */
-$(document).ready(function () {
-    $('.form-fields').append('<input type="hidden" id="captcha-box" value="" name="g-recaptcha-response">');
+document.addEventListener('DOMContentLoaded', function () {
+    var formFields = document.querySelector('.form-fields');
+    if (formFields) {
+        var captchaInput = document.createElement('input');
+        captchaInput.type = 'hidden';
+        captchaInput.id = 'captcha-box';
+        captchaInput.value = '';
+        captchaInput.name = 'g-recaptcha-response';
+        formFields.appendChild(captchaInput);
+    }
 });

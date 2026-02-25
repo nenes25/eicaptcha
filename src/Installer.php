@@ -40,6 +40,8 @@ class Installer
         'actionNewsletterRegistrationBefore',
         'actionAdminControllerSetMedia',
         'displayEicaptchaVerification',
+        'actionGetEicaptchaParams',
+        'actionValidateCaptcha',
     ];
 
     /**

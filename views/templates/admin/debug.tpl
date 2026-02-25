@@ -1,4 +1,4 @@
-{if $errors|@count}
+{if count($errors) > 0}
     <div class="alert alert-warning">
         <h4>{l s='Errors' mod='eicaptcha'}</h4>
         <ul>
@@ -9,7 +9,7 @@
     </div>
 {/if}
 
-{if $success|@count}
+{if count($success) > 0}
     <div class="alert alert-success">
         <h4>{l s='Success' mod='eicaptcha'}</h4>
         <ul>

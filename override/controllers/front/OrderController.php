@@ -2,7 +2,7 @@
 
 class OrderController extends OrderControllerCore
 {
-    public function postProcess()
+    public function postProcess(): void
     {
         if (
             Tools::isSubmit('submitCreate')

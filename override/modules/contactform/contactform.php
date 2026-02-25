@@ -6,7 +6,7 @@ class ContactformOverride extends Contactform
     {
         //Module Eicaptcha : Check captcha before submit
         Hook::exec('actionContactFormSubmitBefore');
-        if (!sizeof($this->context->controller->errors)) {
+        if (!count($this->context->controller->errors)) {
             parent::sendMessage();
         }
     }
