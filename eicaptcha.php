@@ -156,7 +156,19 @@ class EiCaptcha extends Module
     }
 
     /**
-     * Hook Header
+     * Hook displayHeader (canonical name for PS9+)
+     *
+     * @param array $params
+     *
+     * @return string|void
+     */
+    public function hookDisplayHeader(array $params)
+    {
+        return $this->hookHeader($params);
+    }
+
+    /**
+     * Hook Header (legacy alias name for PS 1.7.x compatibility)
      *
      * @param array $params
      *
