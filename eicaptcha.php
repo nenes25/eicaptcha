@@ -249,6 +249,13 @@ class EiCaptcha extends Module
             ($this->context->controller instanceof ContactController
                 && Configuration::get('CAPTCHA_ENABLE_CONTACT') === '1'
             )
+            || (
+                (
+                    $this->context->controller instanceof AuthController
+                    || $this->context->controller instanceof RegistrationController
+                )
+                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') === '1'
+            )
             || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') === '1'
         ) {
             $publicKey = Configuration::get('CAPTCHA_PUBLIC_KEY');
@@ -258,7 +265,9 @@ class EiCaptcha extends Module
                 grecaptcha.ready(function () {
                     grecaptcha.execute("' . $publicKey . '", {action: "contact"}).then(function (token) {
                         var recaptchaResponse = document.getElementById("captcha-box");
-                        recaptchaResponse.value = token;
+                        if (recaptchaResponse) {
+                            recaptchaResponse.value = token;
+                        }
                         });
                     });
             </script>';

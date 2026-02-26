@@ -94,8 +94,11 @@ class Installer
         return Configuration::updateGlobalValue('CAPTCHA_ENABLE_ACCOUNT', 0)
         && Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
         && Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
+        && Configuration::updateValue('CAPTCHA_VERSION', 2)
+        && Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', '0.5')
         && Configuration::updateValue('CAPTCHA_THEME', 0)
         && Configuration::updateValue('CAPTCHA_DEBUG', 0)
+        && Configuration::updateValue('CAPTCHA_LOAD_EVERYWHERE', 0)
         && Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1)
         && Configuration::updateValue('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE',
                 version_compare(_PS_VERSION_, '8.0') < 0 ? '1' : '0'
@@ -115,6 +118,8 @@ class Installer
         && Configuration::deleteByName('CAPTCHA_THEME')
         && Configuration::deleteByName('CAPTCHA_DEBUG')
         && Configuration::deleteByName('CAPTCHA_VERSION')
+        && Configuration::deleteByName('CAPTCHA_V3_MINIMAL_SCORE')
+        && Configuration::deleteByName('CAPTCHA_LOAD_EVERYWHERE')
         && Configuration::deleteByName('CAPTCHA_ENABLE_LOGGED_CUSTOMERS')
         && Configuration::deleteByName('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE');
     }
