@@ -1,39 +1,64 @@
-[![GitHub stars](https://img.shields.io/github/stars/nenes25/eicaptcha)](https://github.com/nenes25/eicaptcha/stargazers) 
-[![GitHub forks](https://img.shields.io/github/forks/nenes25/eicaptcha)](https://github.com/nenes25/eicaptcha/network) 
-[![GitHub release](https://img.shields.io/github/v/release/nenes25/eicaptcha)](https://github.com/nenes25/eicaptcha/)
-[![Github All Releases](https://img.shields.io/github/downloads/nenes25/eicaptcha/total.svg)]()
-[![Github issues](https://img.shields.io/github/issues-raw/nenes25/eicaptcha)]()
+[![GitHub release](https://img.shields.io/github/v/release/bambinounos/eicaptcha)](https://github.com/bambinounos/eicaptcha/releases)
+[![Github All Releases](https://img.shields.io/github/downloads/bambinounos/eicaptcha/total.svg)]()
 
-# eicaptcha
-Module EiCaptcha for prestashop 1.7 +
+# eicaptcha — PrestaShop 9 Compatible Fork
 
-The module is also available for prestashop version 1.6.x see here : https://github.com/nenes25/eicaptcha/tree/master  
-or download 0.4.x releases ( This version remains available but support and evolutions are stopped )   
+> Fork of [nenes25/eicaptcha](https://github.com/nenes25/eicaptcha) with full **PrestaShop 9.0.x** and **PHP 8.1+** compatibility.
+>
+> PR submitted to original repo: [#332](https://github.com/nenes25/eicaptcha/pull/332)
 
-This module display Google recaptcha on the following forms :
- - contact form
- - account creation form
- - newsletter subscription ( since 2.1.0)
- - custom module forms ( since 2.4.0 see : https://www.h-hennes.fr/blog/2022/08/22/prestashop-ajouter-un-captcha-sur-les-formulaires-de-vos-modules/ )
- - You can force the script to load everywhere ( since 2.4.5) for other cases.
+## What's different in this fork?
 
-The module is compatible with both V2 and V3 recaptcha keys ( since v 2.3.0 )  
+- **PrestaShop 9.0.x support** (tested on PS 9.0.3 Basic Edition)
+- **PHP 8.1+ strict compatibility** (strict comparisons, `count()`, return types)
+- **No jQuery dependency** — all JS rewritten to vanilla JavaScript
+- **Updated google/recaptcha library** to 1.3.1 (full reCAPTCHA v3 support)
+- Added `hookDisplayHeader()` canonical method for PS9 hook dispatch
+- Removed hard `contactform` dependency (not included in PS9 Basic Edition)
+- Added missing install defaults and hook registrations
+- PS9-aware debug checks
 
- This module relies upon the override of the following files :
- - AuthController
- - ContactForm Module
+## Installation
 
-For newsletter subscription implementation it needs module **ps_emailsubscription at least  2.6.0**
+1. Download the latest ZIP from [Releases](https://github.com/bambinounos/eicaptcha/releases)
+2. Upload via PrestaShop admin: **Modules → Upload a module**
+3. Configure your reCAPTCHA keys in module settings
 
- This module use composer to get recaptcha lib.  
- Don't forget to use `composer install` in order to download the necessary recaptcha composer package.   
- 
- Otherwise you can go on the github release page https://github.com/nenes25/eicaptcha/releases and download the last 2.x version release to get the full package    
- 
-`Please do not use the github function "download as zip" which will not works`
+> `Please do not use the GitHub "Download ZIP" button — use the Releases page instead.`
 
- Screenshots with V2 keys
----
+## Important for PrestaShop 9 Users
+
+If the reCAPTCHA badge does not appear after installing, check this configuration value:
+
+```sql
+SELECT value FROM ps_configuration WHERE name = 'PS_DISABLE_NON_NATIVE_MODULE';
+```
+
+If the value is `1`, PrestaShop is **silently blocking all non-native modules** from executing hooks. Fix it with:
+
+```sql
+UPDATE ps_configuration SET value = '0' WHERE name = 'PS_DISABLE_NON_NATIVE_MODULE';
+```
+
+Or via admin: **Advanced Parameters → Performance → Disable non PrestaShop modules → No**
+
+Then clear the cache (`var/cache/prod/*` and `var/cache/dev/*`) and restart your web server.
+
+## Features
+
+This module displays Google reCAPTCHA on the following forms:
+- Contact form
+- Account creation form
+- Newsletter subscription (since 2.1.0)
+- Custom module forms (since 2.4.0 — see [documentation](https://www.h-hennes.fr/blog/2022/08/22/prestashop-ajouter-un-captcha-sur-les-formulaires-de-vos-modules/))
+- Force the script to load everywhere (since 2.4.5) for other cases
+
+The module is compatible with both **V2** and **V3** reCAPTCHA keys (since v2.3.0).
+
+For PrestaShop 8+, the module uses **native hooks** instead of controller overrides.
+For newsletter subscription, it requires **ps_emailsubscription >= 2.6.0**.
+
+## Screenshots with V2 keys
 
 <p align="center">
 	Captcha on contact form <br />
@@ -50,28 +75,36 @@ For newsletter subscription implementation it needs module **ps_emailsubscriptio
 	<img src="https://www.h-hennes.fr/blog/wp-content/uploads/2021/03/captcha-newsletter.png" alt="Captcha on newsletter subscription form" />
 </p>
 
-Screenshots with V3 keys (invisible recaptcha)
----
+## Screenshots with V3 keys (invisible reCAPTCHA)
 
-With v3 keys you just need to check if the recaptcha box is present in the bottom right corner
+With V3 keys you just need to check if the reCAPTCHA badge is present in the bottom right corner.
 
 <p align="center">
 	V3 captcha <br />
 	<img src="https://www.h-hennes.fr/blog/wp-content/uploads/2021/10/eicaptcha-v3.png" alt="Captcha V3" />
 </p>
 
- Additionnal informations (French)
----
+## Compatibility
 
-https://www.h-hennes.fr/blog/module-recaptcha-pour-le-formulaire-de-contact-prestashop/  
-https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
+| PrestaShop Version   | Compatible |
+|----------------------|------------|
+| 1.6.1.x and under   | :x: use version 0.4.x or 0.5.x instead |
+| 1.7.0.x to 1.7.8.x  | :heavy_check_mark: |
+| 8.0.x                | :heavy_check_mark: |
+| 8.1.x                | :heavy_check_mark: |
+| **9.0.x**            | :heavy_check_mark: **(this fork)** |
 
- Compatibility
----
+| PHP Version | Compatible |
+|-------------|------------|
+| 7.x         | :heavy_check_mark: (PS 1.7/8 only) |
+| **8.0+**    | :heavy_check_mark: |
+| **8.1+**    | :heavy_check_mark: |
 
-| Prestashop Version | Compatible |
-|--------------------| -----------|
-| 1.6.1.x and under  | :x: use version 0.4.x or 0.5.x instead |
-| 1.7.0.x to 1.7.8.x | :heavy_check_mark: |
-| 8.0.x              | :heavy_check_mark:|
-| 8.1.x              | :heavy_check_mark:|
+## Additional information
+
+- Original module: https://github.com/nenes25/eicaptcha
+- Author blog (French): https://www.h-hennes.fr/blog/2017/07/11/module-catpcha-pour-prestashop-1-7/
+
+## License
+
+Academic Free License (AFL 3.0)
