@@ -42,7 +42,12 @@ UPDATE ps_configuration SET value = '0' WHERE name = 'PS_DISABLE_NON_NATIVE_MODU
 
 Or via admin: **Advanced Parameters → Performance → Disable non PrestaShop modules → No**
 
-Then clear the cache (`var/cache/prod/*` and `var/cache/dev/*`) and restart your web server.
+Then clear the PrestaShop cache and restart your web server:
+
+```bash
+rm -rf /path/to/prestashop/var/cache/prod/*
+rm -rf /path/to/prestashop/var/cache/dev/*
+```
 
 ## Features
 
