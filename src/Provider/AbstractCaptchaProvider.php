@@ -163,8 +163,15 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
      */
     public function getResponseFieldName()
     {
-        // Default to Google reCAPTCHA field name for backward compatibility
         return 'g-recaptcha-response';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function renderContactFormWidget(): string
+    {
+        return '';
     }
 
     /**

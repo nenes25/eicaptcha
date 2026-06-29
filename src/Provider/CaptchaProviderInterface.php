@@ -112,7 +112,16 @@ interface CaptchaProviderInterface
     /**
      * Get the name of the form field containing the captcha response
      *
-     * @return string Field name (e.g., 'g-recaptcha-response', 'cf-turnstile-response')
+     * @return string Field name (e.g., 'g-recaptcha-response', 'h-captcha-response')
      */
     public function getResponseFieldName();
+
+    /**
+     * Get the HTML/JS to inject the captcha widget into the contact form.
+     * Called on contact form pages where no template hook is available.
+     * Return empty string if the provider handles this another way (e.g. via a JS file).
+     *
+     * @return string Inline HTML/JS or empty string
+     */
+    public function renderContactFormWidget(): string;
 }

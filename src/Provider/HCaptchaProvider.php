@@ -158,31 +158,37 @@ class HCaptchaProvider extends AbstractCaptchaProvider
         $isAuthController = $controller instanceof \AuthController || $controller instanceof \RegistrationController;
         $isContactController = $controller instanceof ContactController;
 
-        if ((
-                $isAuthController
-                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
-            )
-            ||
-            ($isContactController
-                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
-            )
+        $shouldLoad = (
+            ($isAuthController && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1)
+            || ($isContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)
             || $loadEverywhere
-        ) {
-            $this->context->controller->registerStylesheet(
-                'module-eicaptcha',
-                'modules/' . $this->module->name . '/views/css/eicaptcha.css'
-            );
+        );
 
-            $siteKey = $this->getConfig('CAPTCHA_HCAPTCHA_SITE_KEY');
-            $lang = $this->getCaptchaLang();
-
-            // hCaptcha uses a different language code format
-            $js = '<script src="https://js.hcaptcha.com/1/api.js?hl=' . $lang . '" async defer></script>';
-
-            return $js;
+        if (!$shouldLoad) {
+            return '';
         }
 
-        return '';
+        $this->context->controller->registerStylesheet(
+            'module-eicaptcha',
+            'modules/' . $this->module->name . '/views/css/eicaptcha.css'
+        );
+
+        $siteKey = $this->getConfig('CAPTCHA_HCAPTCHA_SITE_KEY');
+        $theme = $this->getTheme();
+        $lang = $this->getCaptchaLang();
+
+        // render=explicit + onload so we can explicitly render both template divs
+        // (registration form) and dynamically injected ones (contact form via renderContactFormWidget)
+        $js = '<script>
+function hcaptchaEiOnLoad() {
+    document.querySelectorAll(".h-captcha:not([data-hcaptcha-widget-id])").forEach(function(el) {
+        hcaptcha.render(el, {sitekey: "' . $siteKey . '", theme: "' . $theme . '"});
+    });
+}
+</script>
+<script src="https://js.hcaptcha.com/1/api.js?onload=hcaptchaEiOnLoad&render=explicit&hl=' . $lang . '" async defer></script>';
+
+        return $js;
     }
 
     /**
@@ -205,6 +211,30 @@ class HCaptchaProvider extends AbstractCaptchaProvider
         $secretKey = $this->getConfig('CAPTCHA_HCAPTCHA_SECRET_KEY');
 
         return !empty($siteKey) && !empty($secretKey);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function renderContactFormWidget(): string
+    {
+        $siteKey = $this->getConfig('CAPTCHA_HCAPTCHA_SITE_KEY');
+        $theme = $this->getTheme();
+
+        // Inject the h-captcha div into .form-fields before hcaptcha script loads.
+        // hcaptchaEiOnLoad (registered in renderHeader) will then render it explicitly.
+        return '<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var formFields = document.querySelector(".form-fields");
+    if (formFields && !formFields.querySelector(".h-captcha")) {
+        var wrapper = document.createElement("div");
+        wrapper.className = "form-group row eicaptcha-field";
+        wrapper.innerHTML = "<label class=\"col-md-3 form-control-label\"></label>'
+            . '<div class=\"col-md-9\"><div class=\"h-captcha\" data-sitekey=\"' . $siteKey . '\" data-theme=\"' . $theme . '\"></div></div>";
+        formFields.appendChild(wrapper);
+    }
+});
+</script>';
     }
 
     /**

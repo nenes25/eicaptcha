@@ -168,21 +168,26 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
 
         $captchaVersion = $this->getConfig('CAPTCHA_VERSION', 2);
 
-        // Add Content box to contact form page in order to display captcha
-        if (isset($context['controller']) && $context['controller'] instanceof ContactController
-            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
-        ) {
-            $this->context->controller->registerJavascript(
-                'modules-eicaptcha-contact-form',
-                'modules/' . $this->module->name . '/views/js/eicaptcha-contact-form-v' . $captchaVersion . '.js'
-            );
-        }
-
         if ($captchaVersion == 2) {
             return $this->renderHeaderV2();
         } else {
             return $this->renderHeaderV3();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function renderContactFormWidget(): string
+    {
+        $captchaVersion = $this->getConfig('CAPTCHA_VERSION', 2);
+
+        $this->context->controller->registerJavascript(
+            'modules-eicaptcha-contact-form',
+            'modules/' . $this->module->name . '/views/js/eicaptcha-contact-form-v' . $captchaVersion . '.js'
+        );
+
+        return '';
     }
 
     /**

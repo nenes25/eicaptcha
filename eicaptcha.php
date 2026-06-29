@@ -199,7 +199,15 @@ class EiCaptcha extends Module
             return;
         }
 
-        return $provider->renderHeader(['controller' => $this->context->controller]);
+        $output = $provider->renderHeader(['controller' => $this->context->controller]);
+
+        if ($this->context->controller instanceof ContactController
+            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+        ) {
+            $output .= $provider->renderContactFormWidget();
+        }
+
+        return $output;
     }
 
 
