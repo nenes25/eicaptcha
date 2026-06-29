@@ -1,0 +1,73 @@
+name: ${COMPOSE_PROJECT_NAME:-ps911}
+
+services:
+
+  prestashop:
+    image: prestashop/prestashop:${PS_IMAGE_TAG:-9.1.1}
+    container_name: ps_${PS_VERSION}_eicaptcha
+    ports:
+      - "${PS_PORT:-8096}:80"
+    environment:
+      - DB_SERVER=mysql
+      - DB_NAME=${MYSQL_DATABASE}
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWD=${MYSQL_PASSWORD}
+      - PS_INSTALL_AUTO=1
+      - PS_DOMAIN=localhost:${PS_PORT:-8096}
+      - PS_DEV_MODE=1
+      - PS_ENABLE_SSL=0
+      - XDEBUG_MODE=debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003
+    volumes:
+      - ../:/var/www/html/modules/eicaptcha
+      - ps-data:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - prestashop-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: ps_mysql_${PS_VERSION}_eicaptcha
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT:-3313}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - prestashop-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ps_phpmyadmin_${PS_VERSION}_eicaptcha
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=${MYSQL_USER}
+      - PMA_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "${PMA_PORT:-8097}:80"
+    depends_on:
+      - mysql
+    networks:
+      - prestashop-network
+
+volumes:
+  ps-data:
+  mysql-data:
+
+networks:
+  prestashop-network:
+    driver: bridge
