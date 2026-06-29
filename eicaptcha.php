@@ -309,7 +309,6 @@ class EiCaptcha extends Module
         if (
             $this->context->controller instanceof AdminModulesController
             && Tools::getValue('configure') == $this->name
-            && Tools::getValue('display_debug') == 1
         ) {
             $this->context->controller->addJS(
                 $this->_path . 'views/js/admin.js'
