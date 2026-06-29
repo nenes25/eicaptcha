@@ -46,11 +46,6 @@ function upgrade_module_3_0_0($module)
         $result = $result && Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', 0.5);
     }
 
-    // Initialize new provider configurations
-    if (!Configuration::get('CAPTCHA_MATH_DIFFICULTY')) {
-        $result = $result && Configuration::updateValue('CAPTCHA_MATH_DIFFICULTY', 'easy');
-    }
-
     // Log migration if debug is enabled
     if (Configuration::get('CAPTCHA_DEBUG')) {
         $debugger = $module->getDebugger();

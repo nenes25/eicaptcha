@@ -100,10 +100,7 @@ class Installer
             )
         && Configuration::updateValue('CAPTCHA_PROVIDER', 'google_recaptcha')
         && Configuration::updateValue('CAPTCHA_VERSION', 2)
-        && Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', 0.5)
-        && Configuration::updateValue('CAPTCHA_MATH_DIFFICULTY', 'easy')
-        && Configuration::updateValue('CAPTCHA_TURNSTILE_THEME', 'auto')
-        && Configuration::updateValue('CAPTCHA_TURNSTILE_SIZE', 'normal');
+        && Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', 0.5);
     }
 
     /**

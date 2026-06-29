@@ -187,6 +187,7 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
         return [
             'displayCaptcha' => $this->shouldDisplayToCustomer(),
             'provider' => $this->getName(),
+            'providerTemplatePath' => $this->getTemplatePath(),
             'captchalang' => $this->captchaLang,
             'captchatheme' => $this->getTheme(),
         ];

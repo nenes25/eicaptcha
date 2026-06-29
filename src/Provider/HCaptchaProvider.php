@@ -210,6 +210,14 @@ class HCaptchaProvider extends AbstractCaptchaProvider
     /**
      * @inheritDoc
      */
+    public function getResponseFieldName()
+    {
+        return 'h-captcha-response';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getTemplatePath()
     {
         return 'module:eicaptcha/views/templates/hook/providers/hcaptcha.tpl';

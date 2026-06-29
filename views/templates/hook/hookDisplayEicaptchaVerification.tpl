@@ -22,25 +22,13 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  http://www.h-hennes.fr/blog/
 *}
-{* This template is used to be displayed the captcha in custom forms *}
+{* This template is used to display the captcha in custom forms *}
 {if $displayCaptcha}
     <div class="eicaptcha-captcha-field">
-        {if $captchaVersion == 2}
-            <div class="g-recaptcha" data-sitekey="{$publicKey|escape:'html'}" id="captcha-box-custom"
-                 data-theme="{$captchatheme}"></div>
-            <script src="https://www.google.com/recaptcha/api.js?hl={$captchalang}"
-                    async defer></script>
+        {if isset($providerTemplatePath) && $providerTemplatePath}
+            {include file=$providerTemplatePath}
         {else}
-            <input type="hidden" id="captcha-box-custom" name="g-recaptcha-response"/>
-            <script src="https://www.google.com/recaptcha/api.js?render={$publicKey|escape:'html'}"></script>
-            <script>
-                grecaptcha.ready(function () {ldelim}
-                    grecaptcha.execute('{$publicKey|escape:'html'}', {ldelim}action: 'contact'{rdelim}).then(function (token) {ldelim}
-                        var recaptchaResponse = document.getElementById('captcha-box-custom');
-                        recaptchaResponse.value = token;
-                        {rdelim});
-                    {rdelim});
-            </script>
+            {include file="module:eicaptcha/views/templates/hook/providers/google_recaptcha.tpl"}
         {/if}
     </div>
 {/if}

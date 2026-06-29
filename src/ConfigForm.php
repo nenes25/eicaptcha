@@ -434,12 +434,6 @@ class ConfigForm
                 // Set default values for specific fields
                 if ($field['name'] === 'CAPTCHA_PROVIDER') {
                     $default = 'google_recaptcha';
-                } elseif ($field['name'] === 'CAPTCHA_MATH_DIFFICULTY') {
-                    $default = 'easy';
-                } elseif ($field['name'] === 'CAPTCHA_TURNSTILE_THEME') {
-                    $default = 'auto';
-                } elseif ($field['name'] === 'CAPTCHA_TURNSTILE_SIZE') {
-                    $default = 'normal';
                 }
 
                 $values[$field['name']] = Tools::getValue(

@@ -23,10 +23,8 @@
 *  http://www.h-hennes.fr/blog/
 *}
 
-{* Load the provider-specific template *}
-{if isset($provider) && $provider}
-    {include file="module:eicaptcha/views/templates/hook/providers/{$provider}.tpl"}
+{if isset($providerTemplatePath) && $providerTemplatePath}
+    {include file=$providerTemplatePath}
 {else}
-    {* Fallback to google_recaptcha for backward compatibility *}
     {include file="module:eicaptcha/views/templates/hook/providers/google_recaptcha.tpl"}
 {/if}
