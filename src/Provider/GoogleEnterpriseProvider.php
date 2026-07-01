@@ -17,9 +17,6 @@
 
 namespace Eicaptcha\Module\Provider;
 
-use Configuration;
-use ContactController;
-
 /**
  * Class GoogleEnterpriseProvider
  *
@@ -34,7 +31,7 @@ use ContactController;
 class GoogleEnterpriseProvider extends GoogleRecaptchaProvider
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -42,7 +39,7 @@ class GoogleEnterpriseProvider extends GoogleRecaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getDisplayName()
     {
@@ -50,7 +47,7 @@ class GoogleEnterpriseProvider extends GoogleRecaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function validate($response, $remoteIp)
     {
@@ -138,7 +135,7 @@ class GoogleEnterpriseProvider extends GoogleRecaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getConfigFields()
     {
@@ -171,7 +168,7 @@ class GoogleEnterpriseProvider extends GoogleRecaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function isConfigured()
     {
@@ -183,7 +180,7 @@ class GoogleEnterpriseProvider extends GoogleRecaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getTemplatePath()
     {

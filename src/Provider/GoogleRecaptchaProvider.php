@@ -20,7 +20,6 @@ namespace Eicaptcha\Module\Provider;
 use Configuration;
 use ContactController;
 use ReCaptcha\ReCaptcha;
-use Tools;
 
 /**
  * Class GoogleRecaptchaProvider
@@ -32,7 +31,7 @@ use Tools;
 class GoogleRecaptchaProvider extends AbstractCaptchaProvider
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -40,7 +39,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getDisplayName()
     {
@@ -48,7 +47,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function validate($response, $remoteIp)
     {
@@ -99,7 +98,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getConfigFields()
     {
@@ -158,7 +157,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function renderHeader(array $context = [])
     {
@@ -176,7 +175,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function renderContactFormWidget(): string
     {
@@ -286,7 +285,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getTemplateVars()
     {
@@ -298,7 +297,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function isConfigured()
     {
@@ -309,7 +308,7 @@ class GoogleRecaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getTemplatePath()
     {

@@ -22,8 +22,8 @@ require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 use Eicaptcha\Module\ConfigForm;
 use Eicaptcha\Module\Debugger;
-use Eicaptcha\Module\Installer;
 use Eicaptcha\Module\Factory\CaptchaFactory;
+use Eicaptcha\Module\Installer;
 use Eicaptcha\Module\Provider\CaptchaProviderInterface;
 
 class EiCaptcha extends Module
@@ -209,7 +209,6 @@ class EiCaptcha extends Module
 
         return $output;
     }
-
 
     /**
      * Add Captcha on the Customer Registration Form

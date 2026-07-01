@@ -20,8 +20,8 @@ namespace Eicaptcha\Module\Factory;
 use Configuration;
 use EiCaptcha;
 use Eicaptcha\Module\Provider\CaptchaProviderInterface;
-use Eicaptcha\Module\Provider\GoogleRecaptchaProvider;
 use Eicaptcha\Module\Provider\GoogleEnterpriseProvider;
+use Eicaptcha\Module\Provider\GoogleRecaptchaProvider;
 use Eicaptcha\Module\Provider\HCaptchaProvider;
 
 /**

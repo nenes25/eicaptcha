@@ -19,7 +19,6 @@ namespace Eicaptcha\Module\Provider;
 
 use Configuration;
 use ContactController;
-use Tools;
 
 /**
  * Class HCaptchaProvider
@@ -36,7 +35,7 @@ class HCaptchaProvider extends AbstractCaptchaProvider
     const VERIFY_URL = 'https://hcaptcha.com/siteverify';
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -44,7 +43,7 @@ class HCaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getDisplayName()
     {
@@ -52,7 +51,7 @@ class HCaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function validate($response, $remoteIp)
     {
@@ -118,7 +117,7 @@ class HCaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getConfigFields()
     {
@@ -145,7 +144,7 @@ class HCaptchaProvider extends AbstractCaptchaProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function renderHeader(array $context = [])
     {
@@ -192,7 +191,7 @@ function hcaptchaEiOnLoad() {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getTemplateVars()
     {
@@ -203,7 +202,7 @@ function hcaptchaEiOnLoad() {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function isConfigured()
     {
@@ -214,7 +213,7 @@ function hcaptchaEiOnLoad() {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function renderContactFormWidget(): string
     {
@@ -238,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getResponseFieldName()
     {
@@ -246,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getTemplatePath()
     {
