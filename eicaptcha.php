@@ -322,33 +322,13 @@ class EiCaptcha extends Module
      */
     public function hookActionSubmitAccountBefore(array $params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
-            && Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE') == 0) {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
             $this->debugger->log('check customer registration by method ' . __METHOD__);
 
             return $this->_validateCaptcha();
         }
 
         return true;
-    }
-
-    /**
-     * Check captcha before submit account
-     * Custom hook
-     *
-     * @param array $params
-     *
-     * @return bool|void
-     *
-     * @since 2.4.0
-     */
-    public function hookActionCustomerRegisterSubmitCaptcha(array $params)
-    {
-        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
-            $this->debugger->log('check customer registration by method ' . __METHOD__);
-
-            return $this->_validateCaptcha();
-        }
     }
 
     /**
