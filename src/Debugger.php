@@ -166,6 +166,7 @@ class Debugger
             'displayHeader',
             'displayCustomerAccountForm',
             'displayNewsletterRegistration',
+            'actionCustomerRegisterSubmitCaptcha',
             'actionSubmitAccountBefore',
             'actionContactFormSubmitBefore',
             'actionNewsletterRegistrationBefore',
