@@ -162,7 +162,6 @@ class Debugger
             'displayHeader',
             'displayCustomerAccountForm',
             'displayNewsletterRegistration',
-            'actionCustomerRegisterSubmitCaptcha',
             'actionSubmitAccountBefore',
             'actionContactFormSubmitBefore',
             'actionNewsletterRegistrationBefore',
@@ -205,12 +204,6 @@ class Debugger
         }
 
         //Check if file overrides exists
-        if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/AuthController.php')) {
-            $errors[] = $this->l('AuthController.php override does not exists');
-        } else {
-            $success[] = $this->l('AuthController.php override exists');
-        }
-
         if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
             $errors[] = $this->l('contactform.php override does not exists');
         } else {
@@ -218,14 +211,7 @@ class Debugger
         }
 
         //Check if file override is written in class_index.php files
-        if (file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
-            $classesArray = (include _PS_CACHE_DIR_ . '/class_index.php');
-            if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
-                $errors[] = $this->l('Authcontroller override is not present in class_index.php');
-            } else {
-                $success[] = $this->l('Authcontroller override is present in class_index.php');
-            }
-        } else {
+        if (!file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
             $errors[] = $this->l('no class_index.php found');
         }
 
