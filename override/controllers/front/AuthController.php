@@ -2,12 +2,12 @@
 
 class AuthController extends AuthControllerCore
 {
-    public function initContent()
+    public function initContent(): void
     {
-        if (Tools::isSubmit('submitCreate') && Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE') == 1) {
+        if (Tools::isSubmit('submitCreate') && Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE') === '1') {
             Hook::exec('actionCustomerRegisterSubmitCaptcha');
 
-            if (!sizeof($this->context->controller->errors)) {
+            if (!count($this->context->controller->errors)) {
                 parent::initContent();
             } else {
                 $register_form = $this

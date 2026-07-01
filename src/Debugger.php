@@ -139,7 +139,11 @@ class Debugger
 
         //Check if module contactform is installed
         if (!Module::isInstalled('contactform')) {
-            $errors[] = $this->l('the module contatcform is not installed');
+            if (version_compare(_PS_VERSION_, '9.0', '>=')) {
+                $success[] = $this->l('PrestaShop 9+: contactform module is optional');
+            } else {
+                $errors[] = $this->l('the module contatcform is not installed');
+            }
         } else {
             $success[] = $this->l('the module contactform is installed');
         }
@@ -198,35 +202,40 @@ class Debugger
         $errors = $success = [];
 
         //Check if override are disabled in configuration
-        if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
+        if (Configuration::get('PS_DISABLE_OVERRIDES') === '1') {
             $errors[] = $this->l('Overrides are disabled on your website');
         } else {
             $success[] = $this->l('Overrides are enabled on your website');
         }
 
-        //Check if file overrides exists
-        if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/AuthController.php')) {
-            $errors[] = $this->l('AuthController.php override does not exists');
-        } else {
-            $success[] = $this->l('AuthController.php override exists');
-        }
-
-        if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
-            $errors[] = $this->l('contactform.php override does not exists');
-        } else {
-            $success[] = $this->l('contactform.php override exists');
-        }
-
-        //Check if file override is written in class_index.php files
-        if (file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
-            $classesArray = (include _PS_CACHE_DIR_ . '/class_index.php');
-            if ($classesArray['AuthController']['path'] != 'override/controllers/front/AuthController.php') {
-                $errors[] = $this->l('Authcontroller override is not present in class_index.php');
+        //Override checks are only relevant for PS < 8.0
+        if (version_compare(_PS_VERSION_, '8.0', '<')) {
+            //Check if file overrides exists
+            if (!file_exists(_PS_OVERRIDE_DIR_ . 'controllers/front/AuthController.php')) {
+                $errors[] = $this->l('AuthController.php override does not exists');
             } else {
-                $success[] = $this->l('Authcontroller override is present in class_index.php');
+                $success[] = $this->l('AuthController.php override exists');
+            }
+
+            if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
+                $errors[] = $this->l('contactform.php override does not exists');
+            } else {
+                $success[] = $this->l('contactform.php override exists');
+            }
+
+            //Check if file override is written in class_index.php files
+            if (file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
+                $classesArray = (include _PS_CACHE_DIR_ . '/class_index.php');
+                if ($classesArray['AuthController']['path'] !== 'override/controllers/front/AuthController.php') {
+                    $errors[] = $this->l('Authcontroller override is not present in class_index.php');
+                } else {
+                    $success[] = $this->l('Authcontroller override is present in class_index.php');
+                }
+            } else {
+                $errors[] = $this->l('no class_index.php found');
             }
         } else {
-            $errors[] = $this->l('no class_index.php found');
+            $success[] = $this->l('PrestaShop 8+: using native hooks instead of overrides');
         }
 
         return [

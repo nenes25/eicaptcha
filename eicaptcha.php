@@ -69,8 +69,7 @@ class EiCaptcha extends Module
             $this->warning = $this->l('Captcha Module need to be configurated');
         }
         $this->themes = [0 => 'light', 1 => 'dark'];
-        $this->dependencies = ['contactform'];
-        $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => '9.99.99'];
 
         $this->debugger = new Debugger($this);
 
@@ -157,7 +156,19 @@ class EiCaptcha extends Module
     }
 
     /**
-     * Hook Header
+     * Hook displayHeader (canonical name for PS9+)
+     *
+     * @param array $params
+     *
+     * @return string|void
+     */
+    public function hookDisplayHeader(array $params)
+    {
+        return $this->hookHeader($params);
+    }
+
+    /**
+     * Hook Header (legacy alias name for PS 1.7.x compatibility)
      *
      * @param array $params
      *
@@ -172,7 +183,7 @@ class EiCaptcha extends Module
         $captchaVersion = Configuration::get('CAPTCHA_VERSION');
         //Add Content box to contact form page in order to display captcha
         if ($this->context->controller instanceof ContactController
-            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+            && Configuration::get('CAPTCHA_ENABLE_CONTACT') === '1'
         ) {
             $this->context->controller->registerJavascript(
                 'modules-eicaptcha-contact-form',
@@ -180,7 +191,7 @@ class EiCaptcha extends Module
             );
         }
 
-        if ($captchaVersion == 2) {
+        if ($captchaVersion === '2') {
             return $this->renderHeaderV2();
         } else {
             return $this->renderHeaderV3();
@@ -199,13 +210,13 @@ class EiCaptcha extends Module
                     $this->context->controller instanceof AuthController
                     || $this->context->controller instanceof RegistrationController
                 )
-                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') === '1'
             )
             ||
             ($this->context->controller instanceof ContactController
-                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+                && Configuration::get('CAPTCHA_ENABLE_CONTACT') === '1'
             )
-            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
+            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') === '1'
         ) {
             $this->context->controller->registerStylesheet(
                 'module-eicaptcha',
@@ -231,7 +242,7 @@ class EiCaptcha extends Module
             };
             </script>';
 
-            if (($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)) {
+            if (($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') === '1')) {
                 $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . $this->captchaLang . '" async defer></script>';
             }
 
@@ -248,9 +259,16 @@ class EiCaptcha extends Module
     {
         if (
             ($this->context->controller instanceof ContactController
-                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+                && Configuration::get('CAPTCHA_ENABLE_CONTACT') === '1'
             )
-            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
+            || (
+                (
+                    $this->context->controller instanceof AuthController
+                    || $this->context->controller instanceof RegistrationController
+                )
+                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') === '1'
+            )
+            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') === '1'
         ) {
             $publicKey = Configuration::get('CAPTCHA_PUBLIC_KEY');
             $js = '
@@ -259,7 +277,9 @@ class EiCaptcha extends Module
                 grecaptcha.ready(function () {
                     grecaptcha.execute("' . $publicKey . '", {action: "contact"}).then(function (token) {
                         var recaptchaResponse = document.getElementById("captcha-box");
-                        recaptchaResponse.value = token;
+                        if (recaptchaResponse) {
+                            recaptchaResponse.value = token;
+                        }
                         });
                     });
             </script>';
@@ -277,8 +297,8 @@ class EiCaptcha extends Module
      */
     public function hookDisplayCustomerAccountForm(array $params)
     {
-        if ($this->context->controller->php_self != 'identity'
-            && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+        if ($this->context->controller->php_self !== 'identity'
+            && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') === '1'
         ) {
             $this->context->smarty->assign([
                 'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
@@ -303,7 +323,7 @@ class EiCaptcha extends Module
      */
     public function hookActionContactFormSubmitCaptcha(array $params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') === '1') {
             $this->debugger->log('check customer registration by method ' . __METHOD__);
 
             return $this->_validateCaptcha();
@@ -322,8 +342,8 @@ class EiCaptcha extends Module
      */
     public function hookActionSubmitAccountBefore(array $params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
-            && Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE') == 0) {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') === '1'
+            && Configuration::get('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE') !== '1') {
             $this->debugger->log('check customer registration by method ' . __METHOD__);
 
             return $this->_validateCaptcha();
@@ -344,7 +364,7 @@ class EiCaptcha extends Module
      */
     public function hookActionCustomerRegisterSubmitCaptcha(array $params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1) {
+        if (Configuration::get('CAPTCHA_ENABLE_ACCOUNT') === '1') {
             $this->debugger->log('check customer registration by method ' . __METHOD__);
 
             return $this->_validateCaptcha();
@@ -359,7 +379,7 @@ class EiCaptcha extends Module
      */
     public function hookActionContactFormSubmitBefore()
     {
-        if (Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
+        if (Configuration::get('CAPTCHA_ENABLE_CONTACT') === '1') {
             return $this->_validateCaptcha();
         }
     }
@@ -377,7 +397,7 @@ class EiCaptcha extends Module
     {
         if (
             $this->context->controller instanceof AdminModulesController
-            && Tools::getValue('configure') == $this->name
+            && Tools::getValue('configure') === $this->name
             && Tools::getValue('display_debug') == 1
         ) {
             $this->context->controller->addJS(
@@ -399,7 +419,7 @@ class EiCaptcha extends Module
     public function hookDisplayNewsletterRegistration(array $params)
     {
         if (
-            Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
+            Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') === '1'
             && $this->canUseCaptchaOnNewsletter()
             && $this->shouldDisplayToCustomer()
         ) {
@@ -425,7 +445,7 @@ class EiCaptcha extends Module
      */
     public function hookActionNewsletterRegistrationBefore(array $params)
     {
-        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
+        if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') === '1'
             && $this->canUseCaptchaOnNewsletter()
             && $this->shouldDisplayToCustomer()
         ) {
@@ -456,7 +476,7 @@ class EiCaptcha extends Module
             $recaptchaMethod = null;
         }
         $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'), $recaptchaMethod);
-        if ($captchaVersion == 3) {
+        if ($captchaVersion === '3') {
             $captcha->setScoreThreshold($captchaV3MinScore);
         }
         $result = $captcha->verify(
@@ -468,7 +488,7 @@ class EiCaptcha extends Module
             $errorMessage = $this->l('Please validate the captcha field before submitting your request');
             $this->debugger->log($errorMessage);
             $this->debugger->log(sprintf($this->l('Recaptcha response %s'), print_r($result->getErrorCodes(), true)));
-            if ($captchaVersion == 3) {
+            if ($captchaVersion === '3') {
                 if ($result->getScore() < $captchaV3MinScore) {
                     $errorMessageV3 =
                         sprintf(
@@ -567,7 +587,7 @@ class EiCaptcha extends Module
     protected function shouldDisplayToCustomer()
     {
         if (
-            Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS') == 0
+            Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS') === '0'
             && $this->context->customer->isLogged()
         ) {
             return false;
