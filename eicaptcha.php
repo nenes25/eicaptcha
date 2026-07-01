@@ -22,8 +22,9 @@ require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 use Eicaptcha\Module\ConfigForm;
 use Eicaptcha\Module\Debugger;
+use Eicaptcha\Module\Factory\CaptchaFactory;
 use Eicaptcha\Module\Installer;
-use ReCaptcha\ReCaptcha;
+use Eicaptcha\Module\Provider\CaptchaProviderInterface;
 
 class EiCaptcha extends Module
 {
@@ -48,12 +49,17 @@ class EiCaptcha extends Module
      */
     protected $captchaLang = 'en';
 
+    /**
+     * @var CaptchaProviderInterface
+     */
+    protected $captchaProvider;
+
     public function __construct()
     {
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.6.0';
+        $this->version = '3.0.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -142,6 +148,28 @@ class EiCaptcha extends Module
     }
 
     /**
+     * Get the current captcha provider
+     *
+     * @return CaptchaProviderInterface
+     *
+     * @since 3.0.0
+     */
+    public function getCaptchaProvider()
+    {
+        if (null === $this->captchaProvider) {
+            try {
+                $this->captchaProvider = CaptchaFactory::create($this);
+            } catch (\Exception $e) {
+                $this->debugger->log('Error loading captcha provider: ' . $e->getMessage());
+                // Fallback to google_recaptcha
+                $this->captchaProvider = CaptchaFactory::create($this, 'google_recaptcha');
+            }
+        }
+
+        return $this->captchaProvider;
+    }
+
+    /**
      * Module Configuration in Back Office
      *
      * @return string
@@ -165,107 +193,21 @@ class EiCaptcha extends Module
      */
     public function hookHeader(array $params)
     {
-        if (!$this->shouldDisplayToCustomer()) {
+        $provider = $this->getCaptchaProvider();
+
+        if (!$provider->shouldDisplayToCustomer()) {
             return;
         }
 
-        $captchaVersion = Configuration::get('CAPTCHA_VERSION');
-        //Add Content box to contact form page in order to display captcha
+        $output = $provider->renderHeader(['controller' => $this->context->controller]);
+
         if ($this->context->controller instanceof ContactController
             && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
         ) {
-            $this->context->controller->registerJavascript(
-                'modules-eicaptcha-contact-form',
-                'modules/' . $this->name . '/views/js/eicaptcha-contact-form-v' . $captchaVersion . '.js'
-            );
+            $output .= $provider->renderContactFormWidget();
         }
 
-        if ($captchaVersion == 2) {
-            return $this->renderHeaderV2();
-        } else {
-            return $this->renderHeaderV3();
-        }
-    }
-
-    /**
-     * Return content for (re)captcha v2
-     *
-     * @return string|void
-     */
-    protected function renderHeaderV2()
-    {
-        if ((
-                (
-                    $this->context->controller instanceof AuthController
-                    || $this->context->controller instanceof RegistrationController
-                )
-                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
-            )
-            ||
-            ($this->context->controller instanceof ContactController
-                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
-            )
-            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
-        ) {
-            $this->context->controller->registerStylesheet(
-                'module-eicaptcha',
-                'modules/' . $this->name . '/views/css/eicaptcha.css'
-            );
-            //Dynamic insertion of the content
-            $js = '<script type="text/javascript">
-            //Recaptcha CallBack Function
-            var onloadCallback = function() {
-                //Fix captcha box issue in ps 1.7.7
-                if ( ! document.getElementById("captcha-box")){
-                        var container = document.createElement("div");
-                        container.setAttribute("id","captcha-box");
-                        if ( null !== document.querySelector(".form-fields") ){
-                             document.querySelector(".form-fields").appendChild(container);
-                        }
-                }
-                if ( document.getElementById("captcha-box")){
-                    grecaptcha.render("captcha-box", {"theme" : "' . $this->themes[Configuration::get('CAPTCHA_THEME')] . '", "sitekey" : "' . Configuration::get('CAPTCHA_PUBLIC_KEY') . '"});
-                } else {
-                    console.warn("eicaptcha: unable to add captcha-box placeholder to display captcha ( not an error when form is submited sucessfully )");
-                }
-            };
-            </script>';
-
-            if (($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)) {
-                $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . $this->captchaLang . '" async defer></script>';
-            }
-
-            return $js;
-        }
-    }
-
-    /**
-     * Return content for recaptcha v3
-     *
-     * @return string|void
-     */
-    public function renderHeaderV3()
-    {
-        if (
-            ($this->context->controller instanceof ContactController
-                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
-            )
-            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
-        ) {
-            $publicKey = Configuration::get('CAPTCHA_PUBLIC_KEY');
-            $js = '
-            <script src="https://www.google.com/recaptcha/api.js?render=' . $publicKey . '"></script>
-            <script>
-                grecaptcha.ready(function () {
-                    grecaptcha.execute("' . $publicKey . '", {action: "contact"}).then(function (token) {
-                        var recaptchaResponse = document.getElementById("captcha-box");
-                        recaptchaResponse.value = token;
-                        });
-                    });
-            </script>';
-
-            return $js;
-        }
+        return $output;
     }
 
     /**
@@ -280,12 +222,8 @@ class EiCaptcha extends Module
         if ($this->context->controller->php_self != 'identity'
             && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
         ) {
-            $this->context->smarty->assign([
-                'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
-                'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
-                'captchalang' => $this->captchaLang,
-                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
-            ]);
+            $provider = $this->getCaptchaProvider();
+            $this->context->smarty->assign($provider->getTemplateVars());
 
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayCustomerAccountForm.tpl');
         }
@@ -378,7 +316,6 @@ class EiCaptcha extends Module
         if (
             $this->context->controller instanceof AdminModulesController
             && Tools::getValue('configure') == $this->name
-            && Tools::getValue('display_debug') == 1
         ) {
             $this->context->controller->addJS(
                 $this->_path . 'views/js/admin.js'
@@ -398,17 +335,14 @@ class EiCaptcha extends Module
      */
     public function hookDisplayNewsletterRegistration(array $params)
     {
+        $provider = $this->getCaptchaProvider();
+
         if (
             Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
             && $this->canUseCaptchaOnNewsletter()
-            && $this->shouldDisplayToCustomer()
+            && $provider->shouldDisplayToCustomer()
         ) {
-            $this->context->smarty->assign([
-                'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
-                'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
-                'captchalang' => $this->captchaLang,
-                'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
-            ]);
+            $this->context->smarty->assign($provider->getTemplateVars());
 
             return $this->display(__FILE__, 'views/templates/hook/hookDisplayNewsletterRegistration.tpl');
         }
@@ -425,9 +359,11 @@ class EiCaptcha extends Module
      */
     public function hookActionNewsletterRegistrationBefore(array $params)
     {
+        $provider = $this->getCaptchaProvider();
+
         if (Configuration::get('CAPTCHA_ENABLE_NEWSLETTER') == 1
             && $this->canUseCaptchaOnNewsletter()
-            && $this->shouldDisplayToCustomer()
+            && $provider->shouldDisplayToCustomer()
         ) {
             if (!$this->_validateCaptcha()) {
                 $params['hookError'] = $this->l('Please validate the captcha field before submitting your request');
@@ -442,51 +378,22 @@ class EiCaptcha extends Module
      */
     protected function _validateCaptcha()
     {
-        if (!$this->shouldDisplayToCustomer()) {
+        $provider = $this->getCaptchaProvider();
+
+        if (!$provider->shouldDisplayToCustomer()) {
             return true;
         }
 
-        $context = Context::getContext();
-        $captchaVersion = Configuration::get('CAPTCHA_VERSION');
-        $captchaV3MinScore = (float) Configuration::get('CAPTCHA_V3_MINIMAL_SCORE');
-        //Fix issue if allow_url_open is set to 0
-        if (function_exists('ini_get') && !ini_get('allow_url_fopen')) {
-            $recaptchaMethod = new \ReCaptcha\RequestMethod\CurlPost();
-        } else {
-            $recaptchaMethod = null;
-        }
-        $captcha = new ReCaptcha(Configuration::get('CAPTCHA_PRIVATE_KEY'), $recaptchaMethod);
-        if ($captchaVersion == 3) {
-            $captcha->setScoreThreshold($captchaV3MinScore);
-        }
-        $result = $captcha->verify(
-            Tools::getValue('g-recaptcha-response'),
-            Tools::getRemoteAddr()
-        );
+        $response = Tools::getValue($provider->getResponseFieldName());
+        $remoteIp = Tools::getRemoteAddr();
 
-        if (!$result->isSuccess()) {
-            $errorMessage = $this->l('Please validate the captcha field before submitting your request');
-            $this->debugger->log($errorMessage);
-            $this->debugger->log(sprintf($this->l('Recaptcha response %s'), print_r($result->getErrorCodes(), true)));
-            if ($captchaVersion == 3) {
-                if ($result->getScore() < $captchaV3MinScore) {
-                    $errorMessageV3 =
-                        sprintf(
-                           'Your request has been blocked by the captcha system, due to a low score of %s, required score is %s',
-                            $result->getScore(),
-                            $captchaV3MinScore
-                        );
-                    $this->debugger->log($errorMessageV3);
-                }
-            }
-            $context->controller->errors[] = $errorMessage;
+        $isValid = $provider->validate($response, $remoteIp);
 
-            return false;
+        if (!$isValid) {
+            $this->context->controller->errors[] = $provider->getLastError();
         }
 
-        $this->debugger->log($this->l('Captcha submited with success'));
-
-        return true;
+        return $isValid;
     }
 
     /**
@@ -500,13 +407,9 @@ class EiCaptcha extends Module
      */
     public function hookActionGetEicaptchaParams(array $params)
     {
-        return [
-            'displayCaptcha' => $this->shouldDisplayToCustomer(),
-            'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
-            'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
-            'captchaforcelang' => Configuration::get('CAPTCHA_FORCE_LANG'),
-            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
-        ];
+        $provider = $this->getCaptchaProvider();
+
+        return $provider->getTemplateVars();
     }
 
     /**
@@ -518,13 +421,8 @@ class EiCaptcha extends Module
      */
     public function hookDisplayEicaptchaVerification(array $params)
     {
-        $this->context->smarty->assign([
-            'displayCaptcha' => $this->shouldDisplayToCustomer(),
-            'captchaVersion' => Configuration::get('CAPTCHA_VERSION'),
-            'publicKey' => Configuration::get('CAPTCHA_PUBLIC_KEY'),
-            'captchalang' => $this->captchaLang,
-            'captchatheme' => $this->themes[Configuration::get('CAPTCHA_THEME')],
-        ]);
+        $provider = $this->getCaptchaProvider();
+        $this->context->smarty->assign($provider->getTemplateVars());
 
         return $this->display(__FILE__, 'views/templates/hook/hookDisplayEicaptchaVerification.tpl');
     }

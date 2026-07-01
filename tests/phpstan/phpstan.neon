@@ -14,3 +14,7 @@ parameters:
     - ../../vendor/*
   reportUnmatchedIgnoredErrors: false
   level: 4
+  ignoreErrors:
+    # google/cloud-recaptcha-enterprise is an optional dependency, guarded at
+    # runtime by a class_exists() check in GoogleEnterpriseProvider.
+    - '#(Instantiated class|Call to method .* on an unknown class) Google\\Cloud\\RecaptchaEnterprise\\.*#'

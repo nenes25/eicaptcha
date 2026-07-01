@@ -19,6 +19,7 @@ namespace Eicaptcha\Module;
 
 use Configuration;
 use EiCaptcha;
+use Eicaptcha\Module\Factory\CaptchaFactory;
 use Module;
 
 class Debugger
@@ -91,6 +92,7 @@ class Debugger
         $overridesChecks = $this->checkOverrides();
         $newsletterChecks = $this->checkNewsletter();
         $hookHookDisplayCustomerAccountForm = $this->checkHookDisplayCustomerAccountForm();
+        $providerChecks = $this->checkProviders();
 
         $errors = array_merge(
             $errors,
@@ -98,7 +100,8 @@ class Debugger
             $hookChecks['errors'],
             $overridesChecks['errors'],
             $hookHookDisplayCustomerAccountForm['errors'],
-            $newsletterChecks['errors']
+            $newsletterChecks['errors'],
+            $providerChecks['errors']
         );
 
         $success = array_merge(
@@ -107,7 +110,8 @@ class Debugger
             $hookChecks['success'],
             $overridesChecks['success'],
             $hookHookDisplayCustomerAccountForm['success'],
-            $newsletterChecks['success']
+            $newsletterChecks['success'],
+            $providerChecks['success']
         );
 
         $this->module->getContext()->smarty->assign([
@@ -340,6 +344,71 @@ class Debugger
                 FILE_APPEND
             );
         }
+    }
+
+    /**
+     * Check the current captcha provider configuration
+     *
+     * @return array
+     *
+     * @since 3.0.0
+     */
+    protected function checkProviders()
+    {
+        $errors = $success = [];
+
+        $currentProvider = Configuration::get('CAPTCHA_PROVIDER');
+
+        if (empty($currentProvider)) {
+            $errors[] = $this->l('No captcha provider selected');
+
+            return [
+                'errors' => $errors,
+                'success' => $success,
+            ];
+        }
+
+        try {
+            $provider = CaptchaFactory::create($this->module, $currentProvider);
+
+            $success[] = sprintf(
+                $this->l('Current captcha provider: <strong>%s</strong>'),
+                $provider->getDisplayName()
+            );
+
+            if ($provider->isConfigured()) {
+                $success[] = sprintf(
+                    $this->l('Provider <strong>%s</strong> is properly configured'),
+                    $provider->getDisplayName()
+                );
+            } else {
+                $errors[] = sprintf(
+                    $this->l('Provider <strong>%s</strong> is not properly configured. Please check your API keys.'),
+                    $provider->getDisplayName()
+                );
+            }
+
+            // Check provider-specific requirements
+            switch ($currentProvider) {
+                case 'google_enterprise':
+                    if (!class_exists('\Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient')) {
+                        $errors[] = $this->l('Google Cloud reCAPTCHA Enterprise library is not installed. Run: composer require google/cloud-recaptcha-enterprise');
+                    } else {
+                        $success[] = $this->l('Google Cloud reCAPTCHA Enterprise library is installed');
+                    }
+                    break;
+            }
+        } catch (\Exception $e) {
+            $errors[] = sprintf(
+                $this->l('Error loading provider: %s'),
+                $e->getMessage()
+            );
+        }
+
+        return [
+            'errors' => $errors,
+            'success' => $success,
+        ];
     }
 
     /**
