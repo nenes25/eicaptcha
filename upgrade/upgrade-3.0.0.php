@@ -14,7 +14,6 @@
  * @copyright since 2013 Hervé HENNES
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License ("AFL") v. 3.0
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -33,7 +32,7 @@ function upgrade_module_3_0_0($module)
 
     // Set default provider to google_recaptcha for backward compatibility
     if (!Configuration::get('CAPTCHA_PROVIDER')) {
-        $result = $result && Configuration::updateValue('CAPTCHA_PROVIDER', 'google_recaptcha');
+        $result = Configuration::updateValue('CAPTCHA_PROVIDER', 'google_recaptcha');
     }
 
     // Ensure CAPTCHA_VERSION is set (default to V2 if not set)

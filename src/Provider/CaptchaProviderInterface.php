@@ -124,4 +124,11 @@ interface CaptchaProviderInterface
      * @return string Inline HTML/JS or empty string
      */
     public function renderContactFormWidget(): string;
+
+    /**
+     * Check if captcha should be displayed to the current customer
+     *
+     * @return bool
+     */
+    public function shouldDisplayToCustomer();
 }

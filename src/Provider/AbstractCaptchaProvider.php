@@ -74,7 +74,7 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getLastError()
     {
@@ -143,7 +143,7 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getCssFiles()
     {
@@ -151,7 +151,7 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getJsFiles()
     {
@@ -159,7 +159,7 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getResponseFieldName()
     {
@@ -167,7 +167,7 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function renderContactFormWidget(): string
     {
@@ -187,7 +187,7 @@ abstract class AbstractCaptchaProvider implements CaptchaProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getTemplateVars()
     {
