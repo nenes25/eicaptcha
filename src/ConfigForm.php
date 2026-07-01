@@ -110,33 +110,6 @@ class ConfigForm
             ];
         }
 
-        //For version under PS 8.x we let the choice to the customer to use the override or the hook
-        if (version_compare(_PS_VERSION_, '8.0') < 0) {
-            $fields_form['form']['input'][] = [
-                'type' => 'switch',
-                'name' => 'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE',
-                'label' => $this->l('Use the controller override'),
-                'hint' => $this->l('Choose if you want to use the override or the hook to validate customers registration'),
-                'desc' => $this->l('If you don\'t know what to do with this value let it on the default one'),
-                'required' => false,
-                'class' => 't',
-                'is_bool' => true,
-                'values' => [
-                    [
-                        'id' => 'active_on',
-                        'value' => 1,
-                        'label' => $this->l('Enabled'),
-                    ],
-                    [
-                        'id' => 'active_off',
-                        'value' => 0,
-                        'label' => $this->l('Disabled'),
-                    ],
-                ],
-                'tab' => 'advanced',
-            ];
-        }
-
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -487,7 +460,6 @@ class ConfigForm
         $advancedFields = [
             ['name' => 'CAPTCHA_DEBUG', 'type' => 'switch'],
             ['name' => 'CAPTCHA_LOAD_EVERYWHERE', 'type' => 'switch'],
-            ['name' => 'CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE', 'type' => 'switch'],
         ];
         $allFields = array_merge($allFields, $advancedFields);
 

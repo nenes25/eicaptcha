@@ -45,6 +45,11 @@ function upgrade_module_3_0_0($module)
         $result = $result && Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', 0.5);
     }
 
+    // The AuthController override is no longer needed, the native
+    // actionSubmitAccountBefore hook is used instead (see #335)
+    $result = $result && $module->unregisterHook('actionCustomerRegisterSubmitCaptcha');
+    $result = $result && Configuration::deleteByName('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE');
+
     // Log migration if debug is enabled
     if (Configuration::get('CAPTCHA_DEBUG')) {
         $debugger = $module->getDebugger();
