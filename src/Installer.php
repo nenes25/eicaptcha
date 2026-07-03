@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -17,13 +18,10 @@
 
 namespace Eicaptcha\Module;
 
-use Configuration;
-use EiCaptcha;
-
 class Installer
 {
     /**
-     * @var EiCaptcha
+     * @var \EiCaptcha
      */
     private $module;
 
@@ -44,9 +42,9 @@ class Installer
     /**
      * Installer constructor.
      *
-     * @param EiCaptcha $module
+     * @param \EiCaptcha $module
      */
-    public function __construct(EiCaptcha $module)
+    public function __construct(\EiCaptcha $module)
     {
         $this->module = $module;
     }
@@ -88,12 +86,12 @@ class Installer
      */
     protected function installConfigurations()
     {
-        return Configuration::updateGlobalValue('CAPTCHA_ENABLE_ACCOUNT', 0)
-        && Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
-        && Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
-        && Configuration::updateValue('CAPTCHA_THEME', 0)
-        && Configuration::updateValue('CAPTCHA_DEBUG', 0)
-        && Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1);
+        return \Configuration::updateGlobalValue('CAPTCHA_ENABLE_ACCOUNT', 0)
+        && \Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', 0)
+        && \Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', 0)
+        && \Configuration::updateValue('CAPTCHA_THEME', 0)
+        && \Configuration::updateValue('CAPTCHA_DEBUG', 0)
+        && \Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', 1);
     }
 
     /**
@@ -103,12 +101,12 @@ class Installer
      */
     protected function uninstallConfigurations()
     {
-        return Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
-        && Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
-        && Configuration::deleteByName('CAPTCHA_ENABLE_NEWSLETTER')
-        && Configuration::deleteByName('CAPTCHA_THEME')
-        && Configuration::deleteByName('CAPTCHA_DEBUG')
-        && Configuration::deleteByName('CAPTCHA_VERSION')
-        && Configuration::deleteByName('CAPTCHA_ENABLE_LOGGED_CUSTOMERS');
+        return \Configuration::deleteByName('CAPTCHA_ENABLE_ACCOUNT')
+        && \Configuration::deleteByName('CAPTCHA_ENABLE_CONTACT')
+        && \Configuration::deleteByName('CAPTCHA_ENABLE_NEWSLETTER')
+        && \Configuration::deleteByName('CAPTCHA_THEME')
+        && \Configuration::deleteByName('CAPTCHA_DEBUG')
+        && \Configuration::deleteByName('CAPTCHA_VERSION')
+        && \Configuration::deleteByName('CAPTCHA_ENABLE_LOGGED_CUSTOMERS');
     }
 }

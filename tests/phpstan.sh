@@ -28,12 +28,11 @@ else
 fi
 
 # Run a container for PHPStan, having access to the module content and PrestaShop sources.
-# This tool is outside the composer.json because of the compatibility with PHP 5.6
 echo "Run PHPStan using ${PHPSTAN_CONFIG}"
 
 docker run --rm --volumes-from temp-ps \
        -v $PWD:/var/www/html/modules/eicaptcha \
        -e _PS_ROOT_DIR_=/var/www/html \
-       --workdir=/var/www/html/modules/eicaptcha phpstan/phpstan:0.12 \
+       --workdir=/var/www/html/modules/eicaptcha ghcr.io/phpstan/phpstan:1-php8.1 \
        analyse \
        --configuration=${PHPSTAN_CONFIG}

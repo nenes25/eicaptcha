@@ -7,17 +7,19 @@ on:
       - '17'
 jobs:
   php-linter:
-    name: PHP Syntax check 7.2|7.3|7.4|8.1
+    name: PHP Syntax check 8.1|8.2|8.3|8.4|8.5
     runs-on: ubuntu-latest
     steps:
-      - name: PHP syntax checker 7.2
-        uses: prestashop/github-action-php-lint/7.2@master
-      - name: PHP syntax checker 7.3
-        uses: prestashop/github-action-php-lint/7.3@master
-      - name: PHP syntax checker 7.4
-        uses: prestashop/github-action-php-lint/7.4@master
       - name: PHP syntax checker 8.1
         uses: prestashop/github-action-php-lint/8.1@master
+      - name: PHP syntax checker 8.2
+        uses: prestashop/github-action-php-lint/8.2@master
+      - name: PHP syntax checker 8.3
+        uses: prestashop/github-action-php-lint/8.3@master
+      - name: PHP syntax checker 8.4
+        uses: prestashop/github-action-php-lint/8.4@master
+      - name: PHP syntax checker 8.5
+        uses: prestashop/github-action-php-lint/8.5@master
 
   # Check the PHP code follow the coding standards
   php-cs-fixer:
@@ -27,7 +29,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.1'
       - name: Checkout
         uses: actions/checkout@v4
       - name: Cache dependencies
@@ -47,10 +49,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - presta-versions: '1.7.8.11'
-            php-version: '7.4'
-          - presta-versions: '8.2.3'
-            php-version: '7.4'
+          - presta-versions: '9.1.4-8.1'
+            php-version: '8.1'
+          - presta-versions: '9.1.4-8.2'
+            php-version: '8.2'
+          - presta-versions: '9.1.4-8.3'
+            php-version: '8.3'
+          - presta-versions: '9.1.4-8.4'
+            php-version: '8.4'
+          - presta-versions: '9.1.4-8.5'
+            php-version: '8.5'
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
