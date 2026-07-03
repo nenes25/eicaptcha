@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -27,6 +28,6 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_2_3_0($module)
 {
-    //Intialialize a configuration with recaptcha v2 ( as key was not existing and v3 was not implemented before )
+    // Intialialize a configuration with recaptcha v2 ( as key was not existing and v3 was not implemented before )
     return Configuration::updateGlobalValue('CAPTCHA_VERSION', 2);
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -17,31 +18,24 @@
 
 namespace Eicaptcha\Module;
 
-use Configuration;
-use Context;
-use EiCaptcha;
-use HelperForm;
-use Language;
-use Tools;
-
 class ConfigForm
 {
     /**
-     * @var EiCaptcha
+     * @var \EiCaptcha
      */
     private $module;
 
     /**
-     * @var Context
+     * @var \Context
      */
     private $context;
 
     /**
      * Installer constructor.
      *
-     * @param EiCaptcha $module
+     * @param \EiCaptcha $module
      */
-    public function __construct(EiCaptcha $module)
+    public function __construct(\EiCaptcha $module)
     {
         $this->module = $module;
         $this->context = $this->module->getContext();
@@ -288,7 +282,7 @@ class ConfigForm
                         'type' => 'html',
                         'label' => $this->l('Check module installation'),
                         'name' => 'enable_debug_html',
-                        'html_content' => '<a href="' . $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->module->name . '&tab_module=' . $this->module->tab . '&module_name=' . $this->module->name . '&display_debug=1&token=' . Tools::getAdminTokenLite('AdminModules') . '">' . $this->l('Check if module is well installed') . '</a>',
+                        'html_content' => '<a href="' . $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->module->name . '&tab_module=' . $this->module->tab . '&module_name=' . $this->module->name . '&display_debug=1&token=' . \Tools::getAdminTokenLite('AdminModules') . '">' . $this->l('Check if module is well installed') . '</a>',
                         'desc' => $this->l('click on this link will reload the page, please go again in tab "advanced parameters" to see the results'),
                         'tab' => 'advanced',
                     ],
@@ -300,8 +294,8 @@ class ConfigForm
             ],
         ];
 
-        //Display debug data to help detect issues
-        if (Tools::getValue('display_debug')) {
+        // Display debug data to help detect issues
+        if (\Tools::getValue('display_debug')) {
             $fields_form['form']['input'][] = [
                 'type' => 'html',
                 'name' => 'debug_html',
@@ -310,17 +304,17 @@ class ConfigForm
             ];
         }
 
-        $helper = new HelperForm();
+        $helper = new \HelperForm();
         $helper->show_toolbar = false;
-        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new \Language((int) \Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?
-            Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+        $helper->allow_employee_form_lang = \Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?
+            \Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
         $helper->id = 'eicaptcha';
         $helper->submit_action = 'SubmitCaptchaConfiguration';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
             . '&configure=' . $this->module->name . '&tab_module=' . $this->module->tab . '&module_name=' . $this->module->name;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->token = \Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = [
             'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
@@ -337,25 +331,25 @@ class ConfigForm
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('SubmitCaptchaConfiguration')) {
-            $minScore = Tools::getValue('CAPTCHA_V3_MINIMAL_SCORE');
+        if (\Tools::isSubmit('SubmitCaptchaConfiguration')) {
+            $minScore = \Tools::getValue('CAPTCHA_V3_MINIMAL_SCORE');
 
             if (!is_numeric($minScore) || $minScore < 0 || $minScore > 1) {
                 return $this->module->displayError($this->l('The V3 minimal score must be a number between 0 and 1'));
             }
 
-            Configuration::updateValue('CAPTCHA_VERSION', Tools::getValue('CAPTCHA_VERSION'));
-            Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', (float) $minScore);
-            Configuration::updateValue('CAPTCHA_PUBLIC_KEY', Tools::getValue('CAPTCHA_PUBLIC_KEY'));
-            Configuration::updateValue('CAPTCHA_PRIVATE_KEY', Tools::getValue('CAPTCHA_PRIVATE_KEY'));
-            Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS'));
-            Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
-            Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int) Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
-            Configuration::updateValue('CAPTCHA_FORCE_LANG', Tools::getValue('CAPTCHA_FORCE_LANG'));
-            Configuration::updateValue('CAPTCHA_THEME', (int) Tools::getValue('CAPTCHA_THEME'));
-            Configuration::updateValue('CAPTCHA_DEBUG', (int) Tools::getValue('CAPTCHA_DEBUG'));
-            Configuration::updateValue('CAPTCHA_LOAD_EVERYWHERE', (int) Tools::getValue('CAPTCHA_LOAD_EVERYWHERE'));
+            \Configuration::updateValue('CAPTCHA_VERSION', \Tools::getValue('CAPTCHA_VERSION'));
+            \Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', (float) $minScore);
+            \Configuration::updateValue('CAPTCHA_PUBLIC_KEY', \Tools::getValue('CAPTCHA_PUBLIC_KEY'));
+            \Configuration::updateValue('CAPTCHA_PRIVATE_KEY', \Tools::getValue('CAPTCHA_PRIVATE_KEY'));
+            \Configuration::updateValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', \Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS'));
+            \Configuration::updateValue('CAPTCHA_ENABLE_ACCOUNT', (int) \Tools::getValue('CAPTCHA_ENABLE_ACCOUNT'));
+            \Configuration::updateValue('CAPTCHA_ENABLE_CONTACT', (int) \Tools::getValue('CAPTCHA_ENABLE_CONTACT'));
+            \Configuration::updateValue('CAPTCHA_ENABLE_NEWSLETTER', (int) \Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER'));
+            \Configuration::updateValue('CAPTCHA_FORCE_LANG', \Tools::getValue('CAPTCHA_FORCE_LANG'));
+            \Configuration::updateValue('CAPTCHA_THEME', (int) \Tools::getValue('CAPTCHA_THEME'));
+            \Configuration::updateValue('CAPTCHA_DEBUG', (int) \Tools::getValue('CAPTCHA_DEBUG'));
+            \Configuration::updateValue('CAPTCHA_LOAD_EVERYWHERE', (int) \Tools::getValue('CAPTCHA_LOAD_EVERYWHERE'));
 
             return $this->module->displayConfirmation($this->l('Settings updated'));
         }
@@ -369,18 +363,18 @@ class ConfigForm
     public function getConfigFieldsValues()
     {
         return [
-            'CAPTCHA_VERSION' => Tools::getValue('CAPTCHA_VERSION', Configuration::get('CAPTCHA_VERSION')),
-            'CAPTCHA_V3_MINIMAL_SCORE' => Tools::getValue('CAPTCHA_V3_MINIMAL_SCORE', Configuration::get('CAPTCHA_V3_MINIMAL_SCORE')),
-            'CAPTCHA_PRIVATE_KEY' => Tools::getValue('CAPTCHA_PRIVATE_KEY', Configuration::get('CAPTCHA_PRIVATE_KEY')),
-            'CAPTCHA_PUBLIC_KEY' => Tools::getValue('CAPTCHA_PUBLIC_KEY', Configuration::get('CAPTCHA_PUBLIC_KEY')),
-            'CAPTCHA_ENABLE_LOGGED_CUSTOMERS' => Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS')),
-            'CAPTCHA_ENABLE_ACCOUNT' => Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
-            'CAPTCHA_ENABLE_CONTACT' => Tools::getValue('CAPTCHA_ENABLE_CONTACT', Configuration::get('CAPTCHA_ENABLE_CONTACT')),
-            'CAPTCHA_ENABLE_NEWSLETTER' => Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER', Configuration::get('CAPTCHA_ENABLE_NEWSLETTER')),
-            'CAPTCHA_FORCE_LANG' => Tools::getValue('CAPTCHA_FORCE_LANG', Configuration::get('CAPTCHA_FORCE_LANG')),
-            'CAPTCHA_THEME' => Tools::getValue('CAPTCHA_THEME', Configuration::get('CAPTCHA_THEME')),
-            'CAPTCHA_DEBUG' => Tools::getValue('CAPTCHA_DEBUG', Configuration::get('CAPTCHA_DEBUG')),
-            'CAPTCHA_LOAD_EVERYWHERE' => Tools::getValue('CAPTCHA_LOAD_EVERYWHERE', Configuration::get('CAPTCHA_LOAD_EVERYWHERE')),
+            'CAPTCHA_VERSION' => \Tools::getValue('CAPTCHA_VERSION', \Configuration::get('CAPTCHA_VERSION')),
+            'CAPTCHA_V3_MINIMAL_SCORE' => \Tools::getValue('CAPTCHA_V3_MINIMAL_SCORE', \Configuration::get('CAPTCHA_V3_MINIMAL_SCORE')),
+            'CAPTCHA_PRIVATE_KEY' => \Tools::getValue('CAPTCHA_PRIVATE_KEY', \Configuration::get('CAPTCHA_PRIVATE_KEY')),
+            'CAPTCHA_PUBLIC_KEY' => \Tools::getValue('CAPTCHA_PUBLIC_KEY', \Configuration::get('CAPTCHA_PUBLIC_KEY')),
+            'CAPTCHA_ENABLE_LOGGED_CUSTOMERS' => \Tools::getValue('CAPTCHA_ENABLE_LOGGED_CUSTOMERS', \Configuration::get('CAPTCHA_ENABLE_LOGGED_CUSTOMERS')),
+            'CAPTCHA_ENABLE_ACCOUNT' => \Tools::getValue('CAPTCHA_ENABLE_ACCOUNT', \Configuration::get('CAPTCHA_ENABLE_ACCOUNT')),
+            'CAPTCHA_ENABLE_CONTACT' => \Tools::getValue('CAPTCHA_ENABLE_CONTACT', \Configuration::get('CAPTCHA_ENABLE_CONTACT')),
+            'CAPTCHA_ENABLE_NEWSLETTER' => \Tools::getValue('CAPTCHA_ENABLE_NEWSLETTER', \Configuration::get('CAPTCHA_ENABLE_NEWSLETTER')),
+            'CAPTCHA_FORCE_LANG' => \Tools::getValue('CAPTCHA_FORCE_LANG', \Configuration::get('CAPTCHA_FORCE_LANG')),
+            'CAPTCHA_THEME' => \Tools::getValue('CAPTCHA_THEME', \Configuration::get('CAPTCHA_THEME')),
+            'CAPTCHA_DEBUG' => \Tools::getValue('CAPTCHA_DEBUG', \Configuration::get('CAPTCHA_DEBUG')),
+            'CAPTCHA_LOAD_EVERYWHERE' => \Tools::getValue('CAPTCHA_LOAD_EVERYWHERE', \Configuration::get('CAPTCHA_LOAD_EVERYWHERE')),
         ];
     }
 

@@ -20,15 +20,16 @@ if (!defined('_PS_VERSION_')) {
 }
 
 /**
- * Upgrade module 2_6_0 Add a new configuration to allow to define the recaptcha v3 minimal score
+ * Upgrade module 3_0_0 Drop the configuration left over by the removed AuthController override
  *
  * @param Module $module
  *
  * @return bool
  */
-function upgrade_module_2_6_0($module)
+function upgrade_module_3_0_0($module)
 {
-    Configuration::updateValue('CAPTCHA_V3_MINIMAL_SCORE', '0.5');
-
-    return true;
+    // CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE was only read by the override/controllers/front/AuthController.php
+    // override, which was removed in 2.5.0 (#229) in favor of the actionSubmitAccountBefore hook.
+    // The configuration has been dead since then, drop it now that the module is PS9-only.
+    return Configuration::deleteByName('CAPTCHA_USE_AUTHCONTROLLER_OVERRIDE');
 }

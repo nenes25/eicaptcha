@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -23,6 +24,7 @@ require_once dirname(__FILE__) . '/vendor/autoload.php';
 use Eicaptcha\Module\ConfigForm;
 use Eicaptcha\Module\Debugger;
 use Eicaptcha\Module\Installer;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use ReCaptcha\ReCaptcha;
 
 class EiCaptcha extends Module
@@ -53,7 +55,7 @@ class EiCaptcha extends Module
         $this->author = 'hhennes';
         $this->name = 'eicaptcha';
         $this->tab = 'front_office_features';
-        $this->version = '2.6.0';
+        $this->version = '3.0.0';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -70,7 +72,7 @@ class EiCaptcha extends Module
         }
         $this->themes = [0 => 'light', 1 => 'dark'];
         $this->dependencies = ['contactform'];
-        $this->ps_versions_compliancy = ['min' => '1.7.0.0', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '9.0.0', 'max' => _PS_VERSION_];
 
         $this->debugger = new Debugger($this);
 
@@ -170,7 +172,7 @@ class EiCaptcha extends Module
         }
 
         $captchaVersion = Configuration::get('CAPTCHA_VERSION');
-        //Add Content box to contact form page in order to display captcha
+        // Add Content box to contact form page in order to display captcha
         if ($this->context->controller instanceof ContactController
             && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
         ) {
@@ -182,9 +184,9 @@ class EiCaptcha extends Module
 
         if ($captchaVersion == 2) {
             return $this->renderHeaderV2();
-        } else {
-            return $this->renderHeaderV3();
         }
+
+        return $this->renderHeaderV3();
     }
 
     /**
@@ -195,23 +197,22 @@ class EiCaptcha extends Module
     protected function renderHeaderV2()
     {
         if ((
-                (
-                    $this->context->controller instanceof AuthController
-                    || $this->context->controller instanceof RegistrationController
-                )
-                && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+            (
+                $this->context->controller instanceof AuthController
+                || $this->context->controller instanceof RegistrationController
             )
-            ||
-            ($this->context->controller instanceof ContactController
-                && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
-            )
-            || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
+            && Configuration::get('CAPTCHA_ENABLE_ACCOUNT') == 1
+        )
+        || ($this->context->controller instanceof ContactController
+            && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1
+        )
+        || Configuration::get('CAPTCHA_LOAD_EVERYWHERE') == 1
         ) {
             $this->context->controller->registerStylesheet(
                 'module-eicaptcha',
                 'modules/' . $this->name . '/views/css/eicaptcha.css'
             );
-            //Dynamic insertion of the content
+            // Dynamic insertion of the content
             $js = '<script type="text/javascript">
             //Recaptcha CallBack Function
             var onloadCallback = function() {
@@ -231,7 +232,7 @@ class EiCaptcha extends Module
             };
             </script>';
 
-            if (($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1)) {
+            if ($this->context->controller instanceof ContactController && Configuration::get('CAPTCHA_ENABLE_CONTACT') == 1) {
                 $js .= '<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=' . $this->captchaLang . '" async defer></script>';
             }
 
@@ -355,14 +356,23 @@ class EiCaptcha extends Module
      */
     public function hookActionAdminControllerSetMedia(array $params)
     {
+        // AdminModulesController was removed in PrestaShop 9, the module configure page
+        // is now handled by the Symfony ModuleController. We rely on the current route
+        // name instead, and LegacyControllerContext to register assets on that page.
+        $request = $this->get('request_stack')->getCurrentRequest();
+
         if (
-            $this->context->controller instanceof AdminModulesController
+            $request
+            && $request->attributes->get('_route') === 'admin_module_configure_action'
             && Tools::getValue('configure') == $this->name
             && Tools::getValue('display_debug') == 1
         ) {
-            $this->context->controller->addJS(
-                $this->_path . 'views/js/admin.js'
-            );
+            $legacyControllerContext = $this->get(LegacyControllerContext::class);
+            if ($legacyControllerContext instanceof LegacyControllerContext) {
+                $legacyControllerContext->addJS(
+                    $this->_path . 'views/js/admin.js'
+                );
+            }
         }
     }
 
@@ -429,7 +439,7 @@ class EiCaptcha extends Module
         $context = Context::getContext();
         $captchaVersion = Configuration::get('CAPTCHA_VERSION');
         $captchaV3MinScore = (float) Configuration::get('CAPTCHA_V3_MINIMAL_SCORE');
-        //Fix issue if allow_url_open is set to 0
+        // Fix issue if allow_url_open is set to 0
         if (function_exists('ini_get') && !ini_get('allow_url_fopen')) {
             $recaptchaMethod = new \ReCaptcha\RequestMethod\CurlPost();
         } else {
@@ -452,7 +462,7 @@ class EiCaptcha extends Module
                 if ($result->getScore() < $captchaV3MinScore) {
                     $errorMessageV3 =
                         sprintf(
-                           'Your request has been blocked by the captcha system, due to a low score of %s, required score is %s',
+                            'Your request has been blocked by the captcha system, due to a low score of %s, required score is %s',
                             $result->getScore(),
                             $captchaV3MinScore
                         );

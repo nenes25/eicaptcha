@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -17,29 +18,25 @@
 
 namespace Eicaptcha\Module;
 
-use Configuration;
-use EiCaptcha;
-use Module;
-
 class Debugger
 {
     /** @var string Url of the module relases on github */
-    const URL_MODULE_RELEASES = 'https://github.com/nenes25/eicaptcha/releases';
+    public const URL_MODULE_RELEASES = 'https://github.com/nenes25/eicaptcha/releases';
 
     /** @var string Url of the wiki for the hook issue */
-    const URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM = 'https://github.com/nenes25/eicaptcha/wiki/Issue-:-Unable-to-find-the-hook-displayCustomerAccountForm-in-the-default-template';
+    public const URL_WIKI_DISPLAYCUSTOMERACCOUNTFORM = 'https://github.com/nenes25/eicaptcha/wiki/Issue-:-Unable-to-find-the-hook-displayCustomerAccountForm-in-the-default-template';
 
     /**
-     * @var EiCaptcha
+     * @var \EiCaptcha
      */
     private $module;
 
     /**
      * Installer constructor.
      *
-     * @param EiCaptcha $module
+     * @param \EiCaptcha $module
      */
-    public function __construct(EiCaptcha $module)
+    public function __construct(\EiCaptcha $module)
     {
         $this->module = $module;
     }
@@ -73,7 +70,7 @@ class Debugger
      */
     public function isDebugEnabled()
     {
-        return (bool) Configuration::get('CAPTCHA_DEBUG');
+        return (bool) \Configuration::get('CAPTCHA_DEBUG');
     }
 
     /**
@@ -113,7 +110,7 @@ class Debugger
         $this->module->getContext()->smarty->assign([
             'errors' => $errors,
             'success' => $success,
-            'recaptchaVersion' => Configuration::get('CAPTCHA_VERSION'),
+            'recaptchaVersion' => \Configuration::get('CAPTCHA_VERSION'),
             'prestashopVersion' => _PS_VERSION_,
             'themeName' => _THEME_NAME_,
             'phpVersion' => phpversion(),
@@ -130,15 +127,15 @@ class Debugger
     protected function checkModules()
     {
         $errors = $success = [];
-        //Check if module version is compatible with current PS version
+        // Check if module version is compatible with current PS version
         if (!$this->module->checkCompliancy()) {
             $errors[] = $this->l('the module is not compatible with your version');
         } else {
             $success[] = $this->l('the module is compatible with your version');
         }
 
-        //Check if module contactform is installed
-        if (!Module::isInstalled('contactform')) {
+        // Check if module contactform is installed
+        if (!\Module::isInstalled('contactform')) {
             $errors[] = $this->l('the module contatcform is not installed');
         } else {
             $success[] = $this->l('the module contactform is installed');
@@ -196,21 +193,21 @@ class Debugger
     {
         $errors = $success = [];
 
-        //Check if override are disabled in configuration
-        if (Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
+        // Check if override are disabled in configuration
+        if (\Configuration::get('PS_DISABLE_OVERRIDES') == 1) {
             $errors[] = $this->l('Overrides are disabled on your website');
         } else {
             $success[] = $this->l('Overrides are enabled on your website');
         }
 
-        //Check if file overrides exists
+        // Check if file overrides exists
         if (!file_exists(_PS_OVERRIDE_DIR_ . 'modules/contactform/contactform.php')) {
             $errors[] = $this->l('contactform.php override does not exists');
         } else {
             $success[] = $this->l('contactform.php override exists');
         }
 
-        //Check if file override is written in class_index.php files
+        // Check if file override is written in class_index.php files
         if (!file_exists(_PS_CACHE_DIR_ . '/class_index.php')) {
             $errors[] = $this->l('no class_index.php found');
         }
@@ -230,8 +227,8 @@ class Debugger
     {
         $errors = $success = [];
 
-        //Check if we can display the captcha in the newsletter
-        if (!Module::isInstalled('ps_emailsubscription')) {
+        // Check if we can display the captcha in the newsletter
+        if (!\Module::isInstalled('ps_emailsubscription')) {
             $errors[] = $this->l('the module ps_emailsubscription is not installed you will not be able to use captcha on newslettter');
         } else {
             if ($this->module->canUseCaptchaOnNewsletter()) {
@@ -263,7 +260,7 @@ class Debugger
                         '<i>' . $moduleDefaultFile . '</i>'
                     );
                 }
-                //@Todo manage multi-shop configuration
+            // @Todo manage multi-shop configuration
             } else {
                 $errors[] = $this->l('Module ps_emailsubscription version do not allow to use captcha on newsletter');
             }
