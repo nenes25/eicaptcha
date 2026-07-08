@@ -7,4 +7,5 @@ vendor
 .idea
 config.xml
 config_*.xml
+credentials.txt
 logs/*.log

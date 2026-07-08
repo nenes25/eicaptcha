@@ -15,7 +15,7 @@ export abstract class DefaultPage {
     protected readonly loginPasswordSelector: string = '#field-password';
     protected readonly loginSubmitSelector: string = '#submit-login';
     protected readonly loginEmail:string = 'dev@dev.com';
-    protected readonly loginPassword:string = 'dev1234';
+    protected readonly loginPassword:string = 'dev1234%123';
 
     //Configuration page
     protected configurationPageUrl: string = 'modules/eicaptcha/tests/functionnal/apply_case.php?test_case=';

@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: prestashop-mysql-test
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-prestashop}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-prestashop}
+      MYSQL_USER: ${MYSQL_USER:-prestashop}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-prestashop}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./snapshots:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+    networks:
+      - prestashop_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-prestashop}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prestashop:
+    image: prestashop/prestashop:${PS_VERSION:-8.1.7}
+    container_name: prestashop-test
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_SERVER: mysql
+      DB_NAME: ${MYSQL_DATABASE:-prestashop}
+      DB_USER: ${MYSQL_USER:-prestashop}
+      DB_PASSWD: ${MYSQL_PASSWORD:-prestashop}
+      DB_PREFIX: ps_
+      PS_DOMAIN: localhost:8080
+      PS_FOLDER_INSTALL: install-dev
+      PS_FOLDER_ADMIN: admin-dev
+      PS_LANGUAGE: en
+      PS_COUNTRY: FR
+      PS_DEV_MODE: 1
+      PS_ENABLE_SSL: 0
+      ADMIN_MAIL: ${ADMIN_MAIL:-admin@prestashop.local}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:-Prestashop123}
+    volumes:
+      # Mount the eicaptcha module from the local directory
+      - ../../:/var/www/html/modules/eicaptcha
+      # Persistent PrestaShop data
+      - prestashop_data:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      - prestashop_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/en/"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.32.3-focal
+    container_name: prestashop-playwright
+    depends_on:
+      prestashop:
+        condition: service_healthy
+    working_dir: /app
+    environment:
+      CI_ENVIRONMENT_URL: ${CI_ENVIRONMENT_URL:-http://prestashop:80}
+      NODE_ENV: test
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - prestashop_network
+    command: npx playwright test --workers=1
+    profiles:
+      - test
+
+volumes:
+  mysql_data:
+  prestashop_data:
+
+networks:
+  prestashop_network:
+    driver: bridge

@@ -1,0 +1,202 @@
+name: eicaptcha E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'modules/eicaptcha/**'
+      - '.github/workflows/eicaptcha-e2e-tests.yml'
+  pull_request:
+    paths:
+      - 'modules/eicaptcha/**'
+      - '.github/workflows/eicaptcha-e2e-tests.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  e2e-tests:
+    name: E2E Tests (PS ${{ matrix.prestashop }} - PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # PrestaShop 1.7.8.x with PHP 7.4 & 8.1
+          - prestashop: '1.7.8.11'
+            php: '7.4'
+            mysql: '5.7'
+            node: '14'
+          - prestashop: '1.7.8.11'
+            php: '8.1'
+            mysql: '5.7'
+            node: '14'
+
+          # PrestaShop 8.x with PHP 8.1
+          - prestashop: '8.1.7'
+            php: '8.1'
+            mysql: '8.0'
+            node: '16'
+
+          # PrestaShop 9.x with PHP 8.1 & 8.3
+          - prestashop: '9.0.0'
+            php: '8.1'
+            mysql: '8.0'
+            node: '18'
+          - prestashop: '9.0.0'
+            php: '8.3'
+            mysql: '8.0'
+            node: '18'
+
+    services:
+      mysql:
+        image: mysql:${{ matrix.mysql }}
+        env:
+          MYSQL_ROOT_PASSWORD: prestashop
+          MYSQL_DATABASE: prestashop
+          MYSQL_USER: prestashop
+          MYSQL_PASSWORD: prestashop
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -pprestashop"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, dom, filter, gd, json, zip
+          coverage: none
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+          cache-dependency-path: modules/eicaptcha/tests/functionnal/package-lock.json
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-ps${{ matrix.prestashop }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-ps${{ matrix.prestashop }}-
+            ${{ runner.os }}-composer-
+
+      - name: Install PrestaShop ${{ matrix.prestashop }}
+        run: |
+          # Download and extract PrestaShop
+          wget -O prestashop.zip https://github.com/PrestaShop/PrestaShop/releases/download/${{ matrix.prestashop }}/prestashop_${{ matrix.prestashop }}.zip
+          unzip -q prestashop.zip -d prestashop
+          cd prestashop
+
+          # Extract inner zip if exists
+          if [ -f prestashop.zip ]; then
+            unzip -q prestashop.zip
+            rm prestashop.zip
+          fi
+
+          # Install PrestaShop via CLI
+          php install-dev/index_cli.php \
+            --domain=localhost:8000 \
+            --db_server=127.0.0.1 \
+            --db_name=prestashop \
+            --db_user=prestashop \
+            --db_password=prestashop \
+            --prefix=ps_ \
+            --email=admin@prestashop.local \
+            --password=Prestashop123 \
+            --language=en \
+            --country=fr \
+            --newsletter=0
+
+          # Remove install directory
+          rm -rf install-dev
+
+      - name: Install eicaptcha module
+        run: |
+          cd prestashop
+
+          # Copy module from repository to PrestaShop modules directory
+          cp -r ../modules/eicaptcha modules/
+
+          # Install module via CLI
+          php bin/console prestashop:module install eicaptcha
+
+      - name: Create test user
+        run: |
+          cd prestashop
+          php -r "
+          require_once 'config/config.inc.php';
+
+          \$customer = new Customer();
+          \$customer->firstname = 'Dev';
+          \$customer->lastname = 'Test';
+          \$customer->email = 'dev@dev.com';
+          \$customer->passwd = Tools::hash('dev1234%123');
+          \$customer->id_gender = 1;
+          \$customer->birthday = '1990-01-01';
+          \$customer->newsletter = 1;
+          \$customer->active = 1;
+
+          if (\$customer->add()) {
+              echo 'Test customer created successfully!';
+          } else {
+              echo 'Failed to create test customer';
+              exit(1);
+          }
+          "
+
+      - name: Start PHP built-in server
+        run: |
+          cd prestashop
+          php -S localhost:8000 -t . &
+          sleep 5
+
+          # Wait for server to be ready
+          timeout 30 bash -c 'until curl -f http://localhost:8000/ > /dev/null 2>&1; do sleep 2; done'
+
+      - name: Install Playwright dependencies
+        working-directory: modules/eicaptcha/tests/functionnal
+        run: |
+          npm ci
+          npx playwright install --with-deps firefox
+
+      - name: Run Playwright tests
+        working-directory: modules/eicaptcha/tests/functionnal
+        env:
+          CI: true
+          CI_ENVIRONMENT_URL: http://localhost:8000
+        run: |
+          npx playwright test --workers=1
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results-ps${{ matrix.prestashop }}-php${{ matrix.php }}
+          path: |
+            modules/eicaptcha/tests/functionnal/playwright-report/
+            modules/eicaptcha/tests/functionnal/test-results/
+          retention-days: 30
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-ps${{ matrix.prestashop }}-php${{ matrix.php }}
+          path: modules/eicaptcha/tests/functionnal/test-results/**/*.png
+          retention-days: 30
