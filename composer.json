@@ -29,7 +29,7 @@
   },
   "type": "prestashop-module",
   "require-dev": {
-    "prestashop/php-dev-tools": "^4.1"
+    "prestashop/php-dev-tools": "^5"
   },
   "scripts": {
     "phpstan" : [
